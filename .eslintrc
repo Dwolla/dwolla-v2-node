@@ -1,0 +1,14 @@
+{
+  "extends": "@shinnn/eslint-config-node-legacy",
+  "env": {
+    "node": true,
+    "mocha": true
+  },
+  "rules": {
+    "comma-dangle": [2, "always-multiline"],
+    "object-curly-spacing": [2, "always"],
+    "camelcase": [0],
+    "no-underscore-dangle": [0],
+    "prefer-rest-params": [0]
+  }
+}
