@@ -39,11 +39,24 @@ function getUrl(token, suppliedPath, suppliedQuery) {
 }
 
 function handleResponse(resolve, reject, res) {
-  if (res.status < 400) {
-    resolve(res);
-  } else {
-    reject(res);
-  }
+  res.text().then(function(body) {
+    var parsedBody;
+    try {
+      parsedBody = JSON.parse(body);
+    } catch (e) {
+      parsedBody = body;
+    }
+    var parsedRes = {
+      status: res.status,
+      headers: res.headers,
+      body: parsedBody,
+    };
+    if (parsedRes.status < 400) {
+      resolve(parsedRes);
+    } else {
+      reject(parsedRes);
+    }
+  });
 }
 
 function handleRequest(request) {

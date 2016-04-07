@@ -158,30 +158,40 @@ new client.Token({
 });
 ```
 
-## Making Requests
+## Requests
 
-`Token`s can make requests using the `#get`, `#post`, and `#delete` methods. Requests return
-promises using [node-fetch][].
-
-[node-fetch]: https://github.com/bitinn/node-fetch
+`Token`s can make requests using the `#get`, `#post`, and `#delete` methods. These methods return
+promises containing a response object detailed in the [next section](#responses).
 
 ```javascript
 // GET api.dwolla.com/resource?foo=bar
-token.get('resource', { foo: 'bar' });
+var req = token.get('resource', { foo: 'bar' });
 
 // POST api.dwolla.com/resource {"foo":"bar"}
-token.post('resource', { foo: 'bar' });
+var req = token.post('resource', { foo: 'bar' });
 
 // POST api.dwolla.com/resource multipart/form-data foo=...
 var body = new FormData();
 body.append('foo', fs.createReadStream('foo.jpg'), { filename: 'foo.jpg', contentType: 'image/jpeg', knownLength: 12345 });
-token.post('resource', body);
+var req = token.post('resource', body);
 
 // PUT api.dwolla.com/resource {"foo":"bar"}
-token.put('resource', { foo: 'bar' });
+var req = token.put('resource', { foo: 'bar' });
 
 // DELETE api.dwolla.com/resource
-token.delete('resource');
+var req = token.delete('resource');
+```
+
+## Responses
+
+```javascript
+req.then(function(successfulResponse) {
+  // res.status   => 200
+  // res.headers  => Headers { ... }
+  // res.body     => Object or String depending on response type
+}, function(errorResponse) {
+  // when the server return a status >= 400
+});
 ```
 
 ## Contributing

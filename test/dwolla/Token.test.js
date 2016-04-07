@@ -7,7 +7,7 @@ var chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 
 function toResponseBody(res) {
-  return res.json();
+  return res.body;
 }
 
 function bodyLengthEquals(length, body) {
@@ -19,6 +19,7 @@ describe('Token', function() {
   var client = new Client({ id: 'id', secret: 'secret' });
   var requestBody = { request: 'body' };
   var responseBody = { response: 'body' };
+  var textResponseBody = 'text response body';
   var formDataRequestBody = toFormData(requestBody);
 
   it('sets access_token', function() {
@@ -88,6 +89,15 @@ describe('Token', function() {
     expect(token.get(path).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
   });
 
+  it('#get successful text response', function(done) {
+    var path = 'baz';
+    var token = new client.Token({ access_token: 'access token' });
+    nock([client.apiUrl, path].join('/'), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+      .get('')
+      .reply(200, textResponseBody);
+    expect(token.get(path).then(toResponseBody)).to.eventually.deep.equal(textResponseBody).and.notify(done);
+  });
+
   it('#get error response', function(done) {
     var path = 'baz';
     var token = new client.Token({ access_token: 'access token' });
@@ -143,6 +153,15 @@ describe('Token', function() {
       .post('', requestBody)
       .reply(200, responseBody);
     expect(token.post(path, requestBody).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
+  });
+
+  it('#post successful text response', function(done) {
+    var path = 'baz';
+    var token = new client.Token({ access_token: 'access token' });
+    nock([client.apiUrl, path].join('/'), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+      .post('', requestBody)
+      .reply(200, textResponseBody);
+    expect(token.post(path, requestBody).then(toResponseBody)).to.eventually.deep.equal(textResponseBody).and.notify(done);
   });
 
   it('#post error response', function(done) {
@@ -209,6 +228,15 @@ describe('Token', function() {
       .delete('')
       .reply(200, responseBody);
     expect(token.delete(path).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
+  });
+
+  it('#delete successful text response', function(done) {
+    var path = 'baz';
+    var token = new client.Token({ access_token: 'access token' });
+    nock([client.apiUrl, path].join('/'), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+      .delete('')
+      .reply(200, textResponseBody);
+    expect(token.delete(path).then(toResponseBody)).to.eventually.deep.equal(textResponseBody).and.notify(done);
   });
 
   it('#delete error response', function(done) {
