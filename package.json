@@ -23,7 +23,6 @@
   },
   "dependencies": {
     "bluebird": "^3.3.4",
-    "callbackify": "^1.1.0",
     "form-data": "^1.0.0-rc4",
     "form-urlencoded": "^1.2.1",
     "invariant": "^2.2.1",
