@@ -4,8 +4,9 @@ var rejectEmptyKeys = require('../util/rejectEmptyKeys');
 var instanceOf = require('../util/instanceOf');
 var assign = require('lodash/assign');
 var FormData = require('form-data');
+var Promise = require('bluebird');
 
-fetch.Promise = require('bluebird');
+fetch.Promise = Promise;
 
 var Token = function(client, opts) {
   this.client = client;
