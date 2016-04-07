@@ -57,7 +57,7 @@ function AuthClass(client, opts) {
   this.redirect_uri = opts.redirect_uri;
   this.scope = opts.scope;
   this.state = opts.state;
-  this.url = `${client.authUrl}?${query(client, opts)}`;
+  this.url = [client.authUrl, query(client, opts)].join('?');
 }
 
 AuthClass.prototype.callback = function(params) {

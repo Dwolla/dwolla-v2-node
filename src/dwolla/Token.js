@@ -16,7 +16,7 @@ var Token = function(client, opts) {
 
 function getHeaders(token) {
   return {
-    Authorization: `Bearer ${token.access_token}`,
+    Authorization: ['Bearer', token.access_token].join(' '),
     Accept: 'application/vnd.dwolla.v1.hal+json',
   };
 }
@@ -28,12 +28,12 @@ function getUrl(token, suppliedPath, suppliedQuery) {
   } else if (suppliedPath.indexOf(token.client.apiUrl) === 0) {
     url = suppliedPath;
   } else if (suppliedPath.indexOf('/') === 0) {
-    url = `${token.client.apiUrl}${suppliedPath}`;
+    url = [token.client.apiUrl, suppliedPath].join();
   } else {
-    url = `${token.client.apiUrl}/${suppliedPath}`;
+    url = [token.client.apiUrl, suppliedPath].join('/');
   }
   var query = formurlencoded(rejectEmptyKeys(suppliedQuery || {}));
-  return query ? `${url}?${query}` : url;
+  return query ? [url, query].join('?') : url;
 }
 
 Token.prototype.get = function(path, query) {

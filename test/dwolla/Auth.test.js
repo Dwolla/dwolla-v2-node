@@ -14,7 +14,7 @@ describe('Auth', function() {
   it('Auth#url', function() {
     var auth = new client.Auth();
     assert.equal(
-      `https://www.dwolla.com/oauth/v2/authenticate?response_type=code&client_id=${client.id}`,
+      'https://www.dwolla.com/oauth/v2/authenticate?response_type=code&client_id=' + client.id,
       auth.url
     );
   });
@@ -23,7 +23,7 @@ describe('Auth', function() {
     var redirect_uri = 'redirect uri';
     var auth = new client.Auth({ redirect_uri: redirect_uri });
     var expectedQuery = formurlencoded({ response_type: 'code', client_id: client.id, redirect_uri: redirect_uri });
-    assert.equal(`https://www.dwolla.com/oauth/v2/authenticate?${expectedQuery}`, auth.url);
+    assert.equal(['https://www.dwolla.com/oauth/v2/authenticate', expectedQuery].join('?'), auth.url);
     assert.equal(redirect_uri, auth.redirect_uri);
   });
 
@@ -31,7 +31,7 @@ describe('Auth', function() {
     var scope = 'b|l|a';
     var auth = new client.Auth({ scope: scope });
     var expectedQuery = formurlencoded({ response_type: 'code', client_id: client.id, scope: scope });
-    assert.equal(`https://www.dwolla.com/oauth/v2/authenticate?${expectedQuery}`, auth.url);
+    assert.equal(['https://www.dwolla.com/oauth/v2/authenticate', expectedQuery].join('?'), auth.url);
     assert.equal(scope, auth.scope);
   });
 
@@ -39,7 +39,7 @@ describe('Auth', function() {
     var state = 'b l a';
     var auth = new client.Auth({ state: state });
     var expectedQuery = formurlencoded({ response_type: 'code', client_id: client.id, state: state });
-    assert.equal(`https://www.dwolla.com/oauth/v2/authenticate?${expectedQuery}`, auth.url);
+    assert.equal(['https://www.dwolla.com/oauth/v2/authenticate', expectedQuery].join('?'), auth.url);
     assert.equal(state, auth.state);
   });
 
@@ -47,7 +47,7 @@ describe('Auth', function() {
     var state = 'state';
     var auth = new client.Auth({ state: state });
     assert.throws(function() {
-      auth.callback({ state: `${state}-mismatch` });
+      auth.callback({ state: 'bad state' });
     }, 'Invalid state parameter.');
   });
 
