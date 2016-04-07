@@ -22,6 +22,7 @@
     "sinon": "^1.17.3"
   },
   "dependencies": {
+    "bluebird": "^3.3.4",
     "callbackify": "^1.1.0",
     "form-data": "^1.0.0-rc4",
     "form-urlencoded": "^1.2.1",

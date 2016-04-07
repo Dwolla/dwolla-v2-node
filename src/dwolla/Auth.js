@@ -5,6 +5,8 @@ var invariant = require('invariant');
 var rejectEmptyKeys = require('../util/rejectEmptyKeys');
 var toJson = require('../util/toJson');
 
+fetch.Promise = require('bluebird');
+
 function handleTokenResponse(client, res) {
   if (res.error) {
     throw res;

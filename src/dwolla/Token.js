@@ -5,6 +5,8 @@ var instanceOf = require('../util/instanceOf');
 var assign = require('lodash/assign');
 var FormData = require('form-data');
 
+fetch.Promise = require('bluebird');
+
 var Token = function(client, opts) {
   this.client = client;
   this.access_token = opts.access_token;
