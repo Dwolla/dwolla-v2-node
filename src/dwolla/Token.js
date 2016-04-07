@@ -28,7 +28,7 @@ function getUrl(token, suppliedPath, suppliedQuery) {
   } else if (suppliedPath.indexOf(token.client.apiUrl) === 0) {
     url = suppliedPath;
   } else if (suppliedPath.indexOf('/') === 0) {
-    url = [token.client.apiUrl, suppliedPath].join();
+    url = [token.client.apiUrl, suppliedPath].join('');
   } else {
     url = [token.client.apiUrl, suppliedPath].join('/');
   }
