@@ -33,6 +33,24 @@ describe('Token', function() {
     expect(token.refresh_token).to.equal(refresh_token);
   });
 
+  it('sets expires_in', function() {
+    var expires_in = 123;
+    var token = new client.Token({ expires_in: expires_in });
+    expect(token.expires_in).to.equal(expires_in);
+  });
+
+  it('sets scope', function() {
+    var scope = 'scope';
+    var token = new client.Token({ scope: scope });
+    expect(token.scope).to.equal(scope);
+  });
+
+  it('sets account_id', function() {
+    var account_id = 'account id';
+    var token = new client.Token({ account_id: account_id });
+    expect(token.account_id).to.equal(account_id);
+  });
+
   it('#get resource object', function(done) {
     var resourceHref = 'http://foo.bar/baz';
     var resource = { _links: { self: { href: resourceHref } } };

@@ -9,6 +9,9 @@ var Token = function(client, opts) {
   this.client = client;
   this.access_token = opts.access_token;
   this.refresh_token = opts.refresh_token;
+  this.expires_in = opts.expires_in;
+  this.scope = opts.scope;
+  this.account_id = opts.account_id;
 };
 
 function getHeaders(token) {
