@@ -38,36 +38,56 @@ function getUrl(token, suppliedPath, suppliedQuery) {
   return query ? [url, query].join('?') : url;
 }
 
+function handleResponse(resolve, reject, res) {
+  if (res.status < 400) {
+    resolve(res);
+  } else {
+    reject(res);
+  }
+}
+
+function handleRequest(request) {
+  return new Promise(function(resolve, reject) {
+    request.then(handleResponse.bind(null, resolve, reject));
+  });
+}
+
 Token.prototype.get = function(path, query) {
-  return fetch(
-    getUrl(this, path, query),
-    {
-      headers: getHeaders(this),
-    }
+  return handleRequest(
+    fetch(
+      getUrl(this, path, query),
+      {
+        headers: getHeaders(this),
+      }
+    )
   );
 };
 
 Token.prototype.post = function(path, body) {
-  return fetch(
-    getUrl(this, path),
-    {
-      method: 'POST',
-      headers: assign(
-        getHeaders(this),
-        instanceOf(body, FormData) ? body.getHeaders() : { 'content-type': 'application/json' }
-      ),
-      body: instanceOf(body, FormData) ? body : JSON.stringify(body),
-    }
+  return handleRequest(
+    fetch(
+      getUrl(this, path),
+      {
+        method: 'POST',
+        headers: assign(
+          getHeaders(this),
+          instanceOf(body, FormData) ? body.getHeaders() : { 'content-type': 'application/json' }
+        ),
+        body: instanceOf(body, FormData) ? body : JSON.stringify(body),
+      }
+    )
   );
 };
 
 Token.prototype.delete = function(path, query) {
-  return fetch(
-    getUrl(this, path, query),
-    {
-      method: 'DELETE',
-      headers: getHeaders(this),
-    }
+  return handleRequest(
+    fetch(
+      getUrl(this, path, query),
+      {
+        method: 'DELETE',
+        headers: getHeaders(this),
+      }
+    )
   );
 };
 

@@ -37,6 +37,12 @@ describe('Client', function() {
     assert.equal(environment, client.environment);
   });
 
+  it('sets onGrant', function() {
+    var onGrant = function() {};
+    var client = new Client(assign(clientOpts, { onGrant: onGrant }));
+    assert.equal(clientOpts.onGrant, client.onGrant);
+  });
+
   it('throws error if id is not a string', function() {
     assert.throws(function() {
       new Client({ secret: clientOpts.secret });
@@ -53,6 +59,12 @@ describe('Client', function() {
     assert.throws(function() {
       new Client(assign(clientOpts, { environment: 'invalid' }));
     }, 'Invalid environment.');
+  });
+
+  it('throws error if invalid onGrant', function() {
+    assert.throws(function() {
+      new Client(assign(clientOpts, { onGrant: 'invalid' }));
+    }, 'Invalid onGrant.');
   });
 
   it('has Auth', function() {

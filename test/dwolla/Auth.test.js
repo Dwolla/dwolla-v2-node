@@ -3,6 +3,7 @@ var assert = chai.assert;
 var expect = chai.expect;
 var nock = require('nock');
 var formurlencoded = require('form-urlencoded');
+var sinon = require('sinon');
 
 var chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
@@ -108,5 +109,17 @@ describe('Auth', function() {
       .post('', { client_id: client.id, client_secret: client.secret, grant_type: 'refresh_token', refresh_token: token.refresh_token })
       .reply(200, { error: 'error' });
     expect(client.auth.refresh(token)).to.be.rejected.and.notify(done);
+  });
+
+  it('calls onGrant', function(done) {
+    var onGrant = sinon.spy();
+    var clientWithOnGrant = new dwolla.Client({ id: 'client_id', secret: 'client_secret', onGrant: onGrant });
+    nock(clientWithOnGrant.tokenUrl, { reqheaders: { 'content-type': 'application/x-www-form-urlencoded' } })
+      .post('', { client_id: clientWithOnGrant.id, client_secret: clientWithOnGrant.secret, grant_type: 'client_credentials' })
+      .reply(200, {});
+    expect(clientWithOnGrant.auth.client()).to.be.fulfilled.and.notify(function() {
+      assert.isTrue(onGrant.called);
+      done();
+    });
   });
 });

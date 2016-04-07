@@ -1,6 +1,7 @@
 var invariant = require('invariant');
 var auth = require('./Auth');
 var Token = require('./Token');
+var isOneOfTypes = require('../util/isOneOfTypes');
 
 var DEFAULT_ENVIRONMENT = 'production';
 
@@ -23,10 +24,12 @@ function Client(opts) {
   this.id = opts.id;
   this.secret = opts.secret;
   this.environment = opts.environment || DEFAULT_ENVIRONMENT;
+  this.onGrant = opts.onGrant;
 
   invariant(typeof opts.id === 'string', 'id is required.');
   invariant(typeof opts.secret === 'string', 'secret is required.');
   invariant(this.environment in ENVIRONMENTS, 'Invalid environment.');
+  invariant(isOneOfTypes(opts.onGrant, ['undefined', 'function']), 'Invalid onGrant.');
 
   this.authUrl = ENVIRONMENTS[this.environment].authUrl;
   this.tokenUrl = ENVIRONMENTS[this.environment].tokenUrl;

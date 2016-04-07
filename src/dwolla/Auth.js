@@ -15,6 +15,15 @@ function handleTokenResponse(client, res) {
   }
 }
 
+function performOnGrantCallback(client, token) {
+  if (client.onGrant) {
+    return client.onGrant(token).then(function() {
+      return token;
+    });
+  }
+  return token;
+}
+
 function requestToken(client, params) {
   return fetch(client.tokenUrl, {
     method: 'POST',
@@ -29,7 +38,8 @@ function requestToken(client, params) {
     ),
   })
     .then(toJson)
-    .then(handleTokenResponse.bind(null, client));
+    .then(handleTokenResponse.bind(null, client))
+    .then(performOnGrantCallback.bind(null, client));
 }
 
 function refreshGrant(client, token) {

@@ -88,6 +88,15 @@ describe('Token', function() {
     expect(token.get(path).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
   });
 
+  it('#get error response', function(done) {
+    var path = 'baz';
+    var token = new client.Token({ access_token: 'access token' });
+    nock([client.apiUrl, path].join('/'), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+      .get('')
+      .reply(400, responseBody);
+    expect(token.get(path).then(toResponseBody)).to.eventually.be.rejected.and.notify(done);
+  });
+
   it('#get query', function(done) {
     var path = 'baz';
     var query = { foo: 'bar' };
@@ -134,6 +143,15 @@ describe('Token', function() {
       .post('', requestBody)
       .reply(200, responseBody);
     expect(token.post(path, requestBody).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
+  });
+
+  it('#post error response', function(done) {
+    var path = 'baz';
+    var token = new client.Token({ access_token: 'access token' });
+    nock([client.apiUrl, path].join('/'), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+      .post('', requestBody)
+      .reply(400, responseBody);
+    expect(token.post(path, requestBody).then(toResponseBody)).to.eventually.be.rejected.and.notify(done);
   });
 
   it('#post undefined body', function(done) {
@@ -191,5 +209,14 @@ describe('Token', function() {
       .delete('')
       .reply(200, responseBody);
     expect(token.delete(path).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
+  });
+
+  it('#delete error response', function(done) {
+    var path = 'baz';
+    var token = new client.Token({ access_token: 'access token' });
+    nock([client.apiUrl, path].join('/'), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+      .delete('')
+      .reply(400, responseBody);
+    expect(token.delete(path).then(toResponseBody)).to.eventually.be.rejected.and.notify(done);
   });
 });

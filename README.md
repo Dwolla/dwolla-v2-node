@@ -39,6 +39,23 @@ var client = new dwolla.Client({
 
 *Note: `environment` defaults to `production`.*
 
+### Configuring an onGrant callback (optional)
+
+An `onGrant` callback is useful for storing new tokens when they are granted. The `on_grant`
+callback is called with the `Token` that was just granted by the server and must return a `Promise`.
+
+```javascript
+var dwolla = require('dwolla-v2');
+
+var client = new dwolla.Client({
+  id: process.env.DWOLLA_ID,
+  secret: process.env.DWOLLA_SECRET,
+  onGrant: function(token) {
+    return new Promise(...);
+  },
+});
+```
+
 ## `client.Token`
 
 Tokens can be used to make requests to the Dwolla V2 API. There are two types of tokens:
