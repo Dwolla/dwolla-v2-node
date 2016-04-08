@@ -21,6 +21,7 @@ function getHeaders(token) {
   return {
     Authorization: ['Bearer', token.access_token].join(' '),
     Accept: 'application/vnd.dwolla.v1.hal+json',
+    'User-Agent': require('./userAgent'),
   };
 }
 

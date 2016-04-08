@@ -17,6 +17,13 @@ function bodyLengthEquals(length, body) {
 describe('Token', function() {
   var Client = require('../../src/dwolla/Client');
   var client = new Client({ id: 'id', secret: 'secret' });
+  var requestHeaders = function(token) {
+    return {
+      accept: 'application/vnd.dwolla.v1.hal+json',
+      Authorization: ['Bearer', token.access_token].join(' '),
+      'User-Agent': require('../../src/dwolla/userAgent'),
+    };
+  };
   var requestBody = { request: 'body' };
   var responseBody = { response: 'body' };
   var textResponseBody = 'text response body';
@@ -56,7 +63,7 @@ describe('Token', function() {
     var resourceHref = 'http://foo.bar/baz';
     var resource = { _links: { self: { href: resourceHref } } };
     var token = new client.Token({ access_token: 'access token' });
-    nock(resourceHref, { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+    nock(resourceHref, { reqheaders: requestHeaders(token) })
       .get('')
       .reply(200, responseBody);
     expect(token.get(resource).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
@@ -65,7 +72,7 @@ describe('Token', function() {
   it('#get leading slash', function(done) {
     var path = '/baz';
     var token = new client.Token({ access_token: 'access token' });
-    nock([client.apiUrl, path].join(''), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+    nock([client.apiUrl, path].join(''), { reqheaders: requestHeaders(token) })
       .get('')
       .reply(200, responseBody);
     expect(token.get(path).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
@@ -74,7 +81,7 @@ describe('Token', function() {
   it('#get full url', function(done) {
     var fullUrl = [client.apiUrl, 'baz'].join('/');
     var token = new client.Token({ access_token: 'access token' });
-    nock(fullUrl, { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+    nock(fullUrl, { reqheaders: requestHeaders(token) })
       .get('')
       .reply(200, responseBody);
     expect(token.get(fullUrl).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
@@ -83,7 +90,7 @@ describe('Token', function() {
   it('#get successful response', function(done) {
     var path = 'baz';
     var token = new client.Token({ access_token: 'access token' });
-    nock([client.apiUrl, path].join('/'), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+    nock([client.apiUrl, path].join('/'), { reqheaders: requestHeaders(token) })
       .get('')
       .reply(200, responseBody);
     expect(token.get(path).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
@@ -92,7 +99,7 @@ describe('Token', function() {
   it('#get successful text response', function(done) {
     var path = 'baz';
     var token = new client.Token({ access_token: 'access token' });
-    nock([client.apiUrl, path].join('/'), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+    nock([client.apiUrl, path].join('/'), { reqheaders: requestHeaders(token) })
       .get('')
       .reply(200, textResponseBody);
     expect(token.get(path).then(toResponseBody)).to.eventually.deep.equal(textResponseBody).and.notify(done);
@@ -101,7 +108,7 @@ describe('Token', function() {
   it('#get error response', function(done) {
     var path = 'baz';
     var token = new client.Token({ access_token: 'access token' });
-    nock([client.apiUrl, path].join('/'), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+    nock([client.apiUrl, path].join('/'), { reqheaders: requestHeaders(token) })
       .get('')
       .reply(400, responseBody);
     expect(token.get(path).then(toResponseBody)).to.eventually.be.rejected.and.notify(done);
@@ -111,7 +118,7 @@ describe('Token', function() {
     var path = 'baz';
     var query = { foo: 'bar' };
     var token = new client.Token({ access_token: 'access token' });
-    nock([client.apiUrl, path].join('/'), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+    nock([client.apiUrl, path].join('/'), { reqheaders: requestHeaders(token) })
       .get('')
       .query(query)
       .reply(200, responseBody);
@@ -122,7 +129,7 @@ describe('Token', function() {
     var resourceHref = 'http://foo.bar/baz';
     var resource = { _links: { self: { href: resourceHref } } };
     var token = new client.Token({ access_token: 'access token' });
-    nock(resourceHref, { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+    nock(resourceHref, { reqheaders: requestHeaders(token) })
       .post('', requestBody)
       .reply(200, responseBody);
     expect(token.post(resource, requestBody).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
@@ -131,7 +138,7 @@ describe('Token', function() {
   it('#post leading slash', function(done) {
     var path = '/baz';
     var token = new client.Token({ access_token: 'access token' });
-    nock([client.apiUrl, path].join(''), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+    nock([client.apiUrl, path].join(''), { reqheaders: requestHeaders(token) })
       .post('', requestBody)
       .reply(200, responseBody);
     expect(token.post(path, requestBody).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
@@ -140,7 +147,7 @@ describe('Token', function() {
   it('#post full url', function(done) {
     var fullUrl = [client.apiUrl, 'baz'].join('/');
     var token = new client.Token({ access_token: 'access token' });
-    nock(fullUrl, { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+    nock(fullUrl, { reqheaders: requestHeaders(token) })
       .post('', requestBody)
       .reply(200, responseBody);
     expect(token.post(fullUrl, requestBody).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
@@ -149,7 +156,7 @@ describe('Token', function() {
   it('#post successful response', function(done) {
     var path = 'baz';
     var token = new client.Token({ access_token: 'access token' });
-    nock([client.apiUrl, path].join('/'), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+    nock([client.apiUrl, path].join('/'), { reqheaders: requestHeaders(token) })
       .post('', requestBody)
       .reply(200, responseBody);
     expect(token.post(path, requestBody).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
@@ -158,7 +165,7 @@ describe('Token', function() {
   it('#post successful text response', function(done) {
     var path = 'baz';
     var token = new client.Token({ access_token: 'access token' });
-    nock([client.apiUrl, path].join('/'), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+    nock([client.apiUrl, path].join('/'), { reqheaders: requestHeaders(token) })
       .post('', requestBody)
       .reply(200, textResponseBody);
     expect(token.post(path, requestBody).then(toResponseBody)).to.eventually.deep.equal(textResponseBody).and.notify(done);
@@ -167,7 +174,7 @@ describe('Token', function() {
   it('#post error response', function(done) {
     var path = 'baz';
     var token = new client.Token({ access_token: 'access token' });
-    nock([client.apiUrl, path].join('/'), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+    nock([client.apiUrl, path].join('/'), { reqheaders: requestHeaders(token) })
       .post('', requestBody)
       .reply(400, responseBody);
     expect(token.post(path, requestBody).then(toResponseBody)).to.eventually.be.rejected.and.notify(done);
@@ -176,7 +183,7 @@ describe('Token', function() {
   it('#post undefined body', function(done) {
     var path = 'baz';
     var token = new client.Token({ access_token: 'access token' });
-    nock([client.apiUrl, path].join('/'), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+    nock([client.apiUrl, path].join('/'), { reqheaders: requestHeaders(token) })
       .post('')
       .reply(200, responseBody);
     expect(token.post(path).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
@@ -186,7 +193,7 @@ describe('Token', function() {
     var path = 'baz';
     var token = new client.Token({ access_token: 'access token' });
     formDataRequestBody.getLength(function(_, length) {
-      nock([client.apiUrl, path].join('/'), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+      nock([client.apiUrl, path].join('/'), { reqheaders: requestHeaders(token) })
         .post('', bodyLengthEquals.bind(null, length))
         .reply(200, responseBody);
       expect(token.post(path, formDataRequestBody).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
@@ -197,7 +204,7 @@ describe('Token', function() {
     var resourceHref = 'http://foo.bar/baz';
     var resource = { _links: { self: { href: resourceHref } } };
     var token = new client.Token({ access_token: 'access token' });
-    nock(resourceHref, { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+    nock(resourceHref, { reqheaders: requestHeaders(token) })
       .delete('')
       .reply(200, responseBody);
     expect(token.delete(resource).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
@@ -206,7 +213,7 @@ describe('Token', function() {
   it('#delete leading slash', function(done) {
     var path = '/baz';
     var token = new client.Token({ access_token: 'access token' });
-    nock([client.apiUrl, path].join(''), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+    nock([client.apiUrl, path].join(''), { reqheaders: requestHeaders(token) })
       .delete('')
       .reply(200, responseBody);
     expect(token.delete(path).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
@@ -215,7 +222,7 @@ describe('Token', function() {
   it('#delete full url', function(done) {
     var fullUrl = [client.apiUrl, 'baz'].join('/');
     var token = new client.Token({ access_token: 'access token' });
-    nock(fullUrl, { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+    nock(fullUrl, { reqheaders: requestHeaders(token) })
       .delete('')
       .reply(200, responseBody);
     expect(token.delete(fullUrl).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
@@ -224,7 +231,7 @@ describe('Token', function() {
   it('#delete successful response', function(done) {
     var path = 'baz';
     var token = new client.Token({ access_token: 'access token' });
-    nock([client.apiUrl, path].join('/'), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+    nock([client.apiUrl, path].join('/'), { reqheaders: requestHeaders(token) })
       .delete('')
       .reply(200, responseBody);
     expect(token.delete(path).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
@@ -233,7 +240,7 @@ describe('Token', function() {
   it('#delete successful text response', function(done) {
     var path = 'baz';
     var token = new client.Token({ access_token: 'access token' });
-    nock([client.apiUrl, path].join('/'), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+    nock([client.apiUrl, path].join('/'), { reqheaders: requestHeaders(token) })
       .delete('')
       .reply(200, textResponseBody);
     expect(token.delete(path).then(toResponseBody)).to.eventually.deep.equal(textResponseBody).and.notify(done);
@@ -242,7 +249,7 @@ describe('Token', function() {
   it('#delete error response', function(done) {
     var path = 'baz';
     var token = new client.Token({ access_token: 'access token' });
-    nock([client.apiUrl, path].join('/'), { reqheaders: { accept: 'application/vnd.dwolla.v1.hal+json', Authorization: ['Bearer', token.access_token].join(' ') } })
+    nock([client.apiUrl, path].join('/'), { reqheaders: requestHeaders(token) })
       .delete('')
       .reply(400, responseBody);
     expect(token.delete(path).then(toResponseBody)).to.eventually.be.rejected.and.notify(done);
