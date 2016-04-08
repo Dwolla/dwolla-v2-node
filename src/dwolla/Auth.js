@@ -29,6 +29,7 @@ function requestToken(client, params) {
     method: 'POST',
     headers: {
       'content-type': 'application/x-www-form-urlencoded',
+      'user-agent': require('../../src/dwolla/userAgent'),
     },
     body: formurlencoded(
       assign({

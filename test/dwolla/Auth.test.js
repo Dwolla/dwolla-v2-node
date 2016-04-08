@@ -11,6 +11,10 @@ chai.use(chaiAsPromised);
 describe('Auth', function() {
   var dwolla = require('../../src/index');
   var client = new dwolla.Client({ id: 'client_id', secret: 'client_secret' });
+  var requestHeaders = {
+    'content-type': 'application/x-www-form-urlencoded',
+    'user-agent': require('../../src/dwolla/userAgent'),
+  };
 
   it('Auth#url', function() {
     var auth = new client.Auth();
@@ -64,7 +68,7 @@ describe('Auth', function() {
     var state = 'state';
     var code = 'code';
     var auth = new client.Auth({ state: state });
-    nock(client.tokenUrl, { reqheaders: { 'content-type': 'application/x-www-form-urlencoded' } })
+    nock(client.tokenUrl, { reqheaders: requestHeaders })
       .post('', { client_id: client.id, client_secret: client.secret, grant_type: 'authorization_code', code: code })
       .reply(200, {});
     expect(auth.callback({ state: state, code: code })).to.be.fulfilled.and.notify(done);
@@ -75,21 +79,21 @@ describe('Auth', function() {
     var code = 'code';
     var redirect_uri = 'redirect uri';
     var auth = new client.Auth({ redirect_uri: redirect_uri, state: state });
-    nock(client.tokenUrl, { reqheaders: { 'content-type': 'application/x-www-form-urlencoded' } })
+    nock(client.tokenUrl, { reqheaders: requestHeaders })
       .post('', { client_id: client.id, client_secret: client.secret, grant_type: 'authorization_code', code: code, redirect_uri: redirect_uri })
       .reply(200, { error: 'error' });
     expect(auth.callback({ state: state, code: code })).to.be.rejected.and.notify(done);
   });
 
   it('auth.client successful response', function(done) {
-    nock(client.tokenUrl, { reqheaders: { 'content-type': 'application/x-www-form-urlencoded' } })
+    nock(client.tokenUrl, { reqheaders: requestHeaders })
       .post('', { client_id: client.id, client_secret: client.secret, grant_type: 'client_credentials' })
       .reply(200, {});
     expect(client.auth.client()).to.be.fulfilled.and.notify(done);
   });
 
   it('auth.client error response', function(done) {
-    nock(client.tokenUrl, { reqheaders: { 'content-type': 'application/x-www-form-urlencoded' } })
+    nock(client.tokenUrl, { reqheaders: requestHeaders })
       .post('', { client_id: client.id, client_secret: client.secret, grant_type: 'client_credentials' })
       .reply(200, { error: 'error' });
     expect(client.auth.client()).to.be.rejected.and.notify(done);
@@ -97,7 +101,7 @@ describe('Auth', function() {
 
   it('auth.refresh successful response', function(done) {
     var token = new client.Token({ refresh_token: 'refresh token' });
-    nock(client.tokenUrl, { reqheaders: { 'content-type': 'application/x-www-form-urlencoded' } })
+    nock(client.tokenUrl, { reqheaders: requestHeaders })
       .post('', { client_id: client.id, client_secret: client.secret, grant_type: 'refresh_token', refresh_token: token.refresh_token })
       .reply(200, {});
     expect(client.auth.refresh(token)).to.be.fulfilled.and.notify(done);
@@ -105,7 +109,7 @@ describe('Auth', function() {
 
   it('auth.refresh error response', function(done) {
     var token = new client.Token({ refresh_token: 'refresh token' });
-    nock(client.tokenUrl, { reqheaders: { 'content-type': 'application/x-www-form-urlencoded' } })
+    nock(client.tokenUrl, { reqheaders: requestHeaders })
       .post('', { client_id: client.id, client_secret: client.secret, grant_type: 'refresh_token', refresh_token: token.refresh_token })
       .reply(200, { error: 'error' });
     expect(client.auth.refresh(token)).to.be.rejected.and.notify(done);
@@ -114,7 +118,7 @@ describe('Auth', function() {
   it('calls onGrant', function(done) {
     var onGrant = sinon.spy();
     var clientWithOnGrant = new dwolla.Client({ id: 'client_id', secret: 'client_secret', onGrant: onGrant });
-    nock(clientWithOnGrant.tokenUrl, { reqheaders: { 'content-type': 'application/x-www-form-urlencoded' } })
+    nock(clientWithOnGrant.tokenUrl, { reqheaders: requestHeaders })
       .post('', { client_id: clientWithOnGrant.id, client_secret: clientWithOnGrant.secret, grant_type: 'client_credentials' })
       .reply(200, {});
     expect(clientWithOnGrant.auth.client()).to.be.fulfilled.and.notify(function() {
