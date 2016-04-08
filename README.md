@@ -9,7 +9,7 @@ Dwolla V2 Node client. For the V1 Node client see [Dwolla/dwolla-node](https://g
 ## Installation
 
 ```
-npm install dwolla-v2-node
+npm install dwolla-v2
 ```
 
 ## `dwolla.Client`
