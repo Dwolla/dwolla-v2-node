@@ -74,10 +74,7 @@ client.auth.client()
     return appToken.get('webhook-subscriptions');
   })
   .then(function(res) {
-    return res.json();
-  })
-  .then(function(json) {
-    console.log(JSON.stringify(json));
+    console.log(JSON.stringify(res.body));
   });
 ```
 
@@ -118,10 +115,7 @@ auth.callback(req.query) // pass the code and state (if specified above) to the 
     return token.get('customers');
   })
   .then(function(res) {
-    return res.json();
-  })
-  .then(function(json) {
-    console.log(JSON.stringify(json));
+    console.log(JSON.stringify(res.body));
   });
 ```
 
@@ -137,10 +131,7 @@ client.auth.refresh(oldToken)
     return token.get('customers');
   })
   .then(function(res) {
-    return res.json();
-  })
-  .then(function(json) {
-    console.log(JSON.stringify(json));
+    console.log(JSON.stringify(res.body));
   });
 ```
 
