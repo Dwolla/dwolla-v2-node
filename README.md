@@ -175,7 +175,7 @@ var req = token.delete('resource');
 
 #### Setting headers
 
-To set additional headers on a request you can pass a `Hash` of headers as the 3rd argument.
+To set additional headers on a request you can pass an `object` as the 3rd argument.
 
 For example:
 
