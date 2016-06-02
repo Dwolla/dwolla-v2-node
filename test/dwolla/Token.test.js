@@ -2,6 +2,7 @@ var chai = require('chai');
 var expect = chai.expect;
 var nock = require('nock');
 var toFormData = require('../../src/util/toFormData');
+var assign = require('lodash/assign');
 
 var chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
@@ -17,12 +18,13 @@ function bodyLengthEquals(length, body) {
 describe('Token', function() {
   var Client = require('../../src/dwolla/Client');
   var client = new Client({ id: 'id', secret: 'secret' });
-  var requestHeaders = function(token) {
-    return {
+  var moreHeaders = { 'Idempotency-Key': 'foo' };
+  var requestHeaders = function(token, additionalHeaders) {
+    return assign({
       accept: 'application/vnd.dwolla.v1.hal+json',
       Authorization: ['Bearer', token.access_token].join(' '),
       'User-Agent': require('../../src/dwolla/userAgent'),
-    };
+    }, additionalHeaders);
   };
   var requestBody = { request: 'body' };
   var responseBody = { response: 'body' };
@@ -125,6 +127,17 @@ describe('Token', function() {
     expect(token.get(path, query).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
   });
 
+  it('#get headers', function(done) {
+    var path = 'baz';
+    var query = { foo: 'bar' };
+    var token = new client.Token({ access_token: 'access token' });
+    nock([client.apiUrl, path].join('/'), { reqheaders: requestHeaders(token, moreHeaders) })
+      .get('')
+      .query(query)
+      .reply(200, responseBody);
+    expect(token.get(path, query, moreHeaders).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
+  });
+
   it('#post resource object', function(done) {
     var resourceHref = 'http://foo.bar/baz';
     var resource = { _links: { self: { href: resourceHref } } };
@@ -187,6 +200,15 @@ describe('Token', function() {
       .post('')
       .reply(200, responseBody);
     expect(token.post(path).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
+  });
+
+  it('#post headers', function(done) {
+    var path = 'baz';
+    var token = new client.Token({ access_token: 'access token' });
+    nock([client.apiUrl, path].join('/'), { reqheaders: requestHeaders(token, moreHeaders) })
+      .post('')
+      .reply(200, responseBody);
+    expect(token.post(path, null, moreHeaders).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
   });
 
   it('#post form data body', function(done) {
@@ -253,5 +275,14 @@ describe('Token', function() {
       .delete('')
       .reply(400, responseBody);
     expect(token.delete(path).then(toResponseBody)).to.eventually.be.rejected.and.notify(done);
+  });
+
+  it('#delete headers', function(done) {
+    var path = 'baz';
+    var token = new client.Token({ access_token: 'access token' });
+    nock([client.apiUrl, path].join('/'), { reqheaders: requestHeaders(token, moreHeaders) })
+      .delete('')
+      .reply(400, responseBody);
+    expect(token.delete(path, null, moreHeaders).then(toResponseBody)).to.eventually.be.rejected.and.notify(done);
   });
 });

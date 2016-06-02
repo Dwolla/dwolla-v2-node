@@ -173,6 +173,18 @@ var req = token.put('resource', { foo: 'bar' });
 var req = token.delete('resource');
 ```
 
+#### Setting headers
+
+To set additional headers on a request you can pass a `Hash` of headers as the 3rd argument.
+
+For example:
+
+```javascript
+var req = token.post('customers',
+                     { firstName: "John", lastName: "Doe", email: "jd@doe.com" },
+                     { 'Idempotency-Key': 'a52fcf63-0730-41c3-96e8-7147b5d1fb01' });
+```
+
 ## Responses
 
 ```javascript
