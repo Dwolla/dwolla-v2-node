@@ -17,12 +17,12 @@ var Token = function(client, opts) {
   this.account_id = opts.account_id;
 };
 
-function getHeaders(token) {
-  return {
+function getHeaders(token, moreHeaders) {
+  return assign({
     Authorization: ['Bearer', token.access_token].join(' '),
     Accept: 'application/vnd.dwolla.v1.hal+json',
     'User-Agent': require('./userAgent'),
-  };
+  }, moreHeaders);
 }
 
 function getUrl(token, suppliedPath, suppliedQuery) {
@@ -67,25 +67,25 @@ function handleRequest(request) {
   });
 }
 
-Token.prototype.get = function(path, query) {
+Token.prototype.get = function(path, query, headers) {
   return handleRequest(
     fetch(
       getUrl(this, path, query),
       {
-        headers: getHeaders(this),
+        headers: getHeaders(this, headers),
       }
     )
   );
 };
 
-Token.prototype.post = function(path, body) {
+Token.prototype.post = function(path, body, headers) {
   return handleRequest(
     fetch(
       getUrl(this, path),
       {
         method: 'POST',
         headers: assign(
-          getHeaders(this),
+          getHeaders(this, headers),
           instanceOf(body, FormData) ? body.getHeaders() : { 'content-type': 'application/json' }
         ),
         body: instanceOf(body, FormData) ? body : JSON.stringify(body),
@@ -94,13 +94,13 @@ Token.prototype.post = function(path, body) {
   );
 };
 
-Token.prototype.delete = function(path, query) {
+Token.prototype.delete = function(path, query, headers) {
   return handleRequest(
     fetch(
       getUrl(this, path, query),
       {
         method: 'DELETE',
-        headers: getHeaders(this),
+        headers: getHeaders(this, headers),
       }
     )
   );
