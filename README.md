@@ -206,3 +206,5 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/Dwolla
 The gem is available as open source under the terms of the [MIT License](https://github.com/Dwolla/dwolla-v2-node).
 
 ## Changelog
+
+- **1.1.1** Handle promises differently to allow all rejections to be handled ([#5](/Dwolla/dwolla-v2-node/issues/5))
