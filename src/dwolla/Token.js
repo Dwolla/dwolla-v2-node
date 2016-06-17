@@ -40,8 +40,8 @@ function getUrl(token, suppliedPath, suppliedQuery) {
   return query ? [url, query].join('?') : url;
 }
 
-function handleResponse(resolve, reject, res) {
-  res.text().then(function(body) {
+function handleResponse(res) {
+  return res.text().then(function(body) {
     var parsedBody;
     try {
       parsedBody = JSON.parse(body);
@@ -53,57 +53,44 @@ function handleResponse(resolve, reject, res) {
       headers: res.headers,
       body: parsedBody,
     };
-    if (parsedRes.status < 400) {
-      resolve(parsedRes);
-    } else {
-      reject(parsedRes);
+    if (parsedRes.status >= 400) {
+      return Promise.reject(parsedRes);
     }
-  });
-}
-
-function handleRequest(request) {
-  return new Promise(function(resolve, reject) {
-    request.then(handleResponse.bind(null, resolve, reject));
+    return parsedRes;
   });
 }
 
 Token.prototype.get = function(path, query, headers) {
-  return handleRequest(
-    fetch(
-      getUrl(this, path, query),
-      {
-        headers: getHeaders(this, headers),
-      }
-    )
-  );
+  return fetch(
+    getUrl(this, path, query),
+    {
+      headers: getHeaders(this, headers),
+    }
+  ).then(handleResponse);
 };
 
 Token.prototype.post = function(path, body, headers) {
-  return handleRequest(
-    fetch(
-      getUrl(this, path),
-      {
-        method: 'POST',
-        headers: assign(
-          getHeaders(this, headers),
-          instanceOf(body, FormData) ? body.getHeaders() : { 'content-type': 'application/json' }
-        ),
-        body: instanceOf(body, FormData) ? body : JSON.stringify(body),
-      }
-    )
-  );
+  return fetch(
+    getUrl(this, path),
+    {
+      method: 'POST',
+      headers: assign(
+        getHeaders(this, headers),
+        instanceOf(body, FormData) ? body.getHeaders() : { 'content-type': 'application/json' }
+      ),
+      body: instanceOf(body, FormData) ? body : JSON.stringify(body),
+    }
+  ).then(handleResponse);
 };
 
 Token.prototype.delete = function(path, query, headers) {
-  return handleRequest(
-    fetch(
-      getUrl(this, path, query),
-      {
-        method: 'DELETE',
-        headers: getHeaders(this, headers),
-      }
-    )
-  );
+  return fetch(
+    getUrl(this, path, query),
+    {
+      method: 'DELETE',
+      headers: getHeaders(this, headers),
+    }
+  ).then(handleResponse);
 };
 
 module.exports = Token;
