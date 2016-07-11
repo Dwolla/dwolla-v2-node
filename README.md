@@ -163,7 +163,12 @@ var req = token.post('resource', { foo: 'bar' });
 
 // POST api.dwolla.com/resource multipart/form-data foo=...
 var body = new FormData();
-body.append('foo', fs.createReadStream('foo.jpg'), { filename: 'foo.jpg', contentType: 'image/jpeg', knownLength: 12345 });
+body.append('file', fs.createReadStream('mclovin.jpg'), {
+  filename: 'mclovin.jpg',
+  contentType: 'image/jpeg',
+  knownLength: fs.statSync('mclovin.jpg').size
+});
+body.append('documentType', 'license')
 var req = token.post('resource', body);
 
 // PUT api.dwolla.com/resource {"foo":"bar"}
