@@ -2,6 +2,7 @@ var fetch = require('node-fetch');
 var formurlencoded = require('form-urlencoded');
 var rejectEmptyKeys = require('../util/rejectEmptyKeys');
 var instanceOf = require('../util/instanceOf');
+var isFormData = require('../util/isFormData');
 var assign = require('lodash/assign');
 var FormData = require('form-data');
 var Promise = require('bluebird');
@@ -76,9 +77,9 @@ Token.prototype.post = function(path, body, headers) {
       method: 'POST',
       headers: assign(
         getHeaders(this, headers),
-        instanceOf(body, FormData) ? body.getHeaders() : { 'content-type': 'application/json' }
+        isFormData(body) ? body.getHeaders() : { 'content-type': 'application/json' }
       ),
-      body: instanceOf(body, FormData) ? body : JSON.stringify(body),
+      body: isFormData(body) ? body : JSON.stringify(body),
     }
   ).then(handleResponse);
 };

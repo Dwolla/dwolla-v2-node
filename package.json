@@ -1,6 +1,6 @@
 {
   "name": "dwolla-v2",
-  "version": "1.1.1",
+  "version": "1.1.2-pre1",
   "description": "Dwolla V2 API client",
   "main": "src/index.js",
   "scripts": {
@@ -22,11 +22,12 @@
     "sinon": "^1.17.3"
   },
   "dependencies": {
-    "bluebird": "^3.3.4",
-    "form-data": "^1.0.0-rc4",
-    "form-urlencoded": "^1.2.1",
-    "invariant": "^2.2.1",
-    "lodash": "^4.6.1",
-    "node-fetch": "^1.4.1"
+    "bluebird": "3.4.1",
+    "form-data": "1.0.0-rc4",
+    "form-urlencoded": "1.4.1",
+    "invariant": "2.2.1",
+    "is-stream": "1.1.0",
+    "lodash": "4.13.1",
+    "node-fetch": "1.5.3"
   }
 }
