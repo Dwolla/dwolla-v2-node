@@ -7,12 +7,19 @@ var toJson = require('../util/toJson');
 
 fetch.Promise = require('bluebird');
 
+function errorFrom(parsedRes) {
+  var error = new Error(JSON.stringify(parsedRes));
+  error.error = parsedRes.error;
+  error.error_description = parsedRes.error_description;
+  error.error_uri = parsedRes.error_uri;
+  return error;
+}
+
 function handleTokenResponse(client, res) {
   if (res.error) {
-    throw res;
-  } else {
-    return new client.Token(res);
+    return Promise.reject(errorFrom(res));
   }
+  return new client.Token(res);
 }
 
 function performOnGrantCallback(client, token) {

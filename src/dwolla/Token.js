@@ -1,10 +1,8 @@
 var fetch = require('node-fetch');
 var formurlencoded = require('form-urlencoded');
 var rejectEmptyKeys = require('../util/rejectEmptyKeys');
-var instanceOf = require('../util/instanceOf');
 var isFormData = require('../util/isFormData');
 var assign = require('lodash/assign');
-var FormData = require('form-data');
 var Promise = require('bluebird');
 
 fetch.Promise = Promise;
@@ -41,6 +39,14 @@ function getUrl(token, suppliedPath, suppliedQuery) {
   return query ? [url, query].join('?') : url;
 }
 
+function errorFrom(message, parsedRes) {
+  var error = new Error(message);
+  error.status = parsedRes.status;
+  error.headers = parsedRes.headers;
+  error.body = parsedRes.body;
+  return error;
+}
+
 function handleResponse(res) {
   return res.text().then(function(body) {
     var parsedBody;
@@ -55,7 +61,7 @@ function handleResponse(res) {
       body: parsedBody,
     };
     if (parsedRes.status >= 400) {
-      return Promise.reject(parsedRes);
+      return Promise.reject(errorFrom(body, parsedRes));
     }
     return parsedRes;
   });
