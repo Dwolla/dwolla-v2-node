@@ -1,13 +1,21 @@
 language: node_js
 node_js:
-  - "6"
-  - "5"
-  - "5.1"
-  - "4"
-  - "4.2"
-  - "4.1"
-  - "4.0"
-  - "0.12"
-  - "0.11"
-  - "0.10"
-  - "iojs"
+- '6'
+- '5'
+- '5.1'
+- '4'
+- '4.2'
+- '4.1'
+- '4.0'
+- '0.12'
+- '0.11'
+- '0.10'
+- iojs
+deploy:
+  provider: npm
+  email: api@dwolla.com
+  api_key:
+    secure: MiqDO0dFfIoU9Aq+zPbpqUnVDpPOxdB0IGplI7iVNSnVBqjF+evSoMdfrlUQxRnFX7ykDbcgzPiN4XROl0tbYUuQwofDH34bxlOxZAInW8EsXGPJ9CSrFjKH3973MD8eohJaqIQojce0TJuPcDLMWJjNrM69pYgHMj4sXRCbZ381knE08qgj0gw9OV5KYYAkLTql3p4F3ong06WYwhpLJ/J6wI2Ln8yKL1F3UVnk9oQPOmIJoX3YTuDYGT5qT2gIzWv+jMLcz0puSuj9Y2JbDgbjbTv9tJ0g9F1SZttmF77zUCAUSHw4ImpXImCh61Z3tmbR5PxZq/uAq/fsSLny7E1LSb2d2Jj75qe4a4jkLpY6oU54/nD9eYpcVWj1BNdfrguzOPQOk4jEJ1dQO/1+4xmjz377Y08ztfsk+1UhqyeBEp8btRrOdaz3IVwMedHTzGTZV722pWOv76V2MhNdLOhpoomFmBRGysho4YCugRKimfroA6WqCUOEuq0fr+BzLO9EHl0vZrOZe+jDwXY6JA5XAOZSDSiQRUU/Aav5FscgixrZ4JUcQS6mblIqB/3RHjilC1n4/EgMqBPbwLqAwR3m+0qfClg2HIbizPANVumf+i5EmRyeA0GEdPJ7Ebsbhtalt0/2b8tked4rBW+K6CNzxQZ9/E60mGKgfLTJJVw=
+  on:
+    tags: true
+    repo: Dwolla/dwolla-v2-node
