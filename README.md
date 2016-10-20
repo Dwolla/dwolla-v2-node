@@ -41,7 +41,7 @@ var client = new dwolla.Client({
 
 ### Configuring an onGrant callback (optional)
 
-An `onGrant` callback is useful for storing new tokens when they are granted. The `on_grant`
+An `onGrant` callback is useful for storing new tokens when they are granted. The `onGrant`
 callback is called with the `Token` that was just granted by the server and must return a `Promise`.
 
 ```javascript
@@ -51,7 +51,7 @@ var client = new dwolla.Client({
   id: process.env.DWOLLA_ID,
   secret: process.env.DWOLLA_SECRET,
   onGrant: function(token) {
-    return new Promise(...);
+    return new Promise(...); // here you can return a Promise that saves a token to your database
   },
 });
 ```
@@ -67,6 +67,10 @@ belong to an application include: `webhook-subscriptions`, `events`, and `webhoo
 tokens can be created using the [`client_credentials`][client_credentials] OAuth grant type:
 
 [client_credentials]: https://tools.ietf.org/html/rfc6749#section-4.4
+
+**Note:** If an application has the `ManageCustomers` scope enabled, it can also be used to access
+the API for White Label Customer related endpoints. Keep in mind, the application must belong to
+same Dwolla account that will be used when creating and managing White Label Customers in the API.
 
 ```javascript
 client.auth.client()
@@ -110,7 +114,7 @@ var auth = new client.Auth({
   state: getRandomHex(), // optional - https://tools.ietf.org/html/rfc6749#section-10.12
 });
 // redirect to `auth.url`
-auth.callback(req.query) // pass the code and state (if specified above) to the callback
+auth.callback(req.query) // pass the code and state (optional) to the callback
   .then(function(token) {
     return token.get('customers');
   })
@@ -135,9 +139,9 @@ client.auth.refresh(oldToken)
   });
 ```
 
-### Initializing tokens:
+### Initializing pre-existing tokens:
 
-`DwollaV2::Token`s can be initialized with the following attributes:
+`Token`s can be initialized with the following attributes:
 
 ```javascript
 new client.Token({
@@ -156,10 +160,10 @@ promises containing a response object detailed in the [next section](#responses)
 
 ```javascript
 // GET api.dwolla.com/resource?foo=bar
-var req = token.get('resource', { foo: 'bar' });
+token.get('resource', { foo: 'bar' });
 
 // POST api.dwolla.com/resource {"foo":"bar"}
-var req = token.post('resource', { foo: 'bar' });
+token.post('resource', { foo: 'bar' });
 
 // POST api.dwolla.com/resource multipart/form-data foo=...
 var body = new FormData();
@@ -169,13 +173,13 @@ body.append('file', fs.createReadStream('mclovin.jpg'), {
   knownLength: fs.statSync('mclovin.jpg').size
 });
 body.append('documentType', 'license')
-var req = token.post('resource', body);
+token.post('resource', body);
 
 // PUT api.dwolla.com/resource {"foo":"bar"}
-var req = token.put('resource', { foo: 'bar' });
+token.put('resource', { foo: 'bar' });
 
 // DELETE api.dwolla.com/resource
-var req = token.delete('resource');
+token.delete('resource');
 ```
 
 #### Setting headers
@@ -185,19 +189,19 @@ To set additional headers on a request you can pass an `object` as the 3rd argum
 For example:
 
 ```javascript
-var req = token.post('customers',
-                     { firstName: "John", lastName: "Doe", email: "jd@doe.com" },
-                     { 'Idempotency-Key': 'a52fcf63-0730-41c3-96e8-7147b5d1fb01' });
+token.post('customers',
+           { firstName: 'John', lastName: 'Doe', email: 'jd@doe.com' },
+           { 'Idempotency-Key': 'a52fcf63-0730-41c3-96e8-7147b5d1fb01' });
 ```
 
 ## Responses
 
 ```javascript
-req.then(function(successfulResponse) {
+token.get('customers').then(function(res) {
   // res.status   => 200
   // res.headers  => Headers { ... }
   // res.body     => Object or String depending on response type
-}, function(errorResponse) {
+}, function(error) {
   // when the server return a status >= 400
 });
 ```
