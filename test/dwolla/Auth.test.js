@@ -48,6 +48,22 @@ describe('Auth', function() {
     assert.equal(state, auth.state);
   });
 
+  it('Auth#url with verified_account', function() {
+    var verified_account = true;
+    var auth = new client.Auth({ verified_account: verified_account });
+    var expectedQuery = formurlencoded({ response_type: 'code', client_id: client.id, verified_account: verified_account });
+    assert.equal(['https://www.dwolla.com/oauth/v2/authenticate', expectedQuery].join('?'), auth.url);
+    assert.equal(verified_account, auth.verified_account);
+  });
+
+  it('Auth#url with dwolla_landing', function() {
+    var dwolla_landing = 'register';
+    var auth = new client.Auth({ dwolla_landing: dwolla_landing });
+    var expectedQuery = formurlencoded({ response_type: 'code', client_id: client.id, dwolla_landing: dwolla_landing });
+    assert.equal(['https://www.dwolla.com/oauth/v2/authenticate', expectedQuery].join('?'), auth.url);
+    assert.equal(dwolla_landing, auth.dwolla_landing);
+  });
+
   it('Auth#callback throws error with bad state', function() {
     var state = 'state';
     var auth = new client.Auth({ state: state });
