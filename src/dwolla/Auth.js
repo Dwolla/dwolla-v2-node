@@ -65,6 +65,8 @@ function query(client, opts) {
       redirect_uri: opts.redirect_uri,
       scope: opts.scope,
       state: opts.state,
+      verified_account: opts.verified_account,
+      dwolla_landing: opts.dwolla_landing,
     })
   );
 }
@@ -77,6 +79,8 @@ function AuthClass(client, opts) {
   this.redirect_uri = opts.redirect_uri;
   this.scope = opts.scope;
   this.state = opts.state;
+  this.verified_account = opts.verified_account;
+  this.dwolla_landing = opts.dwolla_landing;
   this.url = [client.authUrl, query(client, opts)].join('?');
 }
 

@@ -112,9 +112,13 @@ var auth = new client.Auth({
   redirect_uri: 'http://yoursite.com/callback',
   scope: 'ManageCustomers',
   state: getRandomHex(), // optional - https://tools.ietf.org/html/rfc6749#section-10.12
+  verified_account: true, // optional
+  dwolla_landing: 'register', // optional
 });
+
 // redirect to `auth.url`
-auth.callback(req.query) // pass the code and state (optional) to the callback
+
+auth.callback(req.query) // pass the code and optional state to the callback
   .then(function(token) {
     return token.get('customers');
   })
@@ -216,6 +220,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Changelog
 
+- **1.2.1** Add support for `verified_account` and `dwolla_landing` auth flags
 - **1.2.0** Reject promises with Errors instead of plain objects ([#8](/Dwolla/dwolla-v2-node/issues/8))
 - **1.1.2** Fix issue uploading files ([#4](/Dwolla/dwolla-v2-node/issues/4))
 - **1.1.1** Handle promises differently to allow all rejections to be handled ([#5](/Dwolla/dwolla-v2-node/issues/5))
