@@ -216,6 +216,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Changelog
 
+- **1.2.2** Upgrade `node-fetch` dependency to fix `form-data` compatibility ([#15][/Dwolla/dwolla-v2-node/issues/15])
 - **1.2.1** Add support for `verified_account` and `dwolla_landing` auth flags
 - **1.2.0** Reject promises with Errors instead of plain objects ([#8](/Dwolla/dwolla-v2-node/issues/8))
 - **1.1.2** Fix issue uploading files ([#4](/Dwolla/dwolla-v2-node/issues/4))
