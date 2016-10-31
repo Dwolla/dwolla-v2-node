@@ -95,10 +95,11 @@ describe('Auth', function() {
     var code = 'code';
     var redirect_uri = 'redirect uri';
     var auth = new client.Auth({ redirect_uri: redirect_uri, state: state });
+    var error = { error: 'error' };
     nock(client.tokenUrl, { reqheaders: requestHeaders })
       .post('', { client_id: client.id, client_secret: client.secret, grant_type: 'authorization_code', code: code, redirect_uri: redirect_uri })
-      .reply(200, { error: 'error' });
-    expect(auth.callback({ state: state, code: code })).to.be.rejected.and.notify(done);
+      .reply(200, error);
+    expect(auth.callback({ state: state, code: code })).to.be.rejectedWith(error).and.notify(done);
   });
 
   it('auth.client successful response', function(done) {
@@ -109,10 +110,11 @@ describe('Auth', function() {
   });
 
   it('auth.client error response', function(done) {
+    var error = { error: 'error' }
     nock(client.tokenUrl, { reqheaders: requestHeaders })
       .post('', { client_id: client.id, client_secret: client.secret, grant_type: 'client_credentials' })
-      .reply(200, { error: 'error' });
-    expect(client.auth.client()).to.be.rejected.and.notify(done);
+      .reply(200, error);
+    expect(client.auth.client()).to.be.rejectedWith(error).and.notify(done);
   });
 
   it('auth.refresh successful response', function(done) {
@@ -124,11 +126,12 @@ describe('Auth', function() {
   });
 
   it('auth.refresh error response', function(done) {
+    var error = { error: 'error' };
     var token = new client.Token({ refresh_token: 'refresh token' });
     nock(client.tokenUrl, { reqheaders: requestHeaders })
       .post('', { client_id: client.id, client_secret: client.secret, grant_type: 'refresh_token', refresh_token: token.refresh_token })
-      .reply(200, { error: 'error' });
-    expect(client.auth.refresh(token)).to.be.rejected.and.notify(done);
+      .reply(200, error);
+    expect(client.auth.refresh(token)).to.be.rejectedWith(error).and.notify(done);
   });
 
   it('calls onGrant', function(done) {
