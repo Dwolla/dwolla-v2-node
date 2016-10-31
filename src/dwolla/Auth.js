@@ -4,8 +4,9 @@ var assign = require('lodash/assign');
 var invariant = require('invariant');
 var rejectEmptyKeys = require('../util/rejectEmptyKeys');
 var toJson = require('../util/toJson');
+var Promise = require('bluebird');
 
-fetch.Promise = require('bluebird');
+fetch.Promise = Promise;
 
 function errorFrom(parsedRes) {
   var error = new Error(JSON.stringify(parsedRes));
