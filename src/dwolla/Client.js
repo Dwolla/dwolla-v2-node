@@ -21,12 +21,12 @@ var ENVIRONMENTS = {
 function Client(opts) {
   invariant(typeof opts === 'object', 'First argument must be an object.');
 
-  this.id = opts.id;
+  this.id = this.key = opts.id || opts.key;
   this.secret = opts.secret;
   this.environment = opts.environment || DEFAULT_ENVIRONMENT;
   this.onGrant = opts.onGrant;
 
-  invariant(typeof opts.id === 'string', 'id is required.');
+  invariant(typeof opts.id === 'string' || typeof opts.key === 'string', 'key is required.');
   invariant(typeof opts.secret === 'string', 'secret is required.');
   invariant(this.environment in ENVIRONMENTS, 'Invalid environment.');
   invariant(isOneOfTypes(opts.onGrant, ['undefined', 'function']), 'Invalid onGrant.');
