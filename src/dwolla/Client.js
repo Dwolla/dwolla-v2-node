@@ -12,9 +12,9 @@ var ENVIRONMENTS = {
     apiUrl: 'https://api.dwolla.com',
   },
   sandbox: {
-    authUrl: 'https://uat.dwolla.com/oauth/v2/authenticate',
-    tokenUrl: 'https://uat.dwolla.com/oauth/v2/token',
-    apiUrl: 'https://api-uat.dwolla.com',
+    authUrl: 'https://sandbox.dwolla.com/oauth/v2/authenticate',
+    tokenUrl: 'https://sandbox.dwolla.com/oauth/v2/token',
+    apiUrl: 'https://api-sandbox.dwolla.com',
   },
 };
 

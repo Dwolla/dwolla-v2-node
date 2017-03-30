@@ -92,7 +92,7 @@ to an account include `customers`, `funding-sources`, `documents`, `mass-payment
 `transfers`, and `on-demand-authorizations`.
 
 There are two ways to get an account token. One is by generating a token at
-https://uat.dwolla.com/applications (sandbox) or https://www.dwolla.com/applications (production).
+https://sandbox.dwolla.com/applications (Sandbox) or https://www.dwolla.com/applications (Production).
 
 You can instantiate a generated token by doing the following:
 
@@ -220,6 +220,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Changelog
 
+- **1.3.1** Update sandbox URLs from uat => sandbox.
 - **1.3.0** Refer to Client id as key.
 - **1.2.3** Use Bluebird Promise in Auth to prevent Promise undefined error.
 - **1.2.2** Upgrade `node-fetch` dependency to fix `form-data` compatibility ([#15][/Dwolla/dwolla-v2-node/issues/15])
