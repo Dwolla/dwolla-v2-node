@@ -33,7 +33,7 @@ function getUrl(token, suppliedPath, suppliedQuery) {
   } else if (suppliedPath.indexOf('/') === 0) {
     url = [token.client.apiUrl, suppliedPath].join('');
   } else {
-    url = [token.client.apiUrl, suppliedPath].join('/');
+    url = [token.client.apiUrl, suppliedPath.replace(/^https?:\/\/[^\/]*\//, '')].join('/');
   }
   var query = formurlencoded(rejectEmptyKeys(suppliedQuery || {}));
   return query ? [url, query].join('?') : url;

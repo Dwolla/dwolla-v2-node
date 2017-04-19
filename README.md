@@ -220,6 +220,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Changelog
 
+- **1.3.2** Strip domain from URLs provided to `token.*` methods.
 - **1.3.1** Update sandbox URLs from uat => sandbox.
 - **1.3.0** Refer to Client id as key.
 - **1.2.3** Use Bluebird Promise in Auth to prevent Promise undefined error.
