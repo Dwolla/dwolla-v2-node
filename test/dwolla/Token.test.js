@@ -89,6 +89,16 @@ describe('Token', function() {
     expect(token.get(fullUrl).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
   });
 
+  it('#get other domain', function(done) {
+    var fullUrl = [client.apiUrl, 'baz'].join('/');
+    var otherUrl = ['https://foo.com', 'baz'].join('/');
+    var token = new client.Token({ access_token: 'access token' });
+    nock(fullUrl, { reqheaders: requestHeaders(token) })
+      .get('')
+      .reply(200, responseBody);
+    expect(token.get(otherUrl).then(toResponseBody)).to.eventually.deep.equal(responseBody).and.notify(done);
+  });
+
   it('#get successful response', function(done) {
     var path = 'baz';
     var token = new client.Token({ access_token: 'access token' });
