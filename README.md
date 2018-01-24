@@ -2,11 +2,13 @@
 
 ![Build Status](https://travis-ci.org/Dwolla/dwolla-v2-node.svg)
 
-Dwolla V2 Node client. For the V1 Node client see [Dwolla/dwolla-node](https://github.com/Dwolla/dwolla-node).
+Dwolla V2 Node client.
 
 [API Documentation](https://docsv2.dwolla.com)
 
 ## Installation
+
+`dwolla-v2` is available on [NPM](https://www.npmjs.com/package/dwolla-v2).
 
 ```
 npm install dwolla-v2
@@ -58,24 +60,18 @@ var client = new dwolla.Client({
 
 ## `client.Token`
 
-Tokens can be used to make requests to the Dwolla V2 API. There are two types of tokens:
+Tokens can be used to make requests to the Dwolla V2 API.
 
 ### Application tokens
 
-Application tokens are used to access the API on behalf of a consumer application. API resources that
-belong to an application include: `webhook-subscriptions`, `events`, and `webhooks`. Application
-tokens can be created using the [`client_credentials`][client_credentials] OAuth grant type:
+Application access tokens are used to authenticate against the API on behalf of a consumer application. Application tokens can be used to access resources in the API that either belong to the application itself (`webhooks`, `events`, `webhook-subscriptions`) or the partner Account that owns the consumer application (`accounts`, `customers`, `funding-sources`, etc.). Application tokens are obtained by using the [`client_credentials`][client_credentials] OAuth grant type:
 
 [client_credentials]: https://tools.ietf.org/html/rfc6749#section-4.4
-
-**Note:** If an application has the `ManageCustomers` scope enabled, it can also be used to access
-the API for White Label Customer related endpoints. Keep in mind, the application must belong to
-same Dwolla account that will be used when creating and managing White Label Customers in the API.
 
 ```javascript
 client.auth.client()
   .then(function(appToken) {
-    return appToken.get('webhook-subscriptions');
+    return appToken.get('/');
   })
   .then(function(res) {
     console.log(JSON.stringify(res.body));
@@ -85,64 +81,6 @@ client.auth.client()
 *Application tokens do not include a `refresh_token`. When an application token expires, generate
 a new one using `client.auth.client()`.*
 
-### Account tokens
-
-Account tokens are used to access the API on behalf of a Dwolla account. API resources that belong
-to an account include `customers`, `funding-sources`, `documents`, `mass-payments`, `mass-payment-items`,
-`transfers`, and `on-demand-authorizations`.
-
-There are two ways to get an account token. One is by generating a token at
-https://sandbox.dwolla.com/applications (Sandbox) or https://www.dwolla.com/applications (Production).
-
-You can instantiate a generated token by doing the following:
-
-```javascript
-var accountToken = new client.Token({ access_token: "...", refresh_token: "..." });
-```
-
-The other way to get an account token is using the [`authorization_code`][authorization_code]
-OAuth grant type. This flow works by redirecting a user to dwolla.com in order to get authorization
-and sending them back to your website with an authorization code which can be exchanged for a token.
-For example:
-
-[authorization_code]: https://tools.ietf.org/html/rfc6749#section-4.1
-
-```javascript
-var auth = new client.Auth({
-  redirect_uri: 'http://yoursite.com/callback',
-  scope: 'ManageCustomers',
-  state: getRandomHex(), // optional - https://tools.ietf.org/html/rfc6749#section-10.12
-  verified_account: true, // optional
-  dwolla_landing: 'register', // optional
-});
-
-// redirect to `auth.url`
-
-auth.callback(req.query) // pass the code and optional state to the callback
-  .then(function(token) {
-    return token.get('customers');
-  })
-  .then(function(res) {
-    console.log(JSON.stringify(res.body));
-  });
-```
-
-### Refreshing tokens
-
-Tokens with `refresh_token`s can be refreshed using `client.auth.refresh(token)`, which takes a
-`Token` as its first argument and returns a promise containing a new token.
-
-```javascript
-var oldToken = new client.Token({ refresh_token: 'sHzEauv7FVpga2BSHVecKqFmCUfuhbBa4JRuClFuYa5vUSUdhL' });
-client.auth.refresh(oldToken)
-  .then(function(token) {
-    return token.get('customers');
-  })
-  .then(function(res) {
-    console.log(JSON.stringify(res.body));
-  });
-```
-
 ### Initializing pre-existing tokens:
 
 `Token`s can be initialized with the following attributes:
@@ -150,10 +88,7 @@ client.auth.refresh(oldToken)
 ```javascript
 new client.Token({
   access_token: "...",
-  refresh_token: "...",
-  expires_in: 123,
-  scope: "...",
-  account_id: "..."
+  expires_in: 123
 });
 ```
 
