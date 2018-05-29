@@ -1,15 +1,13 @@
 {
   "name": "dwolla-v2",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Dwolla V2 API client",
   "main": "src/index.js",
   "scripts": {
     "test": "NODE_ENV=test mocha test/**",
     "eslint": "eslint src/ test/"
   },
-  "keywords": [
-    "Dwolla"
-  ],
+  "keywords": ["Dwolla"],
   "author": "Stephen Ausman <stephen@dwolla.com>",
   "license": "MIT",
   "devDependencies": {
