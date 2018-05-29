@@ -155,6 +155,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Changelog
 
+- **1.3.3** Update lodash to avoid security vulnerability ([#25](/Dwolla/dwolla-v2-node/issues/25) - Thanks @bold-d!).
 - **1.3.2** Strip domain from URLs provided to `token.*` methods.
 - **1.3.1** Update sandbox URLs from uat => sandbox.
 - **1.3.0** Refer to Client id as key.
