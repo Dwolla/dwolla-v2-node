@@ -77,7 +77,7 @@ describe('Auth', function() {
     var auth = new client.Auth();
     assert.throws(function() {
       auth.callback(errorParams);
-    }, errorParams);
+    });
   });
 
   it('Auth#callback successful response', function(done) {
