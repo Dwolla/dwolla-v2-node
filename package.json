@@ -7,7 +7,9 @@
     "test": "NODE_ENV=test mocha test/**",
     "eslint": "eslint src/ test/"
   },
-  "keywords": ["Dwolla"],
+  "keywords": [
+    "Dwolla"
+  ],
   "author": "Stephen Ausman <stephen@dwolla.com>",
   "license": "MIT",
   "devDependencies": {
@@ -16,8 +18,8 @@
     "chai-as-promised": "5.3.0",
     "eslint": "2.5.3",
     "form-data": "2.1.1",
-    "mocha": "2.4.5",
-    "nock": "7.7.3",
+    "mocha": "^5.2.0",
+    "nock": "^9.6.1",
     "sinon": "1.17.3"
   },
   "dependencies": {
