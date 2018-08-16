@@ -1,5 +1,4 @@
 {
-  "extends": "@shinnn/eslint-config-node-legacy",
   "env": {
     "node": true,
     "mocha": true
