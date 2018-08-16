@@ -2,7 +2,7 @@ var chai = require('chai');
 var assert = chai.assert;
 var expect = chai.expect;
 var nock = require('nock');
-var formurlencoded = require('form-urlencoded');
+var formurlencoded = require('form-urlencoded').default;
 var sinon = require('sinon');
 
 var chaiAsPromised = require('chai-as-promised');

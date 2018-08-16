@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "bluebird": "3.5.1",
-    "form-urlencoded": "1.4.1",
+    "form-urlencoded": "3.0.0",
     "invariant": "2.2.1",
     "is-stream": "1.1.0",
     "lodash": "4.17.10",
