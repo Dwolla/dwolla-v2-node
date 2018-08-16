@@ -28,6 +28,6 @@
     "invariant": "2.2.4",
     "is-stream": "1.1.0",
     "lodash": "4.17.10",
-    "node-fetch": "1.6.3"
+    "node-fetch": "2.2.0"
   }
 }
