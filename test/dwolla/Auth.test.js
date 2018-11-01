@@ -2,7 +2,7 @@ var chai = require('chai');
 var assert = chai.assert;
 var expect = chai.expect;
 var nock = require('nock');
-var formurlencoded = require('form-urlencoded');
+var formurlencoded = require('form-urlencoded').default;
 var sinon = require('sinon');
 
 var chaiAsPromised = require('chai-as-promised');
@@ -77,7 +77,7 @@ describe('Auth', function() {
     var auth = new client.Auth();
     assert.throws(function() {
       auth.callback(errorParams);
-    }, errorParams);
+    });
   });
 
   it('Auth#callback successful response', function(done) {

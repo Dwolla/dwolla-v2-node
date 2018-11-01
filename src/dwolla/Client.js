@@ -8,12 +8,12 @@ var DEFAULT_ENVIRONMENT = 'production';
 var ENVIRONMENTS = {
   production: {
     authUrl: 'https://www.dwolla.com/oauth/v2/authenticate',
-    tokenUrl: 'https://www.dwolla.com/oauth/v2/token',
+    tokenUrl: 'https://accounts.dwolla.com/token',
     apiUrl: 'https://api.dwolla.com',
   },
   sandbox: {
     authUrl: 'https://sandbox.dwolla.com/oauth/v2/authenticate',
-    tokenUrl: 'https://sandbox.dwolla.com/oauth/v2/token',
+    tokenUrl: 'https://accounts-sandbox.dwolla.com/token',
     apiUrl: 'https://api-sandbox.dwolla.com',
   },
 };

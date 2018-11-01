@@ -1,6 +1,9 @@
 language: node_js
 
 node_js:
+- '10'
+- '9'
+- '8'
 - '7'
 - '6'
 - '5'
@@ -9,10 +12,7 @@ node_js:
 - '4.2'
 - '4.1'
 - '4.0'
-- '0.12'
-- '0.11'
-- '0.10'
-- iojs
+
 deploy:
   provider: npm
   email: api@dwolla.com
