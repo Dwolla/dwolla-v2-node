@@ -1,6 +1,6 @@
 {
   "name": "dwolla-v2",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Dwolla V2 API client",
   "main": "src/index.js",
   "scripts": {
@@ -15,7 +15,7 @@
   "devDependencies": {
     "chai": "4.1.2",
     "chai-as-promised": "7.1.1",
-    "eslint": "5.3.0",
+    "eslint": "^5.13.0",
     "form-data": "2.3.2",
     "mocha": "^5.2.0",
     "nock": "^9.6.1",
@@ -26,7 +26,7 @@
     "form-urlencoded": "3.0.0",
     "invariant": "2.2.4",
     "is-stream": "1.1.0",
-    "lodash": "4.17.10",
+    "lodash": "^4.17.11",
     "node-fetch": "2.2.0"
   }
 }
