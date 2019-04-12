@@ -5,7 +5,10 @@
   "main": "src/index.js",
   "scripts": {
     "test": "NODE_ENV=test mocha test/**",
-    "eslint": "eslint src/ test/"
+    "eslint": "eslint src/ test/",
+    "prettier-check": "npm run _prettier -- --check",
+    "prettier-write": "npm run _prettier -- --write",
+    "_prettier": "prettier src/*.js src/**/*.js test/*.js test/**/*.js"
   },
   "keywords": [
     "Dwolla"
@@ -19,6 +22,8 @@
     "form-data": "^2.3.2",
     "mocha": "^5.2.0",
     "nock": "^9.6.1",
+    "npm-check": "^5.9.0",
+    "prettier": "^1.16.4",
     "sinon": "^6.1.5"
   },
   "dependencies": {
