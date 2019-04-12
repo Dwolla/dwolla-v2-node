@@ -1,10 +1,10 @@
-var fetch = require('node-fetch');
-var formurlencoded = require('form-urlencoded').default;
-var assign = require('lodash/assign');
-var invariant = require('invariant');
-var rejectEmptyKeys = require('../util/rejectEmptyKeys');
-var toJson = require('../util/toJson');
-var Promise = require('bluebird');
+var fetch = require("node-fetch");
+var formurlencoded = require("form-urlencoded").default;
+var assign = require("lodash/assign");
+var invariant = require("invariant");
+var rejectEmptyKeys = require("../util/rejectEmptyKeys");
+var toJson = require("../util/toJson");
+var Promise = require("bluebird");
 
 fetch.Promise = Promise;
 
@@ -34,17 +34,20 @@ function performOnGrantCallback(client, token) {
 
 function requestToken(client, params) {
   return fetch(client.tokenUrl, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'user-agent': require('../../src/dwolla/userAgent'),
+      "content-type": "application/x-www-form-urlencoded",
+      "user-agent": require("../../src/dwolla/userAgent")
     },
     body: formurlencoded(
-      assign({
-        client_id: client.id,
-        client_secret: client.secret,
-      }, params)
-    ),
+      assign(
+        {
+          client_id: client.id,
+          client_secret: client.secret
+        },
+        params
+      )
+    )
   })
     .then(toJson)
     .then(handleTokenResponse.bind(null, client))
@@ -53,27 +56,27 @@ function requestToken(client, params) {
 
 function refreshGrant(client, token) {
   return requestToken(client, {
-    grant_type: 'refresh_token',
-    refresh_token: token.refresh_token,
+    grant_type: "refresh_token",
+    refresh_token: token.refresh_token
   });
 }
 
 function query(client, opts) {
   return formurlencoded(
     rejectEmptyKeys({
-      response_type: 'code',
+      response_type: "code",
       client_id: client.id,
       redirect_uri: opts.redirect_uri,
       scope: opts.scope,
       state: opts.state,
       verified_account: opts.verified_account,
-      dwolla_landing: opts.dwolla_landing,
+      dwolla_landing: opts.dwolla_landing
     })
   );
 }
 
 function AuthClass(client, opts) {
-  if (typeof opts === 'undefined') {
+  if (typeof opts === "undefined") {
     opts = {};
   }
   this.client = client;
@@ -82,22 +85,19 @@ function AuthClass(client, opts) {
   this.state = opts.state;
   this.verified_account = opts.verified_account;
   this.dwolla_landing = opts.dwolla_landing;
-  this.url = [client.authUrl, query(client, opts)].join('?');
+  this.url = [client.authUrl, query(client, opts)].join("?");
 }
 
 AuthClass.prototype.callback = function(params) {
-  invariant(params.state === this.state, 'Invalid state parameter.');
+  invariant(params.state === this.state, "Invalid state parameter.");
   if (params.error) {
     throw params;
   }
-  return requestToken(
-    this.client,
-    {
-      grant_type: 'authorization_code',
-      code: params.code,
-      redirect_uri: this.redirect_uri,
-    }
-  );
+  return requestToken(this.client, {
+    grant_type: "authorization_code",
+    code: params.code,
+    redirect_uri: this.redirect_uri
+  });
 };
 
 module.exports = function(client) {
@@ -105,9 +105,9 @@ module.exports = function(client) {
     klass: AuthClass.bind(null, client),
     methods: {
       client: requestToken.bind(null, client, {
-        grant_type: 'client_credentials',
+        grant_type: "client_credentials"
       }),
-      refresh: refreshGrant.bind(null, client),
-    },
+      refresh: refreshGrant.bind(null, client)
+    }
   };
 };

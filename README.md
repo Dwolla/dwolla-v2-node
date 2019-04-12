@@ -11,99 +11,41 @@ Dwolla V2 Node client.
 `dwolla-v2` is available on [NPM](https://www.npmjs.com/package/dwolla-v2).
 
 ```
-npm install dwolla-v2
+npm install dwolla-v2 --save
 ```
 
-## `dwolla.Client`
-
-### Basic usage
+## Getting started
 
 ```javascript
-var dwolla = require("dwolla-v2");
+var Client = require("dwolla-v2").Client;
 
-var client = new dwolla.Client({
-  key: process.env.DWOLLA_APP_KEY,
-  secret: process.env.DWOLLA_APP_SECRET
-});
-```
-
-### Using the sandbox environment (optional)
-
-```javascript
-var dwolla = require("dwolla-v2");
-
-var client = new dwolla.Client({
+var dwolla = new Client({
   key: process.env.DWOLLA_APP_KEY,
   secret: process.env.DWOLLA_APP_SECRET,
-  environment: "sandbox"
+  environment: "sandbox" // defaults to 'production'
 });
 ```
 
-_Note: `environment` defaults to `production`._
+## Making requests
 
-### Configuring an onGrant callback (optional)
-
-An `onGrant` callback is useful for storing new tokens when they are granted. The `onGrant`
-callback is called with the `Token` that was just granted by the server and must return a `Promise`.
-
-```javascript
-var dwolla = require('dwolla-v2');
-
-var client = new dwolla.Client({
-  key: process.env.DWOLLA_APP_KEY,
-  secret: process.env.DWOLLA_APP_SECRET,
-  onGrant: function(token) {
-    return new Promise(...); // here you can return a Promise that saves a token to your database
-  },
-});
-```
-
-## `client.Token`
-
-Tokens can be used to make requests to the Dwolla V2 API.
-
-### Application tokens
-
-Application access tokens are used to authenticate against the API on behalf of a consumer application. Application tokens can be used to access resources in the API that either belong to the application itself (`webhooks`, `events`, `webhook-subscriptions`) or the partner Account that owns the consumer application (`accounts`, `customers`, `funding-sources`, etc.). Application tokens are obtained by using the [`client_credentials`][client_credentials] OAuth grant type:
-
-[client_credentials]: https://tools.ietf.org/html/rfc6749#section-4.4
+Once you've created a `Client`, you can make requests using the `#get`, `#post`,
+and `#delete` methods. These methods return promises containing a response object
+detailed in the [Responses section](#responses).
 
 ```javascript
-client.auth
-  .client()
-  .then(function(appToken) {
-    return appToken.get("/");
-  })
-  .then(function(res) {
-    console.log(JSON.stringify(res.body));
-  });
-```
-
-_Application tokens do not include a `refresh_token`. When an application token expires, generate
-a new one using `client.auth.client()`._
-
-### Initializing pre-existing tokens:
-
-`Token`s can be initialized with the following attributes:
-
-```javascript
-new client.Token({
-  access_token: "...",
-  expires_in: 123
-});
-```
-
-## Requests
-
-`Token`s can make requests using the `#get`, `#post`, and `#delete` methods. These methods return
-promises containing a response object detailed in the [next section](#responses).
-
-```javascript
-// GET api.dwolla.com/resource?foo=bar
-token.get("resource", { foo: "bar" });
+// GET api.dwolla.com/customers?limit=10&offset=20
+dwolla
+  .get("customers", { limit: 10, offset: 20 })
+  .then(res => console.log(res.body.total));
 
 // POST api.dwolla.com/resource {"foo":"bar"}
-token.post("resource", { foo: "bar" });
+dwolla
+  .post("customers", {
+    firstName: "Jane",
+    lastName: "Doe",
+    email: "jane@doe.com"
+  })
+  .then(res => console.log(res.headers.get("location")));
 
 // POST api.dwolla.com/resource multipart/form-data foo=...
 var body = new FormData();
@@ -113,13 +55,10 @@ body.append("file", fs.createReadStream("mclovin.jpg"), {
   knownLength: fs.statSync("mclovin.jpg").size
 });
 body.append("documentType", "license");
-token.post("resource", body);
-
-// PUT api.dwolla.com/resource {"foo":"bar"}
-token.put("resource", { foo: "bar" });
+dwolla.post(`${customerUrl}/documents`, body);
 
 // DELETE api.dwolla.com/resource
-token.delete("resource");
+dwolla.delete("resource");
 ```
 
 #### Setting headers
@@ -129,9 +68,9 @@ To set additional headers on a request you can pass an `object` as the 3rd argum
 For example:
 
 ```javascript
-token.post(
+dwolla.post(
   "customers",
-  { firstName: "John", lastName: "Doe", email: "jd@doe.com" },
+  { firstName: "John", lastName: "Doe", email: "john@doe.com" },
   { "Idempotency-Key": "a52fcf63-0730-41c3-96e8-7147b5d1fb01" }
 );
 ```
@@ -139,7 +78,7 @@ token.post(
 ## Responses
 
 ```javascript
-token.get("customers").then(
+dwolla.get("customers").then(
   function(res) {
     // res.status   => 200
     // res.headers  => Headers { ... }
@@ -147,6 +86,9 @@ token.get("customers").then(
   },
   function(error) {
     // when the server return a status >= 400
+    // error.status   => 400
+    // error.headers  => Headers { ... }
+    // error.body     => Object or String depending on response type
   }
 );
 ```
@@ -161,6 +103,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Changelog
 
+- **3.0.0** Token management changes
 - **2.1.0** Update dependencies
 - **2.0.1** Update dependencies
 - **2.0.0** Change token URLs, update dependencies, remove Node 0.x support.

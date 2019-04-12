@@ -9,13 +9,13 @@ var ENVIRONMENTS = {
   production: {
     authUrl: "https://www.dwolla.com/oauth/v2/authenticate",
     tokenUrl: "https://accounts.dwolla.com/token",
-    apiUrl: "https://api.dwolla.com",
+    apiUrl: "https://api.dwolla.com"
   },
   sandbox: {
     authUrl: "https://sandbox.dwolla.com/oauth/v2/authenticate",
     tokenUrl: "https://accounts-sandbox.dwolla.com/token",
-    apiUrl: "https://api-sandbox.dwolla.com",
-  },
+    apiUrl: "https://api-sandbox.dwolla.com"
+  }
 };
 
 function Client(opts) {
@@ -47,7 +47,7 @@ function Client(opts) {
 
   this.Token = Token.bind(null, this);
 
-  var currentToken = {};
+  var currentToken = { instance: null };
 
   function now() {
     return parseInt(Date.now() / 1000, 10);
@@ -61,17 +61,18 @@ function Client(opts) {
       return token;
     });
   }
-  updateToken();
+
+  var isTokenFresh = function() {
+    return (
+      currentToken.expiresIn === null || // token is updating
+      currentToken.updatedAt + currentToken.expiresIn > now()
+    );
+  };
 
   var freshToken = function() {
-    var fresh =
-      currentToken.expiresIn === null || // token is updating
-      currentToken.updatedAt + currentToken.expiresIn > now();
-
-    if (!fresh) {
+    if (currentToken.instance === null || !isTokenFresh()) {
       updateToken();
     }
-
     return currentToken.instance;
   };
 

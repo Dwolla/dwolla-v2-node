@@ -1,4 +1,4 @@
-var FormData = require('form-data');
+var FormData = require("form-data");
 
 module.exports = function(obj) {
   var formData = new FormData();
