@@ -13,20 +13,20 @@
   "author": "Stephen Ausman <stephen@dwolla.com>",
   "license": "MIT",
   "devDependencies": {
-    "chai": "4.1.2",
-    "chai-as-promised": "7.1.1",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
     "eslint": "^5.13.0",
-    "form-data": "2.3.2",
+    "form-data": "^2.3.2",
     "mocha": "^5.2.0",
     "nock": "^9.6.1",
-    "sinon": "6.1.5"
+    "sinon": "^6.1.5"
   },
   "dependencies": {
-    "bluebird": "3.5.1",
-    "form-urlencoded": "3.0.0",
-    "invariant": "2.2.4",
-    "is-stream": "1.1.0",
+    "bluebird": "^3.5.1",
+    "form-urlencoded": "^3.0.0",
+    "invariant": "^2.2.4",
+    "is-stream": "^1.1.0",
     "lodash": "^4.17.11",
-    "node-fetch": "2.2.0"
+    "node-fetch": "^2.2.0"
   }
 }
