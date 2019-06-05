@@ -19,27 +19,27 @@ npm install dwolla-v2
 ### Basic usage
 
 ```javascript
-var dwolla = require('dwolla-v2');
+var dwolla = require("dwolla-v2");
 
 var client = new dwolla.Client({
   key: process.env.DWOLLA_APP_KEY,
-  secret: process.env.DWOLLA_APP_SECRET,
+  secret: process.env.DWOLLA_APP_SECRET
 });
 ```
 
 ### Using the sandbox environment (optional)
 
 ```javascript
-var dwolla = require('dwolla-v2');
+var dwolla = require("dwolla-v2");
 
 var client = new dwolla.Client({
   key: process.env.DWOLLA_APP_KEY,
   secret: process.env.DWOLLA_APP_SECRET,
-  environment: 'sandbox',
+  environment: "sandbox"
 });
 ```
 
-*Note: `environment` defaults to `production`.*
+_Note: `environment` defaults to `production`._
 
 ### Configuring an onGrant callback (optional)
 
@@ -69,17 +69,18 @@ Application access tokens are used to authenticate against the API on behalf of 
 [client_credentials]: https://tools.ietf.org/html/rfc6749#section-4.4
 
 ```javascript
-client.auth.client()
+client.auth
+  .client()
   .then(function(appToken) {
-    return appToken.get('/');
+    return appToken.get("/");
   })
   .then(function(res) {
     console.log(JSON.stringify(res.body));
   });
 ```
 
-*Application tokens do not include a `refresh_token`. When an application token expires, generate
-a new one using `client.auth.client()`.*
+_Application tokens do not include a `refresh_token`. When an application token expires, generate
+a new one using `client.auth.client()`._
 
 ### Initializing pre-existing tokens:
 
@@ -99,26 +100,26 @@ promises containing a response object detailed in the [next section](#responses)
 
 ```javascript
 // GET api.dwolla.com/resource?foo=bar
-token.get('resource', { foo: 'bar' });
+token.get("resource", { foo: "bar" });
 
 // POST api.dwolla.com/resource {"foo":"bar"}
-token.post('resource', { foo: 'bar' });
+token.post("resource", { foo: "bar" });
 
 // POST api.dwolla.com/resource multipart/form-data foo=...
 var body = new FormData();
-body.append('file', fs.createReadStream('mclovin.jpg'), {
-  filename: 'mclovin.jpg',
-  contentType: 'image/jpeg',
-  knownLength: fs.statSync('mclovin.jpg').size
+body.append("file", fs.createReadStream("mclovin.jpg"), {
+  filename: "mclovin.jpg",
+  contentType: "image/jpeg",
+  knownLength: fs.statSync("mclovin.jpg").size
 });
-body.append('documentType', 'license')
-token.post('resource', body);
+body.append("documentType", "license");
+token.post("resource", body);
 
 // PUT api.dwolla.com/resource {"foo":"bar"}
-token.put('resource', { foo: 'bar' });
+token.put("resource", { foo: "bar" });
 
 // DELETE api.dwolla.com/resource
-token.delete('resource');
+token.delete("resource");
 ```
 
 #### Setting headers
@@ -128,21 +129,26 @@ To set additional headers on a request you can pass an `object` as the 3rd argum
 For example:
 
 ```javascript
-token.post('customers',
-           { firstName: 'John', lastName: 'Doe', email: 'jd@doe.com' },
-           { 'Idempotency-Key': 'a52fcf63-0730-41c3-96e8-7147b5d1fb01' });
+token.post(
+  "customers",
+  { firstName: "John", lastName: "Doe", email: "jd@doe.com" },
+  { "Idempotency-Key": "a52fcf63-0730-41c3-96e8-7147b5d1fb01" }
+);
 ```
 
 ## Responses
 
 ```javascript
-token.get('customers').then(function(res) {
-  // res.status   => 200
-  // res.headers  => Headers { ... }
-  // res.body     => Object or String depending on response type
-}, function(error) {
-  // when the server return a status >= 400
-});
+token.get("customers").then(
+  function(res) {
+    // res.status   => 200
+    // res.headers  => Headers { ... }
+    // res.body     => Object or String depending on response type
+  },
+  function(error) {
+    // when the server return a status >= 400
+  }
+);
 ```
 
 ## Contributing
@@ -155,6 +161,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Changelog
 
+- **2.1.0** Update dependencies
 - **2.0.1** Update dependencies
 - **2.0.0** Change token URLs, update dependencies, remove Node 0.x support.
 - **1.3.3** Update lodash to avoid security vulnerability ([#25](/Dwolla/dwolla-v2-node/issues/25) - Thanks @bold-d!).
@@ -162,7 +169,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 - **1.3.1** Update sandbox URLs from uat => sandbox.
 - **1.3.0** Refer to Client id as key.
 - **1.2.3** Use Bluebird Promise in Auth to prevent Promise undefined error.
-- **1.2.2** Upgrade `node-fetch` dependency to fix `form-data` compatibility ([#15][/Dwolla/dwolla-v2-node/issues/15])
+- **1.2.2** Upgrade `node-fetch` dependency to fix `form-data` compatibility ([#15][/dwolla/dwolla-v2-node/issues/15])
 - **1.2.1** Add support for `verified_account` and `dwolla_landing` auth flags
 - **1.2.0** Reject promises with Errors instead of plain objects ([#8](/Dwolla/dwolla-v2-node/issues/8))
 - **1.1.2** Fix issue uploading files ([#4](/Dwolla/dwolla-v2-node/issues/4))
