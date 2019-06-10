@@ -2,6 +2,7 @@ var invariant = require("invariant");
 var auth = require("./Auth");
 var Token = require("./Token");
 var isOneOfTypes = require("../util/isOneOfTypes");
+var TokenManager = require("./TokenManager");
 
 var DEFAULT_ENVIRONMENT = "production";
 
@@ -47,52 +48,25 @@ function Client(opts) {
 
   this.Token = Token.bind(null, this);
 
-  var currentToken = { instance: null };
-
-  function now() {
-    return parseInt(Date.now() / 1000, 10);
-  }
-
-  function updateToken() {
-    currentToken.updatedAt = now();
-    currentToken.expiresIn = null;
-    currentToken.instance = thisAuth.methods.client().then(function(token) {
-      currentToken.expiresIn = token.expires_in;
-      return token;
-    });
-  }
-
-  var isTokenFresh = function() {
-    return (
-      currentToken.expiresIn === null || // token is updating
-      currentToken.updatedAt + currentToken.expiresIn > now()
-    );
-  };
-
-  var freshToken = function() {
-    if (currentToken.instance === null || !isTokenFresh()) {
-      updateToken();
-    }
-    return currentToken.instance;
-  };
+  var getToken = TokenManager(this).getToken;
 
   this.get = function() {
     var getArgs = arguments;
-    return freshToken().then(function(token) {
+    return getToken().then(function(token) {
       return token.get.apply(token, getArgs);
     });
   };
 
   this.post = function() {
     var postArgs = arguments;
-    return freshToken().then(function(token) {
+    return getToken().then(function(token) {
       return token.post.apply(token, postArgs);
     });
   };
 
   this.delete = function() {
     var deleteArgs = arguments;
-    return freshToken().then(function(token) {
+    return getToken().then(function(token) {
       return token.delete.apply(token, deleteArgs);
     });
   };
