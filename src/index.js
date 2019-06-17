@@ -1,3 +1,3 @@
 module.exports = {
-  Client: require('./dwolla/Client'),
+  Client: require("./dwolla/Client")
 };

@@ -4,7 +4,7 @@
     "mocha": true
   },
   "rules": {
-    "comma-dangle": [2, "always-multiline"],
+    "comma-dangle": [0],
     "object-curly-spacing": [2, "always"],
     "camelcase": [0],
     "no-underscore-dangle": [0],

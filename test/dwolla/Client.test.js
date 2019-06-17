@@ -1,103 +1,144 @@
-var assign = require('lodash/assign');
-var assert = require('chai').assert;
+var assign = require("lodash/assign");
+var assert = require("chai").assert;
+var nock = require("nock");
 
-describe('Client', function() {
+describe("Client", function() {
   var Client;
   var clientOpts;
   var clientOptsWithKey;
 
+  var requestHeaders = function(additionalHeaders) {
+    return assign(
+      {
+        accept: "application/vnd.dwolla.v1.hal+json",
+        "User-Agent": require("../../src/dwolla/userAgent")
+      },
+      additionalHeaders
+    );
+  };
+
+  var responseBody = { response: "body" };
+
   beforeEach(function() {
-    Client = require('../../src/dwolla/Client');
-    clientOpts = { id: 'id', secret: 'secret' };
-    clientOptsWithKey = { key: 'key', secret: 'secret' };
+    Client = require("../../src/dwolla/Client");
+    clientOpts = { id: "id", secret: "secret" };
+    clientOptsWithKey = { key: "key", secret: "secret" };
+    nock(new Client(clientOpts).tokenUrl)
+      .post({
+        client_id: clientOpts.id,
+        client_secret: clientOpts.secret,
+        grant_type: "client_credentials"
+      })
+      .reply(200, {});
   });
 
-  it('throws error opts is not an object', function() {
+  it("throws error opts is not an object", function() {
     assert.throws(function() {
       new Client();
-    }, 'First argument must be an object.');
+    }, "First argument must be an object.");
   });
 
-  it('sets id and key', function() {
+  it("sets id and key", function() {
     var client = new Client(clientOpts);
     assert.equal(clientOpts.id, client.id);
     assert.equal(clientOpts.id, client.key);
   });
 
-  it('sets id and key when key provided', function() {
+  it("sets id and key when key provided", function() {
     var client = new Client(clientOptsWithKey);
     assert.equal(clientOptsWithKey.key, client.id);
     assert.equal(clientOptsWithKey.key, client.key);
   });
 
-  it('sets secret', function() {
+  it("sets secret", function() {
     var client = new Client(clientOpts);
     assert.equal(clientOpts.secret, client.secret);
   });
 
-  it('defaults environment to production', function() {
+  it("defaults environment to production", function() {
     var client = new Client(clientOpts);
-    assert.equal('production', client.environment);
+    assert.equal("production", client.environment);
   });
 
-  it('sets environment if provided', function() {
-    var environment = 'sandbox';
+  it("sets environment if provided", function() {
+    var environment = "sandbox";
     var client = new Client(assign(clientOpts, { environment: environment }));
     assert.equal(environment, client.environment);
   });
 
-  it('sets onGrant', function() {
+  it("sets onGrant", function() {
     var onGrant = function() {};
     var client = new Client(assign(clientOpts, { onGrant: onGrant }));
     assert.equal(clientOpts.onGrant, client.onGrant);
   });
 
-  it('throws error if id is not a string', function() {
+  it("throws error if id is not a string", function() {
     assert.throws(function() {
       new Client({ secret: clientOpts.secret });
-    }, 'key is required.');
+    }, "key is required.");
   });
 
-  it('throws error if secret is not a string', function() {
+  it("throws error if secret is not a string", function() {
     assert.throws(function() {
       new Client({ id: clientOpts.id });
-    }, 'secret is required.');
+    }, "secret is required.");
   });
 
-  it('throws error if invalid environment', function() {
+  it("throws error if invalid environment", function() {
     assert.throws(function() {
-      new Client(assign(clientOpts, { environment: 'invalid' }));
-    }, 'Invalid environment.');
+      new Client(assign(clientOpts, { environment: "invalid" }));
+    }, "Invalid environment.");
   });
 
-  it('throws error if invalid onGrant', function() {
+  it("throws error if invalid onGrant", function() {
     assert.throws(function() {
-      new Client(assign(clientOpts, { onGrant: 'invalid' }));
-    }, 'Invalid onGrant.');
+      new Client(assign(clientOpts, { onGrant: "invalid" }));
+    }, "Invalid onGrant.");
   });
 
-  it('has Auth', function() {
+  it("has Auth", function() {
     var client = new Client(clientOpts);
     assert.isDefined(client.Auth);
   });
 
-  it('has auth', function() {
+  it("has auth", function() {
     var client = new Client(clientOpts);
     assert.isDefined(client.auth);
   });
 
-  it('authUrl', function() {
+  it("authUrl", function() {
     var client = new Client(clientOpts);
-    assert.equal(Client.ENVIRONMENTS[client.environment].authUrl, client.authUrl);
+    assert.equal(
+      Client.ENVIRONMENTS[client.environment].authUrl,
+      client.authUrl
+    );
   });
 
-  it('tokenUrl', function() {
+  it("tokenUrl", function() {
     var client = new Client(clientOpts);
-    assert.equal(Client.ENVIRONMENTS[client.environment].tokenUrl, client.tokenUrl);
+    assert.equal(
+      Client.ENVIRONMENTS[client.environment].tokenUrl,
+      client.tokenUrl
+    );
   });
 
-  it('apiUrl', function() {
+  it("apiUrl", function() {
     var client = new Client(clientOpts);
     assert.equal(Client.ENVIRONMENTS[client.environment].apiUrl, client.apiUrl);
+  });
+
+  it("get", function() {
+    var client = new Client(clientOpts);
+    assert.equal(typeof client.get, "function");
+  });
+
+  it("post", function() {
+    var client = new Client(clientOpts);
+    assert.equal(typeof client.post, "function");
+  });
+
+  it("delete", function() {
+    var client = new Client(clientOpts);
+    assert.equal(typeof client.delete, "function");
   });
 });
