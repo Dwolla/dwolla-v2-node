@@ -1,6 +1,6 @@
 {
   "name": "dwolla-v2",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Dwolla V2 API client",
   "main": "src/index.js",
   "scripts": {
