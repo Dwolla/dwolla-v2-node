@@ -22,7 +22,7 @@ module.exports = function TokenManager(client, initialState) {
   var isTokenFresh = function() {
     return (
       state.expiresIn === null || // token is updating
-      state.updatedAt + state.expiresIn > now() - EXPIRES_IN_LEEWAY
+      state.updatedAt + state.expiresIn > now() + EXPIRES_IN_LEEWAY
     );
   };
 
