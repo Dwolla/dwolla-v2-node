@@ -1,3 +1,5 @@
+var Promise = require("bluebird");
+
 var EXPIRES_IN_LEEWAY = 60;
 
 function now() {
@@ -13,10 +15,16 @@ module.exports = function TokenManager(client, initialState) {
   var updateToken = function() {
     state.updatedAt = now();
     state.expiresIn = null;
-    state.instance = client.auth.client().then(function(token) {
-      state.expiresIn = token.expires_in;
-      return token;
-    });
+    state.instance = client.auth.client().then(
+      function(token) {
+        state.expiresIn = token.expires_in;
+        return token;
+      },
+      function(err) {
+        state.instance = null;
+        return Promise.reject(err);
+      }
+    );
   };
 
   var isTokenFresh = function() {
