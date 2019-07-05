@@ -103,6 +103,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Changelog
 
+- **3.0.2** Don't cache token errors
 - **3.0.1** Fix token leeway logic
 - **3.0.0** Token management changes
 - **2.1.0** Update dependencies
