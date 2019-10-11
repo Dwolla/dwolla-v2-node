@@ -2,6 +2,7 @@ var invariant = require("invariant");
 var auth = require("./Auth");
 var Token = require("./Token");
 var isOneOfTypes = require("../util/isOneOfTypes");
+var snakifyKeys = require("../util/snakifyKeys");
 var TokenManager = require("./TokenManager");
 
 var DEFAULT_ENVIRONMENT = "production";
@@ -42,6 +43,8 @@ function Client(opts) {
   this.tokenUrl = ENVIRONMENTS[this.environment].tokenUrl;
   this.apiUrl = ENVIRONMENTS[this.environment].apiUrl;
 
+  var self = this;
+
   var thisAuth = auth(this);
   this.auth = thisAuth.methods;
   this.Auth = thisAuth.klass;
@@ -69,6 +72,16 @@ function Client(opts) {
     return getToken().then(function(token) {
       return token.delete.apply(token, deleteArgs);
     });
+  };
+
+  this.refreshToken = function(opts) {
+    snakifyKeys(opts);
+    return thisAuth.methods.refresh(new self.Token(opts));
+  };
+
+  this.token = function(opts) {
+    snakifyKeys(opts);
+    return new self.Token(opts);
   };
 }
 
