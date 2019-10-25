@@ -4,6 +4,7 @@ var assign = require("lodash/assign");
 var invariant = require("invariant");
 var rejectEmptyKeys = require("../util/rejectEmptyKeys");
 var toJson = require("../util/toJson");
+var snakifyKeys = require("../util/snakifyKeys");
 var Promise = require("bluebird");
 
 fetch.Promise = Promise;
@@ -101,13 +102,17 @@ AuthClass.prototype.callback = function(params) {
 };
 
 module.exports = function(client) {
+  var klass = AuthClass.bind(null, client);
+  var methods = function(opts) {
+    snakifyKeys(opts);
+    return new klass(opts);
+  };
+  methods.client = requestToken.bind(null, client, {
+    grant_type: "client_credentials"
+  });
+  methods.refresh = refreshGrant.bind(null, client);
   return {
-    klass: AuthClass.bind(null, client),
-    methods: {
-      client: requestToken.bind(null, client, {
-        grant_type: "client_credentials"
-      }),
-      refresh: refreshGrant.bind(null, client)
-    }
+    klass: klass,
+    methods: methods
   };
 };

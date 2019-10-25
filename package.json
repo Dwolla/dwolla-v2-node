@@ -1,6 +1,6 @@
 {
   "name": "dwolla-v2",
-  "version": "3.0.3",
+  "version": "3.1.0",
   "description": "Dwolla V2 API client",
   "main": "src/index.js",
   "scripts": {
@@ -32,6 +32,7 @@
     "invariant": "^2.2.4",
     "is-stream": "^1.1.0",
     "lodash": "^4.17.14",
+    "lodash.snakecase": "^4.1.1",
     "node-fetch": "^2.2.0"
   }
 }

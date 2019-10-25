@@ -2,19 +2,20 @@ var invariant = require("invariant");
 var auth = require("./Auth");
 var Token = require("./Token");
 var isOneOfTypes = require("../util/isOneOfTypes");
+var snakifyKeys = require("../util/snakifyKeys");
 var TokenManager = require("./TokenManager");
 
 var DEFAULT_ENVIRONMENT = "production";
 
 var ENVIRONMENTS = {
   production: {
-    authUrl: "https://www.dwolla.com/oauth/v2/authenticate",
-    tokenUrl: "https://accounts.dwolla.com/token",
+    authUrl: "https://accounts.dwolla.com/auth",
+    tokenUrl: "https://api.dwolla.com/token",
     apiUrl: "https://api.dwolla.com"
   },
   sandbox: {
-    authUrl: "https://sandbox.dwolla.com/oauth/v2/authenticate",
-    tokenUrl: "https://accounts-sandbox.dwolla.com/token",
+    authUrl: "https://accounts-sandbox.dwolla.com/auth",
+    tokenUrl: "https://api-sandbox.dwolla.com/token",
     apiUrl: "https://api-sandbox.dwolla.com"
   }
 };
@@ -41,6 +42,8 @@ function Client(opts) {
   this.authUrl = ENVIRONMENTS[this.environment].authUrl;
   this.tokenUrl = ENVIRONMENTS[this.environment].tokenUrl;
   this.apiUrl = ENVIRONMENTS[this.environment].apiUrl;
+
+  var self = this;
 
   var thisAuth = auth(this);
   this.auth = thisAuth.methods;
@@ -69,6 +72,16 @@ function Client(opts) {
     return getToken().then(function(token) {
       return token.delete.apply(token, deleteArgs);
     });
+  };
+
+  this.refreshToken = function(opts) {
+    snakifyKeys(opts);
+    return thisAuth.methods.refresh(new self.Token(opts));
+  };
+
+  this.token = function(opts) {
+    snakifyKeys(opts);
+    return new self.Token(opts);
   };
 }
 

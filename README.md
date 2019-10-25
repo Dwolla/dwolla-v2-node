@@ -26,6 +26,10 @@ var dwolla = new Client({
 });
 ```
 
+### Integrations Authorization
+
+Check out our [Integrations Authorization Guide](https://developers.dwolla.com/integrations/authorization).
+
 ## Making requests
 
 Once you've created a `Client`, you can make requests using the `#get`, `#post`,
@@ -103,6 +107,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Changelog
 
+- **3.1.0** Add integrations auth functionality
 - **3.0.2** Don't cache token errors
 - **3.0.1** Fix token leeway logic
 - **3.0.0** Token management changes

@@ -1,5 +1,7 @@
 var assign = require("lodash/assign");
-var assert = require("chai").assert;
+var chai = require("chai");
+var assert = chai.assert;
+var expect = chai.expect;
 var nock = require("nock");
 
 describe("Client", function() {
@@ -140,5 +142,54 @@ describe("Client", function() {
   it("delete", function() {
     var client = new Client(clientOpts);
     assert.equal(typeof client.delete, "function");
+  });
+
+  it("auth", function() {
+    var redirectUri = "redirect-uri";
+    var client = new Client(clientOpts);
+    var auth = client.auth({ redirectUri: redirectUri });
+    assert.equal(
+      "https://accounts.dwolla.com/auth?response_type=code&client_id=id&redirect_uri=" +
+        redirectUri,
+      auth.url
+    );
+  });
+
+  it("auth.refresh successful response", function(done) {
+    var client = new Client(clientOpts);
+    var opts = { refreshToken: "refresh token" };
+    nock(client.tokenUrl, { reqheaders: requestHeaders })
+      .post("", {
+        client_id: client.id,
+        client_secret: client.secret,
+        grant_type: "refresh_token",
+        refresh_token: opts.refreshToken
+      })
+      .reply(200, {});
+    expect(client.refreshToken(opts)).to.be.fulfilled.and.notify(done);
+  });
+
+  it("auth.refresh error response", function(done) {
+    var client = new Client(clientOpts);
+    var error = { error: "error" };
+    var opts = { refreshToken: "refresh token" };
+    nock(client.tokenUrl, { reqheaders: requestHeaders })
+      .post("", {
+        client_id: client.id,
+        client_secret: client.secret,
+        grant_type: "refresh_token",
+        refresh_token: opts.refreshToken
+      })
+      .reply(200, error);
+    expect(client.refreshToken(opts))
+      .to.be.rejectedWith(error)
+      .and.notify(done);
+  });
+
+  it("token", function() {
+    var accessToken = "access-token";
+    var client = new Client(clientOpts);
+    var token = client.token({ accessToken: accessToken });
+    assert.equal(accessToken, token.access_token);
   });
 });
