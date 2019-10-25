@@ -149,7 +149,7 @@ describe("Client", function() {
     var client = new Client(clientOpts);
     var auth = client.auth({ redirectUri: redirectUri });
     assert.equal(
-      "https://www.dwolla.com/oauth/v2/authenticate?response_type=code&client_id=id&redirect_uri=" +
+      "https://accounts.dwolla.com/auth?response_type=code&client_id=id&redirect_uri=" +
         redirectUri,
       auth.url
     );

@@ -19,7 +19,7 @@ describe("Auth", function() {
   it("Auth#url", function() {
     var auth = new client.Auth();
     assert.equal(
-      "https://www.dwolla.com/oauth/v2/authenticate?response_type=code&client_id=" +
+      "https://accounts.dwolla.com/auth?response_type=code&client_id=" +
         client.id,
       auth.url
     );
@@ -34,7 +34,7 @@ describe("Auth", function() {
       redirect_uri: redirect_uri
     });
     assert.equal(
-      ["https://www.dwolla.com/oauth/v2/authenticate", expectedQuery].join("?"),
+      ["https://accounts.dwolla.com/auth", expectedQuery].join("?"),
       auth.url
     );
     assert.equal(redirect_uri, auth.redirect_uri);
@@ -49,7 +49,7 @@ describe("Auth", function() {
       scope: scope
     });
     assert.equal(
-      ["https://www.dwolla.com/oauth/v2/authenticate", expectedQuery].join("?"),
+      ["https://accounts.dwolla.com/auth", expectedQuery].join("?"),
       auth.url
     );
     assert.equal(scope, auth.scope);
@@ -64,7 +64,7 @@ describe("Auth", function() {
       state: state
     });
     assert.equal(
-      ["https://www.dwolla.com/oauth/v2/authenticate", expectedQuery].join("?"),
+      ["https://accounts.dwolla.com/auth", expectedQuery].join("?"),
       auth.url
     );
     assert.equal(state, auth.state);
@@ -79,7 +79,7 @@ describe("Auth", function() {
       verified_account: verified_account
     });
     assert.equal(
-      ["https://www.dwolla.com/oauth/v2/authenticate", expectedQuery].join("?"),
+      ["https://accounts.dwolla.com/auth", expectedQuery].join("?"),
       auth.url
     );
     assert.equal(verified_account, auth.verified_account);
@@ -94,7 +94,7 @@ describe("Auth", function() {
       dwolla_landing: dwolla_landing
     });
     assert.equal(
-      ["https://www.dwolla.com/oauth/v2/authenticate", expectedQuery].join("?"),
+      ["https://accounts.dwolla.com/auth", expectedQuery].join("?"),
       auth.url
     );
     assert.equal(dwolla_landing, auth.dwolla_landing);
