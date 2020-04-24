@@ -22,7 +22,7 @@ var Client = require("dwolla-v2").Client;
 var dwolla = new Client({
   key: process.env.DWOLLA_APP_KEY,
   secret: process.env.DWOLLA_APP_SECRET,
-  environment: "sandbox" // defaults to 'production'
+  environment: "sandbox", // defaults to 'production'
 });
 ```
 
@@ -40,23 +40,23 @@ detailed in the [Responses section](#responses).
 // GET api.dwolla.com/customers?limit=10&offset=20
 dwolla
   .get("customers", { limit: 10, offset: 20 })
-  .then(res => console.log(res.body.total));
+  .then((res) => console.log(res.body.total));
 
 // POST api.dwolla.com/resource {"foo":"bar"}
 dwolla
   .post("customers", {
     firstName: "Jane",
     lastName: "Doe",
-    email: "jane@doe.com"
+    email: "jane@doe.com",
   })
-  .then(res => console.log(res.headers.get("location")));
+  .then((res) => console.log(res.headers.get("location")));
 
 // POST api.dwolla.com/resource multipart/form-data foo=...
 var body = new FormData();
 body.append("file", fs.createReadStream("mclovin.jpg"), {
   filename: "mclovin.jpg",
   contentType: "image/jpeg",
-  knownLength: fs.statSync("mclovin.jpg").size
+  knownLength: fs.statSync("mclovin.jpg").size,
 });
 body.append("documentType", "license");
 dwolla.post(`${customerUrl}/documents`, body);
@@ -107,6 +107,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Changelog
 
+- **3.1.1** Change node-fetch import style for better Webpack compatibility
 - **3.1.0** Add integrations auth functionality
 - **3.0.2** Don't cache token errors
 - **3.0.1** Fix token leeway logic
