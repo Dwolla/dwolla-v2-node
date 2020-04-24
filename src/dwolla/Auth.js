@@ -1,4 +1,4 @@
-var fetch = require("node-fetch");
+var fetch = require("node-fetch").default;
 var formurlencoded = require("form-urlencoded").default;
 var assign = require("lodash/assign");
 var invariant = require("invariant");

@@ -1,4 +1,4 @@
-var fetch = require("node-fetch");
+var fetch = require("node-fetch").default;
 var formurlencoded = require("form-urlencoded").default;
 var rejectEmptyKeys = require("../util/rejectEmptyKeys");
 var isFormData = require("../util/isFormData");
