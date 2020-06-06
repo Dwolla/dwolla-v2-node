@@ -4,12 +4,12 @@ declare module "dwolla-v2" {
     get: (
       resource: string,
       parameters?: { [prop: string]: string },
-      headers?: { "Idempotency-Key": string } & { [prop: string]: string },
+      headers?: { "Idempotency-Key"?: string } & { [prop: string]: string },
     ) => Promise<Response>;
     post: (
       resource: string,
-      parameters?: { [prop: string]: string },
-      headers?: { "Idempotency-Key": string } & { [prop: string]: string },
+      body: object,
+      headers?: { "Idempotency-Key"?: string } & { [prop: string]: string },
     ) => Promise<Response>;
     delete: (resource: string) => Promise<Response>;
     constructor(options: {
