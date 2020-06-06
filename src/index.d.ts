@@ -26,8 +26,8 @@ declare module "dwolla-v2" {
   }
 
   interface Response {
-    status: string;
-    headers: any;
-    body: any | string;
+    status: number;
+    headers: Headers;
+    body: object | string;
   }
 }
