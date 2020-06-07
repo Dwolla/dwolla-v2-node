@@ -8,7 +8,7 @@ declare module "dwolla-v2" {
     ) => Promise<Response>;
     post: (
       resource: string,
-      body: object,
+      body?: object,
       headers?: { "Idempotency-Key"?: string } & { [prop: string]: string },
     ) => Promise<Response>;
     delete: (resource: string) => Promise<Response>;
