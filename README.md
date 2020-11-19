@@ -105,6 +105,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Changelog
 
+- **3.2.0** Add TypeScript definition (Thanks @rhuffy!)
 - **3.1.1** Change node-fetch import style for better Webpack compatibility
 - **3.1.0** Add integrations auth functionality
 - **3.0.2** Don't cache token errors
