@@ -15,7 +15,6 @@ declare module "dwolla-v2" {
       key: string;
       secret: string;
       environment?: "production" | "sandbox";
-      onGrant?: (token: string) => {};
     });
   }
 
