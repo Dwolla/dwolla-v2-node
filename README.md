@@ -1,7 +1,5 @@
 # DwollaV2 Node
 
-![Build Status](https://travis-ci.org/Dwolla/dwolla-v2-node.svg)
-
 Dwolla V2 Node client.
 
 [API Documentation](https://docsv2.dwolla.com)
