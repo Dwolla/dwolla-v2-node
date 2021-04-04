@@ -1,6 +1,6 @@
 var fetch = require("node-fetch").default;
 var formurlencoded = require("form-urlencoded").default;
-var assign = require("lodash/assign");
+var assign = Object.assign;
 var invariant = require("invariant");
 var rejectEmptyKeys = require("../util/rejectEmptyKeys");
 var toJson = require("../util/toJson");
