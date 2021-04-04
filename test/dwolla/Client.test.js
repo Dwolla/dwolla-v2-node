@@ -1,4 +1,4 @@
-var assign = require("lodash/assign");
+var assign = Object.assign;
 var chai = require("chai");
 var assert = chai.assert;
 var expect = chai.expect;

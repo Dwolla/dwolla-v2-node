@@ -2,7 +2,7 @@ var chai = require("chai");
 var expect = chai.expect;
 var nock = require("nock");
 var toFormData = require("../../src/util/toFormData");
-var assign = require("lodash/assign");
+var assign = Object.assign;
 
 var chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);

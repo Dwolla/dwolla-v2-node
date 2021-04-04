@@ -2,7 +2,7 @@ var fetch = require("node-fetch").default;
 var formurlencoded = require("form-urlencoded").default;
 var rejectEmptyKeys = require("../util/rejectEmptyKeys");
 var isFormData = require("../util/isFormData");
-var assign = require("lodash/assign");
+var assign = Object.assign;
 var Promise = require("bluebird");
 
 fetch.Promise = Promise;
