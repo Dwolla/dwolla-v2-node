@@ -38,6 +38,6 @@
     "is-stream": "^1.1.0",
     "lodash": "^4.17.14",
     "lodash.snakecase": "^4.1.1",
-    "node-fetch": "^2.2.0"
+    "node-fetch": "^2.6.2"
   }
 }
