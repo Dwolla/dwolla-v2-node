@@ -36,8 +36,8 @@
     "form-urlencoded": "^3.0.1",
     "invariant": "^2.2.4",
     "is-stream": "^1.1.0",
-    "lodash": "^4.17.14",
+    "lodash": "^4.17.21",
     "lodash.snakecase": "^4.1.1",
-    "node-fetch": "^2.2.0"
+    "node-fetch": "^2.6.2"
   }
 }
