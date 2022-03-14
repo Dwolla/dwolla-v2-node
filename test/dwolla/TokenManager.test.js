@@ -12,7 +12,7 @@ describe("TokenManager", function() {
     "content-type": "application/x-www-form-urlencoded",
     "user-agent": require("../../src/dwolla/userAgent")
   };
-  var existingToken = Promise.resolve("existing-token");
+  var existingToken = "existing-token";
   var accessToken = "access-token";
 
   this.beforeEach(function() {
@@ -30,7 +30,7 @@ describe("TokenManager", function() {
 
   it("returns existing token if fresh", function(done) {
     var tokenManager = require("../../src/dwolla/TokenManager")(client, {
-      instance: existingToken,
+      instance: Promise.resolve(existingToken),
       expiresIn: 3600,
       updatedAt: now()
     });
@@ -43,7 +43,7 @@ describe("TokenManager", function() {
 
   it("gets new token when existing token stale", function(done) {
     var tokenManager = require("../../src/dwolla/TokenManager")(client, {
-      instance: existingToken,
+      instance: Promise.resolve(existingToken),
       expiresIn: 30,
       updatedAt: now()
     });
