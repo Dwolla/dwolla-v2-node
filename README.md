@@ -104,6 +104,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/Dwolla
 The gem is available as open source under the terms of the [MIT License](https://github.com/Dwolla/dwolla-v2-node).
 
 ## Changelog
+- **3.2.3** Update version and changelog
 - **3.2.2** Update unit test involving token. Thanks [@philting](https://github.com/philting)!
 - **3.2.1** Update dependencies. Remove `npm-check` package.
 - **3.2.0** Add TypeScript definition (Thanks @rhuffy!)
