@@ -1,6 +1,6 @@
 {
   "name": "dwolla-v2",
-  "version": "3.2.0",
+  "version": "3.2.3",
   "description": "Dwolla V2 API client",
   "main": "src/index.js",
   "files": [
@@ -25,9 +25,8 @@
     "chai-as-promised": "^7.1.1",
     "eslint": "^5.13.0",
     "form-data": "^2.5.0",
-    "mocha": "^5.2.0",
+    "mocha": "^6.2.3",
     "nock": "^9.6.1",
-    "npm-check": "^5.9.0",
     "prettier": "^1.18.2",
     "sinon": "^6.1.5"
   },
@@ -37,6 +36,6 @@
     "invariant": "^2.2.4",
     "is-stream": "^1.1.0",
     "lodash.snakecase": "^4.1.1",
-    "node-fetch": "^2.2.0"
+    "node-fetch": "^2.6.2"
   }
 }
