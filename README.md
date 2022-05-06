@@ -151,6 +151,9 @@ by [clicking here](https://github.com/Dwolla/dwolla-v2-node/compare).
 ## Changelog
 
 - **4.0.0** SDK is fully rewritten in TypeScript. Support is added for ES Modules.
+- **3.2.3** Update version and changelog
+- **3.2.2** Update unit test involving token. Thanks [@philting](https://github.com/philting)!
+- **3.2.1** Update dependencies. Remove `npm-check` package.
 - **3.2.0** Add TypeScript definition (Thanks @rhuffy!)
 - **3.1.1** Change node-fetch import style for better Webpack compatibility
 - **3.1.0** Add integrations auth functionality
