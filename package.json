@@ -1,42 +1,75 @@
 {
   "name": "dwolla-v2",
-  "version": "3.2.0",
-  "description": "Dwolla V2 API client",
-  "main": "src/index.js",
-  "files": [
-    "src/**/*.js",
-    "src/*.js",
-    "src/*.d.ts"
-  ],
-  "scripts": {
-    "test": "NODE_ENV=test mocha test/**",
-    "eslint": "eslint src/ test/",
-    "prettier-check": "npm run _prettier -- --check",
-    "prettier-write": "npm run _prettier -- --write",
-    "_prettier": "prettier src/*.js src/**/*.js test/*.js test/**/*.js"
-  },
+  "version": "4.0.0",
+  "description": "Dwolla Node API Wrapper",
+  "license": "MIT",
+  "author": "Dwolla, Inc.",
   "keywords": [
     "Dwolla"
   ],
-  "author": "Stephen Ausman <stephen@dwolla.com>",
-  "license": "MIT",
+  "files": [
+    "bundle/dwolla-v2.d.ts",
+    "bundle/dwolla-v2.mjs",
+    "bundle/dwolla-v2.js"
+  ],
+  "main": "./bundle/dwolla-v2.js",
+  "types": "./bundle/dwolla-v2.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "bundle": "rollup -c rollup.config.js",
+    "clean": "rimraf build bundle",
+    "cleanbundle": "pnpm clean && pnpm build && pnpm bundle",
+    "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "format:fix": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "lint:check": "eslint \"src/**/*.ts\" \"tests/**/*.ts\" --ignore-path .eslintignore",
+    "lint:fix": "eslint \"src/**/*.ts\" \"tests/**/*.ts\" --fix --ignore-path .eslintignore",
+    "test": "cross-env NODE_ENV=test jest"
+  },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "chai-as-promised": "^7.1.1",
-    "eslint": "^5.13.0",
-    "form-data": "^2.5.0",
-    "mocha": "^5.2.0",
-    "nock": "^9.6.1",
-    "npm-check": "^5.9.0",
-    "prettier": "^1.18.2",
-    "sinon": "^6.1.5"
+    "@rollup/plugin-json": "^4.1.0",
+    "@types/jest": "^27.5.0",
+    "@types/jest-in-case": "^1.0.5",
+    "@types/node": "^17.0.31",
+    "@types/node-fetch": "^2.6.1",
+    "@typescript-eslint/eslint-plugin": "^5.22.0",
+    "@typescript-eslint/parser": "^5.22.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin": "^1.0.1",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "form-data": "^4.0.0",
+    "jest": "^28.0.3",
+    "jest-in-case": "^1.0.2",
+    "nock": "^13.2.4",
+    "prettier": "^2.6.2",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.71.1",
+    "rollup-plugin-dts": "^4.2.1",
+    "rollup-plugin-typescript2": "^0.31.2",
+    "ts-jest": "^28.0.1",
+    "ts-node": "^10.7.0",
+    "tslib": "^2.4.0",
+    "typescript": "^4.6.4"
   },
   "dependencies": {
-    "bluebird": "^3.5.1",
-    "form-urlencoded": "^3.0.1",
-    "invariant": "^2.2.4",
-    "is-stream": "^1.1.0",
-    "lodash.snakecase": "^4.1.1",
-    "node-fetch": "^2.2.0"
+    "form-urlencoded": "^6.0.6",
+    "node-fetch": "~2.6.7"
+  },
+  "peerDependencies": {
+    "form-data": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "form-data": {
+      "optional": true
+    }
+  },
+  "exports": {
+    ".": {
+      "import": "./bundle/dwolla-v2.mjs",
+      "require": "./bundle/dwolla-v2.js",
+      "types": "./bundle/dwolla-v2.d.ts"
+    }
   }
 }

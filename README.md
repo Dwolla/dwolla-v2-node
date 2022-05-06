@@ -1,110 +1,156 @@
-# DwollaV2 Node
+# Dwolla Node SDK
 
-Dwolla V2 Node client.
+Dwolla Node SDK is a thin Node-based wrapper written in TypeScript around our HTTP API. To learn more about our API,
+check out our [developer documentation](https://developers.dwolla.com).
 
-[API Documentation](https://docsv2.dwolla.com)
+> ⚠️ You are currently viewing the version 4.0.0 candidate! ⚠️
+>
+> Although we tried to ensure backwards compatibility with
+> earlier versions, please note that this not officially released and is subject to break. **It should not be used in a
+production environment!**
+>
+> If you would still like to continue with this version, and you encounter any issues or unexpected behavior, please be
+> sure to [open up a bug report](https://github.com/Dwolla/dwolla-v2-node/issues/new) for our team to investigate.
+
+## Table of Contents
+
+* [Installation](#installation)
+* [Getting Started](#getting-started)
+* [Making Requests](#making-requests)
+    * [`GET`](#get)
+    * [`POST`](#post)
+    * [`DELETE`](#delete)
+    * [Setting Headers](#setting-headers)
+* [Responses](#responses)
+* [Contributing](#contributing)
+* [Changelog](#changelog)
+* [License](#license)
 
 ## Installation
 
-`dwolla-v2` is available on [NPM](https://www.npmjs.com/package/dwolla-v2).
+Our SDK is currently available on [npm](https://www.npmjs.com/package/dwolla-v2). It can be installed using `npm`,
+`yarn`, or `pnpm` by executing one of the following commands:
 
-```
-npm install dwolla-v2 --save
+```bash
+# npm
+npm install --save dwolla-v2
+
+# yarn
+yarn add dwolla-v2
+
+# pnpm
+pnpm add dwolla-v2
 ```
 
-## Getting started
+## Getting Started
+
+Our SDK comes with support for both CommonJS (CJS) and ES Modules (ESM). All the examples shown in this document are
+written using ESM syntax; however, you can also "convert" it to use CJS syntax if you do not wish to use ESM in your
+project.
 
 ```javascript
-var Client = require("dwolla-v2").Client;
+import { Client } from "dwolla-v2";
 
-var dwolla = new Client({
-  key: process.env.DWOLLA_APP_KEY,
-  secret: process.env.DWOLLA_APP_SECRET,
-  environment: "sandbox", // defaults to 'production'
+const dwolla = new Client({
+    environment: "sandbox", // Defaults to production
+    key: process.env.DWOLLA_APP_KEY,
+    secret: process.env.DWOLLA_APP_SECRET,
 });
 ```
 
-### Integrations Authorization
+## Making Requests
 
-Check out our [Integrations Authorization Guide](https://developers.dwolla.com/integrations/authorization).
-
-## Making requests
-
-Once you've created a `Client`, you can make requests using the `#get`, `#post`,
-and `#delete` methods. These methods return promises containing a response object
+Once you've created a Dwolla `Client`, you can now make requests using the `get`, `post`,
+and `delete` methods. These methods return a `Promise` containing a response object
 detailed in the [Responses section](#responses).
 
+Since each method returns a `Promise`, you can either use `.then`/`.catch` or `async`/`await`. In the following
+examples, we will be using `async`/`await`.
+
+### `GET`
+
 ```javascript
-// GET api.dwolla.com/customers?limit=10&offset=20
-dwolla
-  .get("customers", { limit: 10, offset: 20 })
-  .then((res) => console.log(res.body.total));
-
-// POST api.dwolla.com/resource {"foo":"bar"}
-dwolla
-  .post("customers", {
-    firstName: "Jane",
-    lastName: "Doe",
-    email: "jane@doe.com",
-  })
-  .then((res) => console.log(res.headers.get("location")));
-
-// POST api.dwolla.com/resource multipart/form-data foo=...
-var body = new FormData();
-body.append("file", fs.createReadStream("mclovin.jpg"), {
-  filename: "mclovin.jpg",
-  contentType: "image/jpeg",
-  knownLength: fs.statSync("mclovin.jpg").size,
+// GET api.dwolla.com/customers?offset=20&limit=10
+const response = await dwolla.get("/", {
+    offset: 20,
+    limit: 10
 });
-body.append("documentType", "license");
-dwolla.post(`${customerUrl}/documents`, body);
 
-// DELETE api.dwolla.com/resource
-dwolla.delete("resource");
+console.log("Response Body: ", response.body.total);
 ```
 
-#### Setting headers
-
-To set additional headers on a request you can pass an `object` as the 3rd argument.
-
-For example:
+### `POST`
 
 ```javascript
-dwolla.post(
-  "customers",
-  { firstName: "John", lastName: "Doe", email: "john@doe.com" },
-  { "Idempotency-Key": "a52fcf63-0730-41c3-96e8-7147b5d1fb01" }
-);
+// POST api.dwolla.com/resource {"foo":"bar"}
+const response = await dwolla.post("customers", {
+    firstName: "Jane",
+    lastName: "Doe",
+    email: "jane+doe@example.com"
+});
+
+console.log("Location: ", response.headers.get("Location"));
+
+// POST api.dwolla.com/resource multipart/form-data foo=...
+const body = new FormData();
+body.append("documentType", "license");
+body.append("file", fs.createReadStream("mclovin.jpg"), {
+    filename: "mclovin.jpg",
+    contentType: "image/jpeg",
+    knownLength: fs.statSync("mclovin.jpg").size
+});
+
+const response = await dwolla.post(`${customerUrl}/documents`, body);
+console.log("Location: ", response.headers.get("Location"));
+```
+
+### `DELETE`
+
+```javascript
+await dwolla.delete("resource");
+```
+
+### Setting Headers
+
+To include additional request headers (e.g., an idempotency key), you can pass in an object as the third argument.
+
+```javascript
+await dwolla.post("customers", {
+    firstName: "John",
+    lastName: "Doe",
+    email: "john+doe@example.com"
+}, {
+    "Idempotency-Key": "b1764e1c-f2ce-4ada-9dff-3a2665170a58"
+});
 ```
 
 ## Responses
 
 ```javascript
-dwolla.get("customers").then(
-  function(res) {
-    // res.status   => 200
-    // res.headers  => Headers { ... }
-    // res.body     => Object or String depending on response type
-  },
-  function(error) {
-    // when the server return a status >= 400
-    // error.status   => 400
-    // error.headers  => Headers { ... }
-    // error.body     => Object or String depending on response type
-  }
-);
+try {
+    const response = await dwolla.get("customers");
+
+    // When the server returns a successful response (e.g., statusCode == 2xx)
+    // response.status  => 200
+    // response.headers => Headers { ... }
+    // response.body    => Object or String depending on the response type
+} catch (e) {
+    // When the server returns a statusCode >= 400
+    // e.status     => 400
+    // e.headers    => Headers { ... }
+    // e.body       => Object or String depending on the response type
+}
 ```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/Dwolla/dwolla-v2-node.
-
-## License
-
-The gem is available as open source under the terms of the [MIT License](https://github.com/Dwolla/dwolla-v2-node).
+Contributions to this repository are welcome! If you have a bug report, please submit it
+by [clicking here](https://github.com/Dwolla/dwolla-v2-node/issues/new). Additionally, a pull request can be opened
+by [clicking here](https://github.com/Dwolla/dwolla-v2-node/compare).
 
 ## Changelog
 
+- **4.0.0** SDK is fully rewritten in TypeScript. Support is added for ES Modules.
 - **3.2.0** Add TypeScript definition (Thanks @rhuffy!)
 - **3.1.1** Change node-fetch import style for better Webpack compatibility
 - **3.1.0** Add integrations auth functionality
@@ -124,3 +170,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 - **1.2.0** Reject promises with Errors instead of plain objects ([#8](/Dwolla/dwolla-v2-node/issues/8))
 - **1.1.2** Fix issue uploading files ([#4](/Dwolla/dwolla-v2-node/issues/4))
 - **1.1.1** Handle promises differently to allow all rejections to be handled ([#5](/Dwolla/dwolla-v2-node/issues/5))
+
+## License
+
+[MIT](LICENSE)
