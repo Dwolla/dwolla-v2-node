@@ -151,6 +151,7 @@ by [clicking here](https://github.com/Dwolla/dwolla-v2-node/compare).
 ## Changelog
 
 - **4.0.0** SDK is fully rewritten in TypeScript. Support is added for ES Modules.
+- **3.3.0** Remove lodash as a dependency and replace with `Object.assign`
 - **3.2.3** Update version and changelog
 - **3.2.2** Update unit test involving token. Thanks [@philting](https://github.com/philting)!
 - **3.2.1** Update dependencies. Remove `npm-check` package.
