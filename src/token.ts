@@ -1,18 +1,18 @@
+import { ClassConstructor, plainToInstance } from "class-transformer";
 import FormData from "form-data";
 import formUrlEncoded from "form-urlencoded";
 import fetch, { Headers, Response as FetchResponse } from "node-fetch";
-import { Client } from "./client";
-import { rejectEmptyKeys, userAgent } from "./utils";
 import { AuthResponse } from "./auth";
+import { Client } from "./client";
+import { HalResource } from "./models/base-hal";
 import { TokenState } from "./token-manager";
+import { rejectEmptyKeys, userAgent } from "./utils";
 
-export interface Response {
-    body: any;
+export interface Response<TBody extends HalResource = any> {
+    body: TBody;
     headers: Headers;
     status: number;
 }
-
-type DwollaResponse = Response;
 
 type ExtendedHeaders = {
     Authorization: string;
@@ -20,7 +20,7 @@ type ExtendedHeaders = {
     "User-Agent": string;
 } & RequestHeaders;
 
-export type ResponseError = Error & Response;
+export type PathLike<TPath extends { _links: { self: { href: string } } } = any> = TPath | string;
 
 export type RequestHeaders = {
     "Idempotency-Key"?: string;
@@ -28,37 +28,36 @@ export type RequestHeaders = {
     [key: string]: string;
 };
 
-export type RequestPath<T extends { _links: { self: { href: string } } } = any> = T | string;
+export type ResponseError<TResult extends HalResource = any> = Error & Response<TResult>;
 
 export type RequestQuery = {
     [key: string]: string;
 };
 
 export class Token {
-    readonly #client: Client;
-    readonly #state: TokenState;
+    constructor(private readonly client: Client, private readonly tokenState: TokenState) {}
 
-    constructor(client: Client, state: TokenState) {
-        this.#client = client;
-        this.#state = state;
-    }
-
-    async delete(path: RequestPath, query?: RequestQuery, headers?: RequestHeaders): Promise<DwollaResponse> {
-        const rawResponse: FetchResponse = await fetch(this.#getUrl(path, query), {
+    async delete<TResult extends HalResource>(
+        path: PathLike,
+        query?: RequestQuery,
+        headers?: RequestHeaders,
+        mappedType?: ClassConstructor<TResult>
+    ): Promise<Response<TResult>> {
+        const rawResponse: FetchResponse = await fetch(this.getUrl(path, query), {
             method: "DELETE",
-            headers: this.#getHeaders(headers)
+            headers: this.getHeaders(headers)
         });
 
-        const parsedResponse: Response = await this.#parseResponse(rawResponse);
+        const parsedResponse: Response<TResult> = await this.parseResponse(rawResponse, mappedType);
 
         if (parsedResponse.status >= 400) {
-            throw this.#errorFrom(parsedResponse);
+            throw this.errorFrom(parsedResponse);
         }
         return parsedResponse;
     }
 
-    #errorFrom(parsedResponse: DwollaResponse): ResponseError {
-        const error: ResponseError = new Error(parsedResponse.body) as ResponseError;
+    private errorFrom<TResult extends HalResource>(parsedResponse: Response<TResult>): ResponseError<TResult> {
+        const error: ResponseError<TResult> = new Error(parsedResponse.body as any) as ResponseError<TResult>;
         error.body = parsedResponse.body;
         error.headers = parsedResponse.headers;
         error.status = parsedResponse.status;
@@ -74,51 +73,57 @@ export class Token {
     }
 
     get state(): TokenState {
-        return this.#state;
+        return this.tokenState;
     }
 
-    #getHeaders(additionalHeaders?: RequestHeaders): ExtendedHeaders {
-        return Object.assign(
-            {
-                Authorization: ["Bearer", this.#state.accessToken].join(" "),
-                Accept: "application/vnd.dwolla.v1.hal+json",
-                "User-Agent": userAgent()
-            } as ExtendedHeaders,
-            additionalHeaders
-        );
+    private getHeaders(additionalHeaders?: RequestHeaders): ExtendedHeaders {
+        return {
+            Authorization: ["Bearer", this.tokenState.accessToken].join(" "),
+            Accept: "application/vnd.dwolla.v1.hal+json",
+            "User-Agent": userAgent(),
+            ...additionalHeaders
+        };
     }
 
-    async get(path: RequestPath, query?: RequestQuery, headers?: RequestHeaders): Promise<DwollaResponse> {
-        const rawResponse: FetchResponse = await fetch(this.#getUrl(path, query), {
-            headers: this.#getHeaders(headers)
+    async get<TResult extends HalResource>(
+        path: PathLike,
+        query?: RequestQuery,
+        headers?: RequestHeaders,
+        mappedType?: ClassConstructor<TResult>
+    ): Promise<Response<TResult>> {
+        const rawResponse: FetchResponse = await fetch(this.getUrl(path, query), {
+            headers: this.getHeaders(headers)
         });
 
-        const parsedResponse: Response = await this.#parseResponse(rawResponse);
+        const parsedResponse: Response<TResult> = await this.parseResponse(rawResponse, mappedType);
 
         if (parsedResponse.status >= 400) {
-            throw this.#errorFrom(parsedResponse);
+            throw this.errorFrom(parsedResponse);
         }
         return parsedResponse;
     }
 
-    #getUrl(suppliedPath: RequestPath, suppliedQuery?: RequestQuery): string {
+    private getUrl(suppliedPath: PathLike, suppliedQuery?: RequestQuery): string {
         let url: string;
 
         if (typeof suppliedPath === "object") {
             url = suppliedPath._links.self.href;
-        } else if (suppliedPath.indexOf(this.#client.environment.apiUrl) === 0) {
+        } else if (suppliedPath.indexOf(this.client.environment.apiUrl) === 0) {
             url = suppliedPath;
         } else if (suppliedPath.indexOf("/") === 0) {
-            url = [this.#client.environment.apiUrl, suppliedPath].join("");
+            url = [this.client.environment.apiUrl, suppliedPath].join("");
         } else {
-            url = [this.#client.environment.apiUrl, suppliedPath.replace(/^https?:\/\/[^/]*\//, "")].join("/");
+            url = [this.client.environment.apiUrl, suppliedPath.replace(/^https?:\/\/[^/]*\//, "")].join("/");
         }
 
         const query: string = formUrlEncoded(rejectEmptyKeys(suppliedQuery || {}));
         return query ? [url, query].join("?") : url;
     }
 
-    async #parseResponse(response: FetchResponse): Promise<DwollaResponse> {
+    private async parseResponse<TResult extends HalResource>(
+        response: FetchResponse,
+        mappedType?: ClassConstructor<TResult>
+    ): Promise<Response<TResult>> {
         const rawBody: string = await response.text();
         let parsedBody: any;
 
@@ -129,26 +134,36 @@ export class Token {
         }
 
         return {
-            body: parsedBody,
+            body: mappedType
+                ? plainToInstance(mappedType, parsedBody, {
+                      enableImplicitConversion: true,
+                      excludeExtraneousValues: true
+                  })
+                : parsedBody,
             headers: response.headers,
             status: response.status
         };
     }
 
-    async post(path: RequestPath, body?: any, headers?: RequestHeaders): Promise<DwollaResponse> {
-        const rawResponse: FetchResponse = await fetch(this.#getUrl(path), {
+    async post<TBody, TResult extends HalResource = any>(
+        path: PathLike,
+        body?: TBody,
+        headers?: RequestHeaders,
+        mappedType?: ClassConstructor<TResult>
+    ): Promise<Response<TResult>> {
+        const rawResponse: FetchResponse = await fetch(this.getUrl(path), {
             method: "POST",
-            headers: Object.assign(
-                this.#getHeaders(headers),
-                body instanceof FormData ? body.getHeaders() : { "Content-Type": "application/json" }
-            ),
+            headers: {
+                ...this.getHeaders(headers),
+                ...(body instanceof FormData ? body.getHeaders() : { "Content-Type": "application/json" })
+            },
             body: body instanceof FormData ? body : JSON.stringify(body)
         });
 
-        const parsedResponse: Response = await this.#parseResponse(rawResponse);
+        const parsedResponse: Response<TResult> = await this.parseResponse(rawResponse, mappedType);
 
         if (parsedResponse.status >= 400) {
-            throw this.#errorFrom(parsedResponse);
+            throw this.errorFrom(parsedResponse);
         }
         return parsedResponse;
     }

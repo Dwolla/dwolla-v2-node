@@ -2,10 +2,10 @@ import FormData from "form-data";
 import cases from "jest-in-case";
 import nock from "nock";
 import { Client } from "../src";
-import { RequestHeaders, RequestPath, RequestQuery, Response, ResponseError, Token } from "../src/token";
+import { PathLike, RequestHeaders, RequestQuery, Response, ResponseError, Token } from "../src/token";
+import { TokenState } from "../src/token-manager";
 import { toFormData, userAgent } from "../src/utils";
 import { getClient } from "./utils";
-import { TokenState } from "../src/token-manager";
 
 interface BaseSDKOptions {
     headers?: RequestHeaders; // Defaults to only auth headers w/ token
@@ -13,7 +13,7 @@ interface BaseSDKOptions {
     nockPath: string;
     nockReplyObj?: any; // Defaults to `responseBody`
     nockReplyStatus?: number; // Defaults to `200`
-    sdkPath: RequestPath;
+    sdkPath: PathLike;
     query?: RequestQuery; // Defaults to an empty object, `{}`
 }
 

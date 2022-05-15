@@ -1,7 +1,11 @@
+import { ClassConstructor } from "class-transformer";
+import "reflect-metadata";
+import { RootApi } from "./api/root";
 import { Auth } from "./auth";
 import getEnvironment, { Environment } from "./environment";
+import { HalResource } from "./models/base-hal";
+import { PathLike, RequestHeaders, RequestQuery, Response } from "./token";
 import { TokenManager } from "./token-manager";
-import { RequestHeaders, RequestPath, RequestQuery, Response } from "./token";
 
 interface BaseClientOptions {
     environment?: "production" | "sandbox";
@@ -16,37 +20,60 @@ export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<T, Exclu
     { [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>> }[Keys];
 
 export class Client {
-    readonly #auth: Auth;
-    readonly #options: ClientOptions;
-    readonly #tokenManager: TokenManager;
+    // API Method Variables
+    readonly root = new RootApi(this);
+
+    // Internal Variables
+    readonly auth: Auth;
+    readonly options: ClientOptions;
+    private readonly tokenManager: TokenManager;
 
     constructor(options: ClientOptions) {
-        this.#auth = new Auth(this);
-        this.#options = options;
-        this.#tokenManager = new TokenManager(this);
+        this.auth = new Auth(this);
+        this.options = options;
+        this.tokenManager = new TokenManager(this);
     }
 
-    async delete(path: RequestPath, query?: RequestQuery, headers?: RequestHeaders): Promise<Response> {
-        return (await this.#tokenManager.getToken()).delete(path, query, headers);
+    async delete(path: PathLike, query?: RequestQuery, headers?: RequestHeaders): Promise<Response> {
+        return this.deleteMapped(path, query, headers);
     }
 
-    async get(path: RequestPath, query?: RequestQuery, headers?: RequestHeaders): Promise<Response> {
-        return (await this.#tokenManager.getToken()).get(path, query, headers);
+    async deleteMapped<TResult extends HalResource>(
+        path: PathLike,
+        query?: RequestQuery,
+        headers?: RequestHeaders,
+        mappedType?: ClassConstructor<TResult>
+    ): Promise<Response<TResult>> {
+        return (await this.tokenManager.getToken()).delete(path, query, headers, mappedType);
     }
 
-    get auth(): Auth {
-        return this.#auth;
+    async get(path: PathLike, query?: RequestQuery, headers?: RequestHeaders): Promise<Response> {
+        return this.getMapped(path, query, headers);
+    }
+
+    async getMapped<TResult extends HalResource>(
+        path: PathLike,
+        query?: RequestQuery,
+        headers?: RequestHeaders,
+        mappedType?: ClassConstructor<TResult>
+    ): Promise<Response<TResult>> {
+        return (await this.tokenManager.getToken()).get(path, query, headers, mappedType);
     }
 
     get environment(): Environment {
-        return getEnvironment(this.#options.environment);
+        return getEnvironment(this.options.environment);
     }
 
-    get options(): ClientOptions {
-        return this.#options;
+    async post<TBody>(path: PathLike, body?: TBody, headers?: RequestHeaders): Promise<Response> {
+        return this.postMapped(path, body, headers);
     }
 
-    async post(path: RequestPath, body?: any, headers?: RequestHeaders): Promise<Response> {
-        return (await this.#tokenManager.getToken()).post(path, body, headers);
+    async postMapped<TBody, TResult extends HalResource = any>(
+        path: PathLike,
+        body?: TBody,
+        headers?: RequestHeaders,
+        mappedType?: ClassConstructor<TResult>
+    ): Promise<Response<TResult>> {
+        return (await this.tokenManager.getToken()).post(path, body, headers, mappedType);
     }
 }

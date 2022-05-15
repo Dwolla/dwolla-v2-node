@@ -15,40 +15,34 @@ export interface TokenManagerState {
 }
 
 export class TokenManager {
-    static #EXPIRES_IN_DELTA = 60;
+    private static readonly EXPIRES_IN_DELTA = 60;
 
-    readonly #client: Client;
-    #state?: TokenManagerState;
-
-    constructor(client: Client, state?: TokenManagerState) {
-        this.#client = client;
-        this.#state = state;
-
+    constructor(private readonly client: Client, private state?: TokenManagerState) {
         // If we're currently testing, don't automatically update token
         if (process.env.NODE_ENV !== "test") {
-            this.#updateToken().catch((err) => console.error(err));
+            this.updateToken().catch((err) => console.error(err));
         }
     }
 
     async getToken(): Promise<Token> {
-        if (!this.#state?.instance || !this.#isTokenFresh()) {
-            return await this.#updateToken();
+        if (!this.state?.instance || !this.isTokenFresh()) {
+            return await this.updateToken();
         }
-        return this.#state.instance;
+        return this.state.instance;
     }
 
-    #isTokenFresh(): boolean {
-        if (!this.#state) return false;
+    isTokenFresh(): boolean {
+        if (!this.state) return false;
         return (
-            this.#state.expiresIn === null ||
-            this.#state.expiresIn + this.#state.updatedAt > unixSeconds() + TokenManager.#EXPIRES_IN_DELTA
+            this.state.expiresIn === null ||
+            this.state.expiresIn + this.state.updatedAt > unixSeconds() + TokenManager.EXPIRES_IN_DELTA
         );
     }
 
-    async #updateToken(): Promise<Token> {
-        const instance: Token = await this.#client.auth.requestToken();
+    async updateToken(): Promise<Token> {
+        const instance: Token = await this.client.auth.requestToken();
 
-        this.#state = {
+        this.state = {
             expiresIn: instance.state.expiresIn,
             instance,
             updatedAt: unixSeconds()

@@ -3,7 +3,9 @@
     "allowJs": true,
     "declaration": true,
     "declarationDir": "build/dts",
+    "emitDecoratorMetadata": true,
     "esModuleInterop": true,
+    "experimentalDecorators": true,
     "lib": [
       "esnext"
     ],

@@ -26,7 +26,7 @@ export default [
                 }
             })
         ],
-        external: ["form-data", "form-urlencoded", "node-fetch", "node:stream"]
+        external: ["class-transformer", "form-data", "form-urlencoded", "node-fetch", "reflect-metadata"]
     },
     {
         input: "./build/dts/src/index.d.ts",
