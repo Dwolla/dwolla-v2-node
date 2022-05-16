@@ -5,6 +5,7 @@ import fetch, { Headers, Response as FetchResponse } from "node-fetch";
 import { AuthResponse } from "./auth";
 import { Client } from "./client";
 import { HalResource } from "./models/base-hal";
+import { ResponseError } from "./response-error";
 import { TokenState } from "./token-manager";
 import { rejectEmptyKeys, userAgent } from "./utils";
 
@@ -28,8 +29,6 @@ export type RequestHeaders = {
     [key: string]: string;
 };
 
-export type ResponseError<TResult extends HalResource = any> = Error & Response<TResult>;
-
 export type RequestQuery = {
     [key: string]: string;
 };
@@ -48,20 +47,12 @@ export class Token {
             headers: this.getHeaders(headers)
         });
 
-        const parsedResponse: Response<TResult> = await this.parseResponse(rawResponse, mappedType);
+        const { parsedResponse, unmappedResponse } = await this.parseResponse(rawResponse, mappedType);
 
         if (parsedResponse.status >= 400) {
-            throw this.errorFrom(parsedResponse);
+            throw new ResponseError(unmappedResponse ?? parsedResponse);
         }
         return parsedResponse;
-    }
-
-    private errorFrom<TResult extends HalResource>(parsedResponse: Response<TResult>): ResponseError<TResult> {
-        const error: ResponseError<TResult> = new Error(parsedResponse.body as any) as ResponseError<TResult>;
-        error.body = parsedResponse.body;
-        error.headers = parsedResponse.headers;
-        error.status = parsedResponse.status;
-        return error;
     }
 
     static fromResponse(client: Client, response: AuthResponse): Token {
@@ -95,10 +86,10 @@ export class Token {
             headers: this.getHeaders(headers)
         });
 
-        const parsedResponse: Response<TResult> = await this.parseResponse(rawResponse, mappedType);
+        const { parsedResponse, unmappedResponse } = await this.parseResponse(rawResponse, mappedType);
 
         if (parsedResponse.status >= 400) {
-            throw this.errorFrom(parsedResponse);
+            throw new ResponseError(unmappedResponse ?? parsedResponse);
         }
         return parsedResponse;
     }
@@ -120,29 +111,64 @@ export class Token {
         return query ? [url, query].join("?") : url;
     }
 
+    /**
+     * Parses {@link FetchResponse} from `node-fetch` into {@link Response}.
+     *
+     * This method may sometimes return more than one property. If {@link mappedType} is not supplied, then only one
+     * property will ever be returned — {@link parsedResponse}; however, if {@link mappedType} is present, then both
+     * {@link parsedResponse} and {@link unmappedResponse} will be returned.
+     *
+     * When a mapped response returns with both properties, {@link parsedResponse}, which is the response mapped to the
+     * specified class, should be used for a successful response, whereas {@link unmappedResponse} should be used when
+     * an error occurred.
+     *
+     * @param response The raw {@link FetchResponse} from the `node-fetch` call
+     * @param [mappedType] The {@link HalResource} model that this response should be mapped to, if present
+     * @private
+     *
+     * @returns {{
+     *     parsedResponse: Response<TResult>,
+     *     unmappedResponse?: Response<TResult>
+     * }}
+     */
     private async parseResponse<TResult extends HalResource>(
         response: FetchResponse,
         mappedType?: ClassConstructor<TResult>
-    ): Promise<Response<TResult>> {
+    ): Promise<{ parsedResponse: Response<TResult>; unmappedResponse?: Response<TResult> }> {
         const rawBody: string = await response.text();
         let parsedBody: any;
+        let unmappedBody: any;
 
         try {
             parsedBody = JSON.parse(rawBody);
+
+            if (mappedType) {
+                unmappedBody = parsedBody;
+                parsedBody = plainToInstance(mappedType, unmappedBody, {
+                    enableImplicitConversion: true,
+                    excludeExtraneousValues: true
+                });
+            }
         } catch (err) {
             parsedBody = rawBody;
         }
 
-        return {
-            body: mappedType
-                ? plainToInstance(mappedType, parsedBody, {
-                      enableImplicitConversion: true,
-                      excludeExtraneousValues: true
-                  })
-                : parsedBody,
+        const parsedResponse: Response<TResult> = {
+            body: parsedBody,
             headers: response.headers,
             status: response.status
         };
+
+        let unmappedResponse: Response<TResult> | undefined;
+
+        if (mappedType) {
+            unmappedResponse = {
+                body: unmappedBody,
+                headers: response.headers,
+                status: response.status
+            };
+        }
+        return { parsedResponse, unmappedResponse };
     }
 
     async post<TBody, TResult extends HalResource = any>(
@@ -160,10 +186,10 @@ export class Token {
             body: body instanceof FormData ? body : JSON.stringify(body)
         });
 
-        const parsedResponse: Response<TResult> = await this.parseResponse(rawResponse, mappedType);
+        const { parsedResponse, unmappedResponse } = await this.parseResponse(rawResponse, mappedType);
 
         if (parsedResponse.status >= 400) {
-            throw this.errorFrom(parsedResponse);
+            throw new ResponseError(unmappedResponse ?? parsedResponse);
         }
         return parsedResponse;
     }

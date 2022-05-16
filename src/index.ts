@@ -1,3 +1,4 @@
 import { Client } from "./client";
+import { isResponseError } from "./utils";
 
-export { Client };
+export { Client, isResponseError };

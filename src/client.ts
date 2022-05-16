@@ -1,6 +1,6 @@
 import { ClassConstructor } from "class-transformer";
 import "reflect-metadata";
-import { RootApi } from "./api/root";
+import { Api } from "./api/api";
 import { Auth } from "./auth";
 import getEnvironment, { Environment } from "./environment";
 import { HalResource } from "./models/base-hal";
@@ -20,15 +20,13 @@ export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<T, Exclu
     { [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>> }[Keys];
 
 export class Client {
-    // API Method Variables
-    readonly root = new RootApi(this);
-
-    // Internal Variables
+    readonly api: Api;
     readonly auth: Auth;
     readonly options: ClientOptions;
     private readonly tokenManager: TokenManager;
 
     constructor(options: ClientOptions) {
+        this.api = new Api(this);
         this.auth = new Auth(this);
         this.options = options;
         this.tokenManager = new TokenManager(this);
@@ -51,6 +49,10 @@ export class Client {
         return this.getMapped(path, query, headers);
     }
 
+    get environment(): Environment {
+        return getEnvironment(this.options.environment);
+    }
+
     async getMapped<TResult extends HalResource>(
         path: PathLike,
         query?: RequestQuery,
@@ -58,10 +60,6 @@ export class Client {
         mappedType?: ClassConstructor<TResult>
     ): Promise<Response<TResult>> {
         return (await this.tokenManager.getToken()).get(path, query, headers, mappedType);
-    }
-
-    get environment(): Environment {
-        return getEnvironment(this.options.environment);
     }
 
     async post<TBody>(path: PathLike, body?: TBody, headers?: RequestHeaders): Promise<Response> {

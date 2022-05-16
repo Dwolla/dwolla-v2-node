@@ -23,6 +23,7 @@
     "format:fix": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
     "lint:check": "eslint \"src/**/*.ts\" \"tests/**/*.ts\" --ignore-path .eslintignore",
     "lint:fix": "eslint \"src/**/*.ts\" \"tests/**/*.ts\" --fix --ignore-path .eslintignore",
+    "run:basic-example": "cd examples/basic-example/cjs && node main",
     "test": "cross-env NODE_ENV=test jest"
   },
   "devDependencies": {
