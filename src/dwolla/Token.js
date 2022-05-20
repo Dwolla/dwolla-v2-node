@@ -31,9 +31,9 @@ function getUrl(token, suppliedPath, suppliedQuery) {
   var url;
   if (typeof suppliedPath === "object") {
     url = suppliedPath._links.self.href;
-  } else if (suppliedPath.indexOf(token.client.apiUrl) === 0) {
+  } else if (suppliedPath.startsWith(token.client.apiUrl)) {
     url = suppliedPath;
-  } else if (suppliedPath.indexOf("/") === 0) {
+  } else if (suppliedPath.startsWith("/")) {
     url = [token.client.apiUrl, suppliedPath].join("");
   } else {
     url = [
