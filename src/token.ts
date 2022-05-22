@@ -40,14 +40,14 @@ export class Token {
         path: PathLike,
         query?: RequestQuery,
         headers?: RequestHeaders,
-        mappedType?: ClassConstructor<TResult>
+        deserializeAs?: ClassConstructor<TResult>
     ): Promise<Response<TResult>> {
         const rawResponse: FetchResponse = await fetch(this.getUrl(path, query), {
             method: "DELETE",
             headers: this.getHeaders(headers)
         });
 
-        const { parsedResponse, unmappedResponse } = await this.parseResponse(rawResponse, mappedType);
+        const { parsedResponse, unmappedResponse } = await this.parseResponse(rawResponse, deserializeAs);
 
         if (parsedResponse.status >= 400) {
             throw new ResponseError(unmappedResponse ?? parsedResponse);
@@ -80,13 +80,13 @@ export class Token {
         path: PathLike,
         query?: RequestQuery,
         headers?: RequestHeaders,
-        mappedType?: ClassConstructor<TResult>
+        deserializeAs?: ClassConstructor<TResult>
     ): Promise<Response<TResult>> {
         const rawResponse: FetchResponse = await fetch(this.getUrl(path, query), {
             headers: this.getHeaders(headers)
         });
 
-        const { parsedResponse, unmappedResponse } = await this.parseResponse(rawResponse, mappedType);
+        const { parsedResponse, unmappedResponse } = await this.parseResponse(rawResponse, deserializeAs);
 
         if (parsedResponse.status >= 400) {
             throw new ResponseError(unmappedResponse ?? parsedResponse);
@@ -175,7 +175,7 @@ export class Token {
         path: PathLike,
         body?: TBody,
         headers?: RequestHeaders,
-        mappedType?: ClassConstructor<TResult>
+        deserializeAs?: ClassConstructor<TResult>
     ): Promise<Response<TResult>> {
         const rawResponse: FetchResponse = await fetch(this.getUrl(path), {
             method: "POST",
@@ -186,7 +186,7 @@ export class Token {
             body: body instanceof FormData ? body : JSON.stringify(body)
         });
 
-        const { parsedResponse, unmappedResponse } = await this.parseResponse(rawResponse, mappedType);
+        const { parsedResponse, unmappedResponse } = await this.parseResponse(rawResponse, deserializeAs);
 
         if (parsedResponse.status >= 400) {
             throw new ResponseError(unmappedResponse ?? parsedResponse);

@@ -5,6 +5,6 @@ export class RootApi {
     constructor(private readonly client: Client) {}
 
     async get(): Promise<Root> {
-        return (await this.client.getMapped("/", undefined, undefined, Root)).body;
+        return (await this.client.getMapped(Root, "/")).body;
     }
 }

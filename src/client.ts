@@ -37,12 +37,12 @@ export class Client {
     }
 
     async deleteMapped<TResult extends HalResource>(
+        deserializeAs: ClassConstructor<TResult>,
         path: PathLike,
         query?: RequestQuery,
-        headers?: RequestHeaders,
-        mappedType?: ClassConstructor<TResult>
+        headers?: RequestHeaders
     ): Promise<Response<TResult>> {
-        return (await this.tokenManager.getToken()).delete(path, query, headers, mappedType);
+        return (await this.tokenManager.getToken()).delete(path, query, headers, deserializeAs);
     }
 
     async get(path: PathLike, query?: RequestQuery, headers?: RequestHeaders): Promise<Response> {
@@ -54,12 +54,12 @@ export class Client {
     }
 
     async getMapped<TResult extends HalResource>(
+        deserializeAs: ClassConstructor<TResult>,
         path: PathLike,
         query?: RequestQuery,
-        headers?: RequestHeaders,
-        mappedType?: ClassConstructor<TResult>
+        headers?: RequestHeaders
     ): Promise<Response<TResult>> {
-        return (await this.tokenManager.getToken()).get(path, query, headers, mappedType);
+        return (await this.tokenManager.getToken()).get(path, query, headers, deserializeAs);
     }
 
     async post<TBody>(path: PathLike, body?: TBody, headers?: RequestHeaders): Promise<Response> {
@@ -67,11 +67,11 @@ export class Client {
     }
 
     async postMapped<TBody, TResult extends HalResource = any>(
+        deserializeAs: ClassConstructor<TResult>,
         path: PathLike,
         body?: TBody,
-        headers?: RequestHeaders,
-        mappedType?: ClassConstructor<TResult>
+        headers?: RequestHeaders
     ): Promise<Response<TResult>> {
-        return (await this.tokenManager.getToken()).post(path, body, headers, mappedType);
+        return (await this.tokenManager.getToken()).post(path, body, headers, deserializeAs);
     }
 }
