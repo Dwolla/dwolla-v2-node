@@ -2,7 +2,7 @@ import FormData from "form-data";
 import cases from "jest-in-case";
 import nock from "nock";
 import { Client } from "../src";
-import { ResponseError } from "../src/response-error";
+import { ResponseError } from "../src/errors/response.error";
 import { PathLike, RequestHeaders, RequestQuery, Response, Token } from "../src/token";
 import { TokenState } from "../src/token-manager";
 import { toFormData, userAgent } from "../src/utils";

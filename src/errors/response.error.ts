@@ -1,8 +1,9 @@
 import { Headers } from "node-fetch";
-import { HalResource } from "./models/base-hal";
-import { Response } from "./token";
+import { HalResource } from "../models/base-hal";
+import { Response } from "../token";
+import { DwollaError } from "./dwolla.error";
 
-export class ResponseError<TResult extends HalResource = any> extends Error {
+export class ResponseError<TResult extends HalResource = any> extends DwollaError {
     readonly body: TResult;
     readonly headers: Headers;
     readonly status: number;

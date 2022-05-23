@@ -4,8 +4,10 @@ import formUrlEncoded from "form-urlencoded";
 import fetch, { Headers, Response as FetchResponse } from "node-fetch";
 import { AuthResponse } from "./auth";
 import { Client } from "./client";
+import { HEADERS } from "./constants";
+import { DwollaError } from "./errors/dwolla.error";
+import { ResponseError } from "./errors/response.error";
 import { HalResource } from "./models/base-hal";
-import { ResponseError } from "./response-error";
 import { TokenState } from "./token-manager";
 import { rejectEmptyKeys, userAgent } from "./utils";
 
@@ -55,25 +57,21 @@ export class Token {
         return parsedResponse;
     }
 
+    private follow<TResult extends HalResource>(
+        response: Response,
+        deserializeAs?: ClassConstructor<TResult>
+    ): Promise<Response<TResult>> {
+        const location: string | null = response.headers.get(HEADERS.LOCATION);
+        if (!location) throw new DwollaError("Cannot follow URL, Location header is missing");
+        return this.get(location, undefined, undefined, deserializeAs);
+    }
+
     static fromResponse(client: Client, response: AuthResponse): Token {
         return new Token(client, {
             accessToken: response.accessToken,
             expiresIn: response.expiresIn,
             tokenType: response.tokenType
         });
-    }
-
-    get state(): TokenState {
-        return this.tokenState;
-    }
-
-    private getHeaders(additionalHeaders?: RequestHeaders): ExtendedHeaders {
-        return {
-            Authorization: ["Bearer", this.tokenState.accessToken].join(" "),
-            Accept: "application/vnd.dwolla.v1.hal+json",
-            "User-Agent": userAgent(),
-            ...additionalHeaders
-        };
     }
 
     async get<TResult extends HalResource>(
@@ -92,6 +90,19 @@ export class Token {
             throw new ResponseError(unmappedResponse ?? parsedResponse);
         }
         return parsedResponse;
+    }
+
+    private getHeaders(additionalHeaders?: RequestHeaders): ExtendedHeaders {
+        return {
+            Authorization: ["Bearer", this.tokenState.accessToken].join(" "),
+            Accept: "application/vnd.dwolla.v1.hal+json",
+            "User-Agent": userAgent(),
+            ...additionalHeaders
+        };
+    }
+
+    get state(): TokenState {
+        return this.tokenState;
     }
 
     private getUrl(suppliedPath: PathLike, suppliedQuery?: RequestQuery): string {
@@ -192,5 +203,14 @@ export class Token {
             throw new ResponseError(unmappedResponse ?? parsedResponse);
         }
         return parsedResponse;
+    }
+
+    async postFollow<TBody, TResult extends HalResource = any>(
+        path: PathLike,
+        body?: TBody,
+        headers?: RequestHeaders,
+        deserializeAs?: ClassConstructor<TResult>
+    ): Promise<Response<TResult>> {
+        return this.follow(await this.post(path, body, headers), deserializeAs);
     }
 }
