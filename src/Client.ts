@@ -1,11 +1,11 @@
 import { ClassConstructor } from "class-transformer";
 import "reflect-metadata";
-import { Api } from "./api/api";
-import { Auth } from "./auth";
+import { Api } from "./api/Api";
+import { Auth } from "./Auth";
 import getEnvironment, { Environment } from "./environment";
-import { HalResource } from "./models/base-hal";
-import { PathLike, RequestHeaders, RequestQuery, Response } from "./token";
-import { TokenManager } from "./token-manager";
+import { HalResource } from "./models/HalResource";
+import { PathLike, RequestHeaders, RequestQuery, Response } from "./Token";
+import { TokenManager } from "./TokenManager";
 
 interface BaseClientOptions {
     environment?: "production" | "sandbox";

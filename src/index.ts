@@ -1,4 +1,4 @@
-import { Client } from "./client";
-import { isResponseError } from "./utils";
+import { Client } from "./Client";
+import { isDwollaError, isResponseError } from "./utils";
 
-export { Client, isResponseError };
+export { Client, isDwollaError, isResponseError };

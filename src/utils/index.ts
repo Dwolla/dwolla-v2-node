@@ -1,4 +1,5 @@
-import { isDwollaError, isResponseError } from "./errors";
+import isDwollaError from "./isDwollaError";
+import isResponseError from "./isResponseError";
 import rejectEmptyKeys from "./rejectEmptyKeys";
 import toFormData from "./toFormData";
 import unixSeconds from "./unixSeconds";

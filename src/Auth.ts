@@ -1,7 +1,7 @@
 import formUrlEncoded from "form-urlencoded";
 import fetch, { Response } from "node-fetch";
-import { Client } from "./client";
-import { Token } from "./token";
+import { Client } from "./Client";
+import { Token } from "./Token";
 import { userAgent } from "./utils";
 
 export interface AuthError extends Error {

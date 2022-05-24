@@ -1,5 +1,5 @@
-import { Client } from "../client";
-import { Root } from "../models/root";
+import { Client } from "../Client";
+import { Root } from "../models/Root";
 
 export class RootApi {
     constructor(private readonly client: Client) {}

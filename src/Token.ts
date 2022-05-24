@@ -2,13 +2,13 @@ import { ClassConstructor, plainToInstance } from "class-transformer";
 import FormData from "form-data";
 import formUrlEncoded from "form-urlencoded";
 import fetch, { Headers, Response as FetchResponse } from "node-fetch";
-import { AuthResponse } from "./auth";
-import { Client } from "./client";
+import { AuthResponse } from "./Auth";
+import { Client } from "./Client";
 import { HEADERS } from "./constants";
-import { DwollaError } from "./errors/dwolla.error";
-import { ResponseError } from "./errors/response.error";
-import { HalResource } from "./models/base-hal";
-import { TokenState } from "./token-manager";
+import { DwollaError } from "./errors/DwollaError";
+import { ResponseError } from "./errors/ResponseError";
+import { HalResource } from "./models/HalResource";
+import { TokenState } from "./TokenManager";
 import { rejectEmptyKeys, userAgent } from "./utils";
 
 export interface Response<TBody extends HalResource = any> {

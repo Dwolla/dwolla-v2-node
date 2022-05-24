@@ -1,5 +1,5 @@
 import { Expose, Type } from "class-transformer";
-import { Link } from "./link";
+import { Link } from "./Link";
 
 export abstract class HalResource {
     @Expose()

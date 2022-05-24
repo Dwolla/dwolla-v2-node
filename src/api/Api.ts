@@ -1,5 +1,5 @@
-import { Client } from "../client";
-import { RootApi } from "./root";
+import { Client } from "../Client";
+import { RootApi } from "./RootApi";
 
 export class Api {
     readonly root: RootApi;

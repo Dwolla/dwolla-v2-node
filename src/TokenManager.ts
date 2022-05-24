@@ -1,5 +1,5 @@
-import { Client } from "./client";
-import { Token } from "./token";
+import { Client } from "./Client";
+import { Token } from "./Token";
 import { unixSeconds } from "./utils";
 
 export interface TokenState {
