@@ -1,6 +1,7 @@
 import { ClassConstructor } from "class-transformer";
 import "reflect-metadata";
-import { Api } from "./api/Api";
+import { AccountsApi } from "./api/AccountsApi";
+import { RootApi } from "./api/RootApi";
 import { Auth } from "./Auth";
 import getEnvironment, { Environment } from "./environment";
 import { HalResource } from "./models/HalResource";
@@ -20,13 +21,16 @@ export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<T, Exclu
     { [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>> }[Keys];
 
 export class Client {
-    readonly api: Api;
+    readonly api = {
+        accounts: new AccountsApi(this),
+        root: new RootApi(this)
+    } as const;
+
     readonly auth: Auth;
     readonly options: ClientOptions;
     private readonly tokenManager: TokenManager;
 
     constructor(options: ClientOptions) {
-        this.api = new Api(this);
         this.auth = new Auth(this);
         this.options = options;
         this.tokenManager = new TokenManager(this);
