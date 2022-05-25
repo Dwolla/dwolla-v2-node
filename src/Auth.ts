@@ -1,12 +1,9 @@
 import formUrlEncoded from "form-urlencoded";
 import fetch, { Response } from "node-fetch";
 import { Client } from "./Client";
+import { AuthError } from "./errors/AuthError";
 import { Token } from "./Token";
 import { userAgent } from "./utils";
-
-export interface AuthError extends Error {
-    error: string;
-}
 
 export interface AuthResponse {
     accessToken: string;
@@ -46,9 +43,7 @@ export class Auth {
         });
 
         if (jsonResponse.error) {
-            const authError: AuthError = new Error(JSON.stringify(jsonResponse)) as AuthError;
-            authError.error = jsonResponse.error;
-            throw authError;
+            throw new AuthError(jsonResponse);
         }
         return Token.fromResponse(this.client, jsonResponse);
     }
