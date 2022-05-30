@@ -1,8 +1,6 @@
 import nock from "nock";
-import { Client } from "../src";
-import { Token } from "../src/Token";
+import { Client, Token, TokenState } from "../src";
 import { getClient, mockTokenRequest } from "./utils";
-import { TokenState } from "../src/TokenManager";
 
 describe("Auth", () => {
     const client: Client = getClient();

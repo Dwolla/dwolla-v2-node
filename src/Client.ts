@@ -1,6 +1,6 @@
 import { ClassConstructor } from "class-transformer";
-import "reflect-metadata";
 import { AccountsApi } from "./api/AccountsApi";
+import { CustomersApi } from "./api/CustomersApi";
 import { RootApi } from "./api/RootApi";
 import { Auth } from "./Auth";
 import getEnvironment, { Environment } from "./environment";
@@ -23,6 +23,7 @@ export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<T, Exclu
 export class Client {
     readonly api = {
         accounts: new AccountsApi(this),
+        customers: new CustomersApi(this),
         root: new RootApi(this)
     } as const;
 

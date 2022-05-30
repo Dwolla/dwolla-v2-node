@@ -3,5 +3,6 @@ export const HEADERS = {
 } as const;
 
 export const PATHS = {
-    ACCOUNTS: "accounts"
+    ACCOUNTS: "accounts",
+    CUSTOMERS: "customers"
 } as const;

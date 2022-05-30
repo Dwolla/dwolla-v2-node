@@ -1,4 +1,71 @@
-import { Client } from "./Client";
-import { isAuthError, isDwollaError, isResponseError } from "./utils";
+import "reflect-metadata";
 
-export { Client, isAuthError, isDwollaError, isResponseError };
+/**
+ * API Methods
+ */
+export { AccountsApi } from "./api/AccountsApi";
+export { CustomersApi } from "./api/CustomersApi";
+export type {
+    CreateUnverifiedOptions,
+    CreateVerifiedBusinessOptions,
+    CreateVerifiedPersonalOptions,
+    CreateVerifiedSolePropOptions,
+    ListQueryParams
+} from "./api/CustomersApi";
+export { RootApi } from "./api/RootApi";
+
+/**
+ * Errors
+ */
+export { AuthError } from "./errors/AuthError";
+export { DwollaError } from "./errors/DwollaError";
+export { ResponseError } from "./errors/ResponseError";
+
+/**
+ * Models
+ */
+export { HalResource } from "./models/HalResource";
+export { Link } from "./models/Link";
+export { Root } from "./models/Root";
+
+/**
+ * Models — Accounts
+ */
+export { Account } from "./models/accounts/Account";
+export { AccountType } from "./models/accounts/AccountType";
+export { BusinessType } from "./models/customers/BusinessType";
+
+/**
+ * Models — Customers
+ */
+export { Customer } from "./models/customers/Customer";
+export { CustomerController } from "./models/customers/CustomerController";
+export { Customers } from "./models/customers/Customers";
+export { CustomerStatus } from "./models/customers/CustomerStatus";
+export { CustomerType } from "./models/customers/CustomerType";
+export { EmbeddedCustomers } from "./models/customers/EmbeddedCustomers";
+
+/**
+ * Models — Shared
+ */
+export { Country } from "./models/shared/Country";
+export { InternationalAddress } from "./models/shared/InternationalAddress";
+export { USAddress } from "./models/shared/USAddress";
+export { USState } from "./models/shared/USState";
+
+/**
+ * Utilities
+ */
+export { isAuthError, isDwollaError, isResponseError } from "./utils";
+
+/**
+ * Core
+ */
+export { Auth } from "./Auth";
+export type { AuthResponse, AuthRequestParams } from "./Auth";
+export { Client } from "./Client";
+export type { ClientOptions, RequireAtLeastOne } from "./Client";
+export { Token } from "./Token";
+export type { PathLike, Response, RequestHeaders, RequestQuery } from "./Token";
+export { TokenManager } from "./TokenManager";
+export type { TokenState, TokenManagerState } from "./TokenManager";

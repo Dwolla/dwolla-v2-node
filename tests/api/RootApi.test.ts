@@ -1,8 +1,6 @@
 import nock from "nock";
 import "reflect-metadata";
-import { Client } from "../../src";
-import { Root } from "../../src/models/Root";
-import { Token } from "../../src/Token";
+import { Client, Root, Token } from "../../src";
 import { getApiHeaders, getClient, mockTokenRequest } from "../utils";
 
 describe("RootApi", () => {

@@ -1,6 +1,5 @@
 import nock from "nock";
-import { Client } from "../src";
-import { Token } from "../src/Token";
+import { Client, Token } from "../src";
 import { userAgent } from "../src/utils";
 
 export function getApiHeaders(token: Token): { Authorization: string; Accept: string; "User-Agent": string } {

@@ -1,3 +1,6 @@
+/**
+ * Represents an enumeration of all U.S. states as well as territories.
+ */
 export enum USState {
     ALABAMA = "AL",
     ALASKA = "AK",

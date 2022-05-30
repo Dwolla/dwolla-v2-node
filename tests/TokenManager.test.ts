@@ -1,7 +1,5 @@
 import nock from "nock";
-import { Client } from "../src";
-import { Token } from "../src/Token";
-import { TokenManager } from "../src/TokenManager";
+import { Client, Token, TokenManager } from "../src";
 import { unixSeconds } from "../src/utils";
 import { getClient, mockTokenRequest } from "./utils";
 

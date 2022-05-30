@@ -32,7 +32,7 @@ export type RequestHeaders = {
 };
 
 export type RequestQuery = {
-    [key: string]: string;
+    [key: string]: any;
 };
 
 export class Token {
@@ -118,7 +118,10 @@ export class Token {
             url = [this.client.environment.apiUrl, suppliedPath.replace(/^https?:\/\/[^/]*\//, "")].join("/");
         }
 
-        const query: string = formUrlEncoded(rejectEmptyKeys(suppliedQuery || {}));
+        const query: string = formUrlEncoded(rejectEmptyKeys(suppliedQuery || {}), {
+            skipBracket: true,
+            skipIndex: true
+        });
         return query ? [url, query].join("?") : url;
     }
 

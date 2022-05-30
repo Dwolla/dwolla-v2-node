@@ -1,9 +1,6 @@
 import nock from "nock";
 import "reflect-metadata";
-import { Client } from "../../src";
-import { Account } from "../../src/models/accounts/Account";
-import { USAddress } from "../../src/models/shared/USAddress";
-import { Token } from "../../src/Token";
+import { Account, Client, Token, USAddress } from "../../src";
 import { getApiHeaders, getClient, mockTokenRequest } from "../utils";
 
 describe("AccountsApi", () => {
