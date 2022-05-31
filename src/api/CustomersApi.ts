@@ -98,11 +98,23 @@ interface WithVerifiedBusiness {
     website?: string;
 }
 
+/**
+ * Request options that are sent when updating an unverified customer record
+ * @see {@link CustomersApi.updateUnverified}
+ */
 export type UpdateUnverifiedOptions = Partial<Omit<CreateUnverifiedOptions, "ipAddress">>;
 
+/**
+ * Request options that are sent when updating a verified business customer record
+ * @see {@link CustomersApi.updateVerifiedBusiness}
+ */
 export type UpdateVerifiedBusinessOptions = UpdateVerifiedPersonalOptions &
     Partial<Pick<CreateVerifiedBusinessOptions, "doingBusinessAs" | "website">>;
 
+/**
+ * Request options that are sent when updating a verified personal customer record
+ * @see {@link CustomersApi.updateVerifiedPersonal}
+ */
 export type UpdateVerifiedPersonalOptions = Partial<WithUSAddress> &
     Partial<Pick<CreateVerifiedPersonalOptions, "email" | "ipAddress" | "phone">>;
 
@@ -214,8 +226,7 @@ export class CustomersApi {
      * @see {@link https://developers.dwolla.com/api-reference/customers/update#deactivate-a-customer|Deactivate a Customer - Dwolla Documentation}
      */
     async deactivate(id: string): Promise<Customer> {
-        return (await this.client.postFollowMapped(Customer, `${PATHS.CUSTOMERS}/${id}`, { status: "deactivated" }))
-            .body;
+        return (await this.client.postMapped(Customer, `${PATHS.CUSTOMERS}/${id}`, { status: "deactivated" })).body;
     }
 
     /**
