@@ -21,6 +21,7 @@
     "cleanbundle": "pnpm clean && pnpm build && pnpm bundle",
     "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\"",
     "format:fix": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "gen:docs": "typedoc --out docs src",
     "lint:check": "eslint \"src/**/*.ts\" \"tests/**/*.ts\" --ignore-path .eslintignore",
     "lint:fix": "eslint \"src/**/*.ts\" \"tests/**/*.ts\" --fix --ignore-path .eslintignore",
     "run:basic-example": "cd examples/basic-example/cjs && node main",
@@ -52,6 +53,7 @@
     "ts-jest": "^28.0.2",
     "ts-node": "^10.8.0",
     "tslib": "^2.4.0",
+    "typedoc": "^0.22.16",
     "typescript": "^4.6.4"
   },
   "dependencies": {
