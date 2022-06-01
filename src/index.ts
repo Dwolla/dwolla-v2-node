@@ -4,6 +4,8 @@ import "reflect-metadata";
  * API Methods
  */
 export { AccountsApi } from "./api/AccountsApi";
+export { BeneficialOwnersApi } from "./api/BeneficialOwnersApi";
+export type { CreateForCustomerOptions, UpdateOptions } from "./api/BeneficialOwnersApi";
 export { BusinessClassificationsApi } from "./api/BusinessClassificationsApi";
 export { CustomersApi } from "./api/CustomersApi";
 export type {
@@ -37,6 +39,14 @@ export { AccountType } from "./models/accounts/AccountType";
 export { BusinessType } from "./models/customers/BusinessType";
 
 /**
+ * Models — Beneficial Owners
+ */
+export { BeneficialOwner } from "./models/beneficial-owners/BeneficialOwner";
+export { BeneficialOwners } from "./models/beneficial-owners/BeneficialOwners";
+export { EmbeddedBeneficialOwners } from "./models/beneficial-owners/EmbeddedBeneficialOwners";
+export { VerificationStatus } from "./models/beneficial-owners/VerificationStatus";
+
+/**
  * Models — Business Classifications
  */
 export { BusinessClassification } from "./models/business-classifications/BusinessClassification";
@@ -62,6 +72,11 @@ export { Country } from "./models/shared/Country";
 export { InternationalAddress } from "./models/shared/InternationalAddress";
 export { USAddress } from "./models/shared/USAddress";
 export { USState } from "./models/shared/USState";
+
+/**
+ * Types
+ */
+export type { PartialNested } from "./types/PartialNested";
 
 /**
  * Utilities
