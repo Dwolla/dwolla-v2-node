@@ -77,6 +77,7 @@ export { USState } from "./models/shared/USState";
  * Types
  */
 export type { PartialNested } from "./types/PartialNested";
+export type { RequireAtLeastOne } from "./types/RequireAtLeastOne";
 
 /**
  * Utilities
@@ -89,7 +90,7 @@ export { isAuthError, isDwollaError, isResponseError } from "./utils";
 export { Auth } from "./Auth";
 export type { AuthResponse, AuthRequestParams } from "./Auth";
 export { Client } from "./Client";
-export type { ClientOptions, RequireAtLeastOne } from "./Client";
+export type { ClientOptions } from "./Client";
 export { Token } from "./Token";
 export type { PathLike, Response, RequestHeaders, RequestQuery } from "./Token";
 export { TokenManager } from "./TokenManager";

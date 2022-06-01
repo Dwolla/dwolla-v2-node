@@ -9,6 +9,7 @@ import getEnvironment, { Environment } from "./environment";
 import { HalResource } from "./models/HalResource";
 import { PathLike, RequestHeaders, RequestQuery, Response } from "./Token";
 import { TokenManager } from "./TokenManager";
+import { RequireAtLeastOne } from "./types/RequireAtLeastOne";
 
 interface BaseClientOptions {
     environment?: "production" | "sandbox";
@@ -18,9 +19,6 @@ interface BaseClientOptions {
 }
 
 export type ClientOptions = RequireAtLeastOne<BaseClientOptions, "id" | "key">;
-
-export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<T, Exclude<keyof T, Keys>> &
-    { [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>> }[Keys];
 
 export class Client {
     readonly api = {
