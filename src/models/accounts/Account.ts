@@ -1,5 +1,4 @@
-import { Expose, Transform } from "class-transformer";
-import stringToEnum from "../../utils/stringToEnum";
+import { Expose } from "class-transformer";
 import { HalResource } from "../HalResource";
 import { USAddress } from "../shared/USAddress";
 import { AccountType } from "./AccountType";
@@ -33,7 +32,6 @@ export class Account extends HalResource {
      * Type of account — for example, personal, commercial, non-profit, or government
      */
     @Expose()
-    @Transform(({ value }) => stringToEnum(AccountType, value), { toClassOnly: true })
     readonly type?: AccountType;
 
     /**

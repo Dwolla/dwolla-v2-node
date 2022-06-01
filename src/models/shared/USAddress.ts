@@ -1,5 +1,4 @@
-import { Expose, Transform } from "class-transformer";
-import { stringToEnum } from "../../utils";
+import { Expose } from "class-transformer";
 import { USState } from "./USState";
 
 /**
@@ -28,7 +27,6 @@ export class USAddress {
      * The customer's two-letter U.S. state — e.g., `CA`.
      */
     @Expose()
-    @Transform(({ value }) => stringToEnum(USState, value), { toClassOnly: true })
     readonly state!: USState;
 
     /**
