@@ -1,26 +1,26 @@
-var chai = require("chai");
+var chai = require('chai');
 var expect = chai.expect;
-var nock = require("nock");
+var nock = require('nock');
 
-var chaiAsPromised = require("chai-as-promised");
+var chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 
-describe("TokenManager", function() {
-  var dwolla = require("../../src/index");
-  var client = new dwolla.Client({ id: "client_id", secret: "client_secret" });
+describe('TokenManager', function() {
+  var dwolla = require('../../src/index');
+  var client = new dwolla.Client({ id: 'client_id', secret: 'client_secret' });
   var requestHeaders = {
-    "content-type": "application/x-www-form-urlencoded",
-    "user-agent": require("../../src/dwolla/userAgent")
+    'content-type': 'application/x-www-form-urlencoded',
+    'user-agent': require('../../src/dwolla/userAgent')
   };
-  var existingToken = "existing-token";
-  var accessToken = "access-token";
+  var existingToken = 'existing-token';
+  var accessToken = 'access-token';
 
   this.beforeEach(function() {
     mockClientCredentials({ access_token: accessToken, expires_in: 3600 });
   });
 
-  it("gets new token when no existing token", function(done) {
-    var tokenManager = require("../../src/dwolla/TokenManager")(client);
+  it('gets new token when no existing token', function(done) {
+    var tokenManager = require('../../src/dwolla/TokenManager')(client);
 
     var token = tokenManager.getToken();
 
@@ -28,8 +28,8 @@ describe("TokenManager", function() {
     expect(token).to.be.fulfilled.and.notify(done);
   });
 
-  it("returns existing token if fresh", function(done) {
-    var tokenManager = require("../../src/dwolla/TokenManager")(client, {
+  it('returns existing token if fresh', function(done) {
+    var tokenManager = require('../../src/dwolla/TokenManager')(client, {
       instance: Promise.resolve(existingToken),
       expiresIn: 3600,
       updatedAt: now()
@@ -41,8 +41,8 @@ describe("TokenManager", function() {
     expect(token).to.be.fulfilled.and.notify(done);
   });
 
-  it("gets new token when existing token stale", function(done) {
-    var tokenManager = require("../../src/dwolla/TokenManager")(client, {
+  it('gets new token when existing token stale', function(done) {
+    var tokenManager = require('../../src/dwolla/TokenManager')(client, {
       instance: Promise.resolve(existingToken),
       expiresIn: 30,
       updatedAt: now()
@@ -56,10 +56,10 @@ describe("TokenManager", function() {
 
   function mockClientCredentials(response) {
     nock(client.tokenUrl, { reqheaders: requestHeaders })
-      .post("", {
+      .post('', {
         client_id: client.id,
         client_secret: client.secret,
-        grant_type: "client_credentials"
+        grant_type: 'client_credentials'
       })
       .reply(200, response);
   }
