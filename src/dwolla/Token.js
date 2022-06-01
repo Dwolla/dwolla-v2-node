@@ -41,8 +41,11 @@ function getUrl(token, suppliedPath, suppliedQuery) {
       suppliedPath.replace(/^https?:\/\/[^\/]*\//, "")
     ].join("/");
   }
-  var query = formurlencoded(rejectEmptyKeys(suppliedQuery || {}));
-  return query ? [url, query].join("?") : url;
+  var query = formurlencoded(rejectEmptyKeys(suppliedQuery), {
+    skipIndex: true,
+    skipBracket: true
+  });
+  return query ? [url, query].join('?') : url;
 }
 
 function errorFrom(message, parsedRes) {
@@ -81,12 +84,12 @@ Token.prototype.get = function(path, query, headers) {
 
 Token.prototype.post = function(path, body, headers) {
   return fetch(getUrl(this, path), {
-    method: "POST",
+    method: 'POST',
     headers: assign(
       getHeaders(this, headers),
       isFormData(body)
         ? body.getHeaders()
-        : { "content-type": "application/json" }
+        : { 'content-type': 'application/json' }
     ),
     body: isFormData(body) ? body : JSON.stringify(body)
   }).then(handleResponse);
@@ -94,7 +97,7 @@ Token.prototype.post = function(path, body, headers) {
 
 Token.prototype.delete = function(path, query, headers) {
   return fetch(getUrl(this, path, query), {
-    method: "DELETE",
+    method: 'DELETE',
     headers: getHeaders(this, headers)
   }).then(handleResponse);
 };
