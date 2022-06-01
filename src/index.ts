@@ -4,6 +4,7 @@ import "reflect-metadata";
  * API Methods
  */
 export { AccountsApi } from "./api/AccountsApi";
+export { BusinessClassificationsApi } from "./api/BusinessClassificationsApi";
 export { CustomersApi } from "./api/CustomersApi";
 export type {
     CreateUnverifiedOptions,
@@ -34,6 +35,15 @@ export { Root } from "./models/Root";
 export { Account } from "./models/accounts/Account";
 export { AccountType } from "./models/accounts/AccountType";
 export { BusinessType } from "./models/customers/BusinessType";
+
+/**
+ * Models — Business Classifications
+ */
+export { BusinessClassification } from "./models/business-classifications/BusinessClassification";
+export { BusinessClassifications } from "./models/business-classifications/BusinessClassifications";
+export { EmbeddedBusinessClassifications } from "./models/business-classifications/EmbeddedBusinessClassifications";
+export { EmbeddedIndustryClassifications } from "./models/business-classifications/EmbeddedIndustryClassifications";
+export { IndustryClassification } from "./models/business-classifications/IndustryClassification";
 
 /**
  * Models — Customers

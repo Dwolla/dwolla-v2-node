@@ -1,10 +1,8 @@
-import { Client } from "../Client";
 import { Root } from "../models/Root";
+import { BaseApi } from "./BaseApi";
 
-export class RootApi {
-    constructor(private readonly client: Client) {}
-
+export class RootApi extends BaseApi {
     async get(): Promise<Root> {
-        return (await this.client.getMapped(Root, "/")).body;
+        return (await this.getClient().getMapped(Root, "/")).body;
     }
 }

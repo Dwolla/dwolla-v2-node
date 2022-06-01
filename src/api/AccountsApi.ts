@@ -1,10 +1,8 @@
-import { Client } from "../Client";
 import { PATHS } from "../constants";
 import { Account } from "../models/accounts/Account";
+import { BaseApi } from "./BaseApi";
 
-export class AccountsApi {
-    constructor(private readonly client: Client) {}
-
+export class AccountsApi extends BaseApi {
     /**
      * Get account information belonging to the authorized Dwolla Master Account.
      *
@@ -12,6 +10,6 @@ export class AccountsApi {
      * either by using our high-level or low-level function.
      */
     async get(id: string): Promise<Account> {
-        return (await this.client.getMapped(Account, `${PATHS.ACCOUNTS}/${id}`)).body;
+        return (await this.getClient().getMapped(Account, `${PATHS.ACCOUNTS}/${id}`)).body;
     }
 }

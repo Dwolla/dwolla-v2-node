@@ -4,5 +4,6 @@ export const HEADERS = {
 
 export const PATHS = {
     ACCOUNTS: "accounts",
+    BUSINESS_CLASSIFICATIONS: "business-classifications",
     CUSTOMERS: "customers"
 } as const;

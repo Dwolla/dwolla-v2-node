@@ -1,4 +1,3 @@
-import { Client } from "../Client";
 import { PATHS } from "../constants";
 import { BusinessType } from "../models/customers/BusinessType";
 import { Customer } from "../models/customers/Customer";
@@ -10,6 +9,7 @@ import { InternationalAddress } from "../models/shared/InternationalAddress";
 import { Passport } from "../models/shared/Passport";
 import { USState } from "../models/shared/USState";
 import { RequestHeaders } from "../Token";
+import { BaseApi } from "./BaseApi";
 
 /**
  * Request options that can be sent when creating a receive-only or unverified customer.
@@ -118,9 +118,7 @@ export type UpdateVerifiedBusinessOptions = UpdateVerifiedPersonalOptions &
 export type UpdateVerifiedPersonalOptions = Partial<WithUSAddress> &
     Partial<Pick<CreateVerifiedPersonalOptions, "email" | "ipAddress" | "phone">>;
 
-export class CustomersApi {
-    constructor(private readonly client: Client) {}
-
+export class CustomersApi extends BaseApi {
     /**
      * Create a receive-only customer record. This customer type can receive money from a Dwolla master account or a
      * verified customer, cannot send money to any customer record, and cannot hold a Dwolla balance.
@@ -133,7 +131,7 @@ export class CustomersApi {
      */
     async createReceiveOnly(body: CreateUnverifiedOptions, headers?: RequestHeaders): Promise<Customer> {
         return (
-            await this.client.postFollowMapped(
+            await this.getClient().postFollowMapped(
                 Customer,
                 PATHS.CUSTOMERS,
                 { type: CustomerType.RECEIVE_ONLY, ...body },
@@ -154,7 +152,7 @@ export class CustomersApi {
      * @see {@link https://developers.dwolla.com/concepts/customer-types|Customer Types - Dwolla Documentation}
      */
     async createUnverified(body: CreateUnverifiedOptions, headers?: RequestHeaders): Promise<Customer> {
-        return (await this.client.postFollowMapped(Customer, PATHS.CUSTOMERS, body, headers)).body;
+        return (await this.getClient().postFollowMapped(Customer, PATHS.CUSTOMERS, body, headers)).body;
     }
 
     /**
@@ -172,7 +170,7 @@ export class CustomersApi {
      * @see {@link https://developers.dwolla.com/concepts/customer-types|Customer Types - Dwolla Documentation}
      */
     async createVerifiedBusiness(body: CreateVerifiedBusinessOptions, headers?: RequestHeaders): Promise<Customer> {
-        return (await this.client.postFollowMapped(Customer, PATHS.CUSTOMERS, body, headers)).body;
+        return (await this.getClient().postFollowMapped(Customer, PATHS.CUSTOMERS, body, headers)).body;
     }
 
     /**
@@ -190,7 +188,7 @@ export class CustomersApi {
      * @see {@link https://developers.dwolla.com/concepts/customer-types|Customer Types - Dwolla Documentation}
      */
     async createVerifiedPersonal(body: CreateVerifiedPersonalOptions, headers?: RequestHeaders): Promise<Customer> {
-        return (await this.client.postFollowMapped(Customer, PATHS.CUSTOMERS, body, headers)).body;
+        return (await this.getClient().postFollowMapped(Customer, PATHS.CUSTOMERS, body, headers)).body;
     }
 
     /**
@@ -209,7 +207,7 @@ export class CustomersApi {
      */
     async createVerifiedSoleProp(body: CreateVerifiedSolePropOptions, headers?: RequestHeaders): Promise<Customer> {
         return (
-            await this.client.postFollowMapped(
+            await this.getClient().postFollowMapped(
                 Customer,
                 PATHS.CUSTOMERS,
                 { businessType: BusinessType.SOLE_PROPRIETORSHIP, ...body },
@@ -226,7 +224,8 @@ export class CustomersApi {
      * @see {@link https://developers.dwolla.com/api-reference/customers/update#deactivate-a-customer|Deactivate a Customer - Dwolla Documentation}
      */
     async deactivate(id: string): Promise<Customer> {
-        return (await this.client.postMapped(Customer, `${PATHS.CUSTOMERS}/${id}`, { status: "deactivated" })).body;
+        return (await this.getClient().postMapped(Customer, `${PATHS.CUSTOMERS}/${id}`, { status: "deactivated" }))
+            .body;
     }
 
     /**
@@ -236,7 +235,7 @@ export class CustomersApi {
      * @see {@link https://developers.dwolla.com/api-reference/customers/retrieve|Retrieve a Customer - Dwolla Documentation}
      */
     async get(id: string): Promise<Customer> {
-        return (await this.client.getMapped(Customer, `${PATHS.CUSTOMERS}/${id}`)).body;
+        return (await this.getClient().getMapped(Customer, `${PATHS.CUSTOMERS}/${id}`)).body;
     }
 
     /**
@@ -246,7 +245,7 @@ export class CustomersApi {
      * @see {@link https://developers.dwolla.com/api-reference/customers/list-and-search|List and Search Customers - Dwolla Documentation}
      */
     async list(query?: ListQueryParams): Promise<Customers> {
-        return (await this.client.getMapped(Customers, PATHS.CUSTOMERS, query)).body;
+        return (await this.getClient().getMapped(Customers, PATHS.CUSTOMERS, query)).body;
     }
 
     /**
@@ -257,7 +256,8 @@ export class CustomersApi {
      * @see {@link https://developers.dwolla.com/api-reference/customers/update#reactivate-a-customer|Reactivate a Customer - Dwolla Documentation}
      */
     async reactivate(id: string): Promise<Customer> {
-        return (await this.client.postMapped(Customer, `${PATHS.CUSTOMERS}/${id}`, { status: "reactivated" })).body;
+        return (await this.getClient().postMapped(Customer, `${PATHS.CUSTOMERS}/${id}`, { status: "reactivated" }))
+            .body;
     }
 
     /**
@@ -268,7 +268,7 @@ export class CustomersApi {
      * @see {@link https://developers.dwolla.com/api-reference/customers/update#suspend-a-customer|Suspend a Customer - Dwolla Documentation}
      */
     async suspend(id: string): Promise<Customer> {
-        return (await this.client.postMapped(Customer, `${PATHS.CUSTOMERS}/${id}`, { status: "suspended" })).body;
+        return (await this.getClient().postMapped(Customer, `${PATHS.CUSTOMERS}/${id}`, { status: "suspended" })).body;
     }
 
     /**
@@ -279,7 +279,7 @@ export class CustomersApi {
      * @see {@link https://developers.dwolla.com/api-reference/customers/update#update-a-customers-information|Update a Customer - Dwolla Documentation}
      */
     async updateUnverified(id: string, body: UpdateUnverifiedOptions): Promise<Customer> {
-        return (await this.client.postMapped(Customer, `${PATHS.CUSTOMERS}/${id}`, body)).body;
+        return (await this.getClient().postMapped(Customer, `${PATHS.CUSTOMERS}/${id}`, body)).body;
     }
 
     /**
@@ -290,7 +290,7 @@ export class CustomersApi {
      * @see {@link https://developers.dwolla.com/api-reference/customers/update#update-a-customers-information|Update a Customer - Dwolla Documentation}
      */
     async updateVerifiedBusiness(id: string, body: UpdateVerifiedBusinessOptions): Promise<Customer> {
-        return (await this.client.postMapped(Customer, `${PATHS.CUSTOMERS}/${id}`, body)).body;
+        return (await this.getClient().postMapped(Customer, `${PATHS.CUSTOMERS}/${id}`, body)).body;
     }
 
     /**
@@ -301,7 +301,7 @@ export class CustomersApi {
      * @see {@link https://developers.dwolla.com/api-reference/customers/update#update-a-customers-information|Update a Customer - Dwolla Documentation}
      */
     async updateVerifiedPersonal(id: string, body: UpdateVerifiedPersonalOptions): Promise<Customer> {
-        return (await this.client.postMapped(Customer, `${PATHS.CUSTOMERS}/${id}`, body)).body;
+        return (await this.getClient().postMapped(Customer, `${PATHS.CUSTOMERS}/${id}`, body)).body;
     }
 
     /**
@@ -312,6 +312,6 @@ export class CustomersApi {
      * @see {@link https://developers.dwolla.com/api-reference/customers/update#upgrade-an-unverified-customer-to-verified-customer|Upgrade an Unverified Customer - Dwolla Documentation}
      */
     async upgradeToVerifiedPersonal(id: string, body: CreateVerifiedPersonalOptions): Promise<Customer> {
-        return (await this.client.postMapped(Customer, `${PATHS.CUSTOMERS}/${id}`, body)).body;
+        return (await this.getClient().postMapped(Customer, `${PATHS.CUSTOMERS}/${id}`, body)).body;
     }
 }

@@ -1,5 +1,6 @@
 import { ClassConstructor } from "class-transformer";
 import { AccountsApi } from "./api/AccountsApi";
+import { BusinessClassificationsApi } from "./api/BusinessClassificationsApi";
 import { CustomersApi } from "./api/CustomersApi";
 import { RootApi } from "./api/RootApi";
 import { Auth } from "./Auth";
@@ -23,6 +24,7 @@ export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<T, Exclu
 export class Client {
     readonly api = {
         accounts: new AccountsApi(this),
+        businessClassifications: new BusinessClassificationsApi(this),
         customers: new CustomersApi(this),
         root: new RootApi(this)
     } as const;
