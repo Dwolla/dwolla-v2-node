@@ -106,9 +106,9 @@ export class Token {
 
         if (typeof suppliedPath === "object") {
             url = suppliedPath._links.self.href;
-        } else if (suppliedPath.indexOf(this.#client.environment.apiUrl) === 0) {
+        } else if (suppliedPath.startsWith(this.#client.environment.apiUrl)) {
             url = suppliedPath;
-        } else if (suppliedPath.indexOf("/") === 0) {
+        } else if (suppliedPath.startsWith("/")) {
             url = [this.#client.environment.apiUrl, suppliedPath].join("");
         } else {
             url = [this.#client.environment.apiUrl, suppliedPath.replace(/^https?:\/\/[^/]*\//, "")].join("/");
