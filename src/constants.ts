@@ -6,5 +6,6 @@ export const PATHS = {
     ACCOUNTS: "accounts",
     BENEFICIAL_OWNERS: "beneficial-owners",
     BUSINESS_CLASSIFICATIONS: "business-classifications",
-    CUSTOMERS: "customers"
+    CUSTOMERS: "customers",
+    DOCUMENTS: "documents"
 } as const;

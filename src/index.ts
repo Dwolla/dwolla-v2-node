@@ -15,6 +15,8 @@ export type {
     CreateVerifiedSolePropOptions,
     ListQueryParams
 } from "./api/CustomersApi";
+export { DocumentsApi } from "./api/DocumentsApi";
+export type { CreateOptions } from "./api/DocumentsApi";
 export { RootApi } from "./api/RootApi";
 
 /**
@@ -65,13 +67,8 @@ export { CustomerStatus } from "./models/customers/CustomerStatus";
 export { CustomerType } from "./models/customers/CustomerType";
 export { EmbeddedCustomers } from "./models/customers/EmbeddedCustomers";
 
-/**
- * Models — Shared
- */
-export { Country } from "./models/shared/Country";
-export { InternationalAddress } from "./models/shared/InternationalAddress";
-export { USAddress } from "./models/shared/USAddress";
-export { USState } from "./models/shared/USState";
+export * from "./models/documents";
+export * from "./models/shared";
 
 /**
  * Types

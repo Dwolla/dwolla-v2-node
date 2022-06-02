@@ -3,6 +3,7 @@ import { AccountsApi } from "./api/AccountsApi";
 import { BeneficialOwnersApi } from "./api/BeneficialOwnersApi";
 import { BusinessClassificationsApi } from "./api/BusinessClassificationsApi";
 import { CustomersApi } from "./api/CustomersApi";
+import { DocumentsApi } from "./api/DocumentsApi";
 import { RootApi } from "./api/RootApi";
 import { Auth } from "./Auth";
 import getEnvironment, { Environment } from "./environment";
@@ -26,6 +27,7 @@ export class Client {
         beneficialOwners: new BeneficialOwnersApi(this),
         businessClassifications: new BusinessClassificationsApi(this),
         customers: new CustomersApi(this),
+        documents: new DocumentsApi(this),
         root: new RootApi(this)
     } as const;
 

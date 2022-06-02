@@ -21,7 +21,7 @@
     "cleanbundle": "pnpm clean && pnpm build && pnpm bundle",
     "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\"",
     "format:fix": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
-    "gen:docs": "typedoc --out docs src",
+    "gen:docs": "typedoc --excludePrivate --excludeProtected --name \"Dwolla Node SDK\" --out docs src",
     "lint:check": "eslint \"src/**/*.ts\" \"tests/**/*.ts\" --ignore-path .eslintignore",
     "lint:fix": "eslint \"src/**/*.ts\" \"tests/**/*.ts\" --fix --ignore-path .eslintignore",
     "run:basic-example": "cd examples/basic-example/cjs && node main",
