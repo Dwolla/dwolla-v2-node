@@ -4,8 +4,14 @@ export const HEADERS = {
 
 export const PATHS = {
     ACCOUNTS: "accounts",
+    ACH_ROUTING: "ach-routing",
+    BALANCE: "balance",
     BENEFICIAL_OWNERS: "beneficial-owners",
     BUSINESS_CLASSIFICATIONS: "business-classifications",
+    CARD_FUNDING_SOURCES_TOKEN: "card-funding-sources-token",
     CUSTOMERS: "customers",
-    DOCUMENTS: "documents"
+    DOCUMENTS: "documents",
+    FUNDING_SOURCES: "funding-sources",
+    FUNDING_SOURCES_TOKEN: "funding-sources-token",
+    MICRO_DEPOSITS: "micro-deposits"
 } as const;

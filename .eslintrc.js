@@ -13,10 +13,11 @@ module.exports = {
         project: "./tsconfig.json",
         sourceType: "module"
     },
-    plugins: ["@typescript-eslint/eslint-plugin"],
+    plugins: ["@typescript-eslint/eslint-plugin", "eslint-plugin-tsdoc"],
     rules: {
         "@typescript-eslint/no-explicit-any": "off",
-        "prettier/prettier": "error"
+        "prettier/prettier": "error",
+        "tsdoc/syntax": "warn"
     },
     root: true
 };

@@ -15,6 +15,7 @@ specifiers:
   eslint-plugin: ^1.0.1
   eslint-plugin-import: ^2.26.0
   eslint-plugin-prettier: ^4.0.0
+  eslint-plugin-tsdoc: ^0.2.16
   form-data: ^4.0.0
   form-urlencoded: ^6.0.6
   jest: ^28.0.3
@@ -53,6 +54,7 @@ devDependencies:
   eslint-plugin: 1.0.1
   eslint-plugin-import: 2.26.0_grfei5yostfimvqdpf73rlhy3e
   eslint-plugin-prettier: 4.0.0_j7rsahgqtkecno6yauhsgsglf4
+  eslint-plugin-tsdoc: 0.2.16
   form-data: 4.0.0
   jest: 28.1.0_ucs5py5trtrgec2ppulvmog6re
   jest-in-case: 1.0.2
@@ -697,6 +699,19 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.0.7
       '@jridgewell/sourcemap-codec': 1.4.13
+    dev: true
+
+  /@microsoft/tsdoc-config/0.16.1:
+    resolution: {integrity: sha512-2RqkwiD4uN6MLnHFljqBlZIXlt/SaUT6cuogU1w2ARw4nKuuppSmR0+s+NC+7kXBQykd9zzu0P4HtBpZT5zBpQ==}
+    dependencies:
+      '@microsoft/tsdoc': 0.14.1
+      ajv: 6.12.6
+      jju: 1.4.0
+      resolve: 1.19.0
+    dev: true
+
+  /@microsoft/tsdoc/0.14.1:
+    resolution: {integrity: sha512-6Wci+Tp3CgPt/B9B0a3J4s3yMgLNSku6w5TV6mN+61C71UqsRBv2FUibBf3tPGlNxebgPHMEUzKpb1ggE8KCKw==}
     dev: true
 
   /@nodelib/fs.scandir/2.1.5:
@@ -1673,6 +1688,13 @@ packages:
       eslint-config-prettier: 8.5.0_eslint@8.16.0
       prettier: 2.6.2
       prettier-linter-helpers: 1.0.0
+    dev: true
+
+  /eslint-plugin-tsdoc/0.2.16:
+    resolution: {integrity: sha512-F/RWMnyDQuGlg82vQEFHQtGyWi7++XJKdYNn0ulIbyMOFqYIjoJOUdE6olORxgwgLkpJxsCJpJbTHgxJ/ggfXw==}
+    dependencies:
+      '@microsoft/tsdoc': 0.14.1
+      '@microsoft/tsdoc-config': 0.16.1
     dev: true
 
   /eslint-plugin/1.0.1:
@@ -2802,6 +2824,10 @@ packages:
       - ts-node
     dev: true
 
+  /jju/1.4.0:
+    resolution: {integrity: sha512-8wb9Yw966OSxApiCt0K3yNJL8pnNeIv+OEq2YMidz4FKP6nonSRoOXc80iXY4JaN2FC11B9qsNmDsm+ZOfMROA==}
+    dev: true
+
   /js-tokens/4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
     dev: true
@@ -3382,6 +3408,13 @@ packages:
   /resolve.exports/1.1.0:
     resolution: {integrity: sha512-J1l+Zxxp4XK3LUDZ9m60LRJF/mAe4z6a4xyabPHk7pvK5t35dACV32iIjJDFeWZFfZlO29w6SZ67knR0tHzJtQ==}
     engines: {node: '>=10'}
+    dev: true
+
+  /resolve/1.19.0:
+    resolution: {integrity: sha512-rArEXAgsBG4UgRGcynxWIWKFvh/XZCcS8UJdHhwy91zwAvCZIbcs+vAbflgBnNjYMs/i/i+/Ux6IZhML1yPvxg==}
+    dependencies:
+      is-core-module: 2.9.0
+      path-parse: 1.0.7
     dev: true
 
   /resolve/1.22.0:

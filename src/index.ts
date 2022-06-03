@@ -17,6 +17,14 @@ export type {
 } from "./api/CustomersApi";
 export { DocumentsApi } from "./api/DocumentsApi";
 export type { CreateOptions } from "./api/DocumentsApi";
+export { FundingSourceApi } from "./api/FundingSourceApi";
+export type {
+    CreateBankForCustomerBody,
+    CreateVirtualForCustomerBody,
+    ListForCustomerQueryParams,
+    UpdateBody,
+    VerifyMicroDepositsBody
+} from "./api/FundingSourceApi";
 export { RootApi } from "./api/RootApi";
 
 /**
@@ -68,6 +76,7 @@ export { CustomerType } from "./models/customers/CustomerType";
 export { EmbeddedCustomers } from "./models/customers/EmbeddedCustomers";
 
 export * from "./models/documents";
+export * from "./models/funding-sources";
 export * from "./models/shared";
 
 /**
