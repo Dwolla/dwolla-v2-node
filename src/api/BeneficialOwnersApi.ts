@@ -1,8 +1,7 @@
 import { PATHS } from "../constants";
 import { BeneficialOwner } from "../models/beneficial-owners/BeneficialOwner";
 import { BeneficialOwners } from "../models/beneficial-owners/BeneficialOwners";
-import { Country } from "../models/shared/Country";
-import { DateOfBirth } from "../models/shared/DateOfBirth";
+import { Country, DateOfBirth } from "../models/shared";
 import { RequestHeaders } from "../Token";
 import { PartialNested } from "../types/PartialNested";
 import { BaseApi } from "./BaseApi";

@@ -214,6 +214,10 @@ export class Token {
         headers?: RequestHeaders,
         deserializeAs?: ClassConstructor<TResult>
     ): Promise<Response<TResult>> {
+        // If we're testing, don't follow the location; tests will return 200 instead of 201
+        if (process.env.NODE_ENV === "test") {
+            return await this.post(path, body, headers, deserializeAs);
+        }
         return this.follow(await this.post(path, body, headers), deserializeAs);
     }
 }

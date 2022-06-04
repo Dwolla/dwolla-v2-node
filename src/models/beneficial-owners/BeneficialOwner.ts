@@ -1,6 +1,6 @@
 import { Expose, Type } from "class-transformer";
 import { HalResource } from "../HalResource";
-import { InternationalAddress } from "../shared/InternationalAddress";
+import { InternationalAddress } from "../shared";
 import { VerificationStatus } from "./VerificationStatus";
 
 /**
@@ -39,4 +39,11 @@ export class BeneficialOwner extends HalResource {
      */
     @Expose()
     readonly verificationStatus!: VerificationStatus;
+
+    /**
+     * ISO-8601 timestamp of when this resource was created.
+     */
+    @Expose()
+    @Type(() => Date)
+    readonly created!: Date;
 }
