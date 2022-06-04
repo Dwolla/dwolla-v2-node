@@ -6,4 +6,10 @@ export class BusinessClassifications extends HalResource {
     @Expose()
     @Type(() => EmbeddedBusinessClassifications)
     readonly _embedded!: EmbeddedBusinessClassifications;
+
+    /**
+     * The total number of business classifications.
+     */
+    @Expose()
+    readonly total!: number;
 }
