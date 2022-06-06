@@ -41,7 +41,10 @@ function getUrl(token, suppliedPath, suppliedQuery) {
       suppliedPath.replace(/^https?:\/\/[^\/]*\//, "")
     ].join("/");
   }
-  var query = formurlencoded(rejectEmptyKeys(suppliedQuery || {}));
+  var query = formurlencoded(rejectEmptyKeys(suppliedQuery), {
+    skipIndex: true,
+    skipBracket: true
+  });
   return query ? [url, query].join("?") : url;
 }
 

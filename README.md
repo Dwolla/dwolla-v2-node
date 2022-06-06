@@ -101,9 +101,11 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/Dwolla
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://github.com/Dwolla/dwolla-v2-node).
+The package is available as open source under the terms of the [MIT License](https://github.com/Dwolla/dwolla-v2-node).
 
 ## Changelog
+
+- **3.4.0** Update `form-urlencoded` version to allow `{ skipIndex: true, skipBracket: true}` options to be passed in. Thanks [@MarcMouallem](https://github.com/MarcMouallem)!
 - **3.3.0** Remove lodash as a dependency and replace with `Object.assign`
 - **3.2.3** Update version and changelog
 - **3.2.2** Update unit test involving token. Thanks [@philting](https://github.com/philting)!
