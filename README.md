@@ -15,12 +15,12 @@ npm install dwolla-v2 --save
 ## Getting started
 
 ```javascript
-var Client = require('dwolla-v2').Client;
+var Client = require("dwolla-v2").Client;
 
 var dwolla = new Client({
   key: process.env.DWOLLA_APP_KEY,
   secret: process.env.DWOLLA_APP_SECRET,
-  environment: 'sandbox' // defaults to 'production'
+  environment: "sandbox", // defaults to 'production'
 });
 ```
 
@@ -37,30 +37,30 @@ detailed in the [Responses section](#responses).
 ```javascript
 // GET api.dwolla.com/customers?limit=10&offset=20
 dwolla
-  .get('customers', { limit: 10, offset: 20 })
-  .then(res => console.log(res.body.total));
+  .get("customers", { limit: 10, offset: 20 })
+  .then((res) => console.log(res.body.total));
 
 // POST api.dwolla.com/resource {"foo":"bar"}
 dwolla
-  .post('customers', {
-    firstName: 'Jane',
-    lastName: 'Doe',
-    email: 'jane@doe.com'
+  .post("customers", {
+    firstName: "Jane",
+    lastName: "Doe",
+    email: "jane@doe.com",
   })
-  .then(res => console.log(res.headers.get('location')));
+  .then((res) => console.log(res.headers.get("location")));
 
 // POST api.dwolla.com/resource multipart/form-data foo=...
 var body = new FormData();
-body.append('file', fs.createReadStream('mclovin.jpg'), {
-  filename: 'mclovin.jpg',
-  contentType: 'image/jpeg',
-  knownLength: fs.statSync('mclovin.jpg').size
+body.append("file", fs.createReadStream("mclovin.jpg"), {
+  filename: "mclovin.jpg",
+  contentType: "image/jpeg",
+  knownLength: fs.statSync("mclovin.jpg").size,
 });
-body.append('documentType', 'license');
+body.append("documentType", "license");
 dwolla.post(`${customerUrl}/documents`, body);
 
 // DELETE api.dwolla.com/resource
-dwolla.delete('resource');
+dwolla.delete("resource");
 ```
 
 #### Setting headers
@@ -71,16 +71,16 @@ For example:
 
 ```javascript
 dwolla.post(
-  'customers',
-  { firstName: 'John', lastName: 'Doe', email: 'john@doe.com' },
-  { 'Idempotency-Key': 'a52fcf63-0730-41c3-96e8-7147b5d1fb01' }
+  "customers",
+  { firstName: "John", lastName: "Doe", email: "john@doe.com" },
+  { "Idempotency-Key": "a52fcf63-0730-41c3-96e8-7147b5d1fb01" }
 );
 ```
 
 ## Responses
 
 ```javascript
-dwolla.get('customers').then(
+dwolla.get("customers").then(
   function(res) {
     // res.status   => 200
     // res.headers  => Headers { ... }
