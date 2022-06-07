@@ -1,7 +1,7 @@
 import { Expose } from "class-transformer";
 import { HalResource } from "../HalResource";
-import { USAddress } from "../shared/USAddress";
-import { AccountType } from "./AccountType";
+import { USAddress } from "../shared";
+import type { AccountType } from "./types";
 
 export class Account extends HalResource {
     /**

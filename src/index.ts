@@ -44,9 +44,7 @@ export { Root } from "./models/Root";
 /**
  * Models — Accounts
  */
-export { Account } from "./models/accounts/Account";
-export { AccountType } from "./models/accounts/AccountType";
-export { BusinessType } from "./models/customers/BusinessType";
+export * from "./models/accounts";
 
 /**
  * Models — Beneficial Owners
@@ -68,6 +66,7 @@ export { IndustryClassification } from "./models/business-classifications/Indust
 /**
  * Models — Customers
  */
+export { BusinessType } from "./models/customers/BusinessType";
 export { Customer } from "./models/customers/Customer";
 export { CustomerController } from "./models/customers/CustomerController";
 export { Customers } from "./models/customers/Customers";
