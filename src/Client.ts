@@ -14,7 +14,7 @@ import { TokenManager } from "./TokenManager";
 import { RequireAtLeastOne } from "./types/RequireAtLeastOne";
 
 interface BaseClientOptions {
-    environment?: "production" | "sandbox";
+    environment?: Environment | "production" | "sandbox";
     id?: string;
     key?: string;
     secret: string;

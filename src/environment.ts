@@ -19,6 +19,12 @@ const ENVIRONMENT: EnvironmentDefaults = {
     }
 };
 
-export default function getEnvironment(environment?: "production" | "sandbox"): Environment {
-    return ENVIRONMENT[environment ?? "production"];
+function isEnvironment(obj: any): obj is Environment {
+    return "apiUrl" in obj && "tokenUrl" in obj;
+}
+
+export default function getEnvironment(environment?: Environment | "production" | "sandbox"): Environment {
+    if (!environment) return ENVIRONMENT["production"];
+    if (typeof environment === "object" && isEnvironment(environment)) return environment;
+    return ENVIRONMENT[environment];
 }
