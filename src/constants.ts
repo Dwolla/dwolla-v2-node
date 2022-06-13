@@ -11,7 +11,10 @@ export const PATHS = {
     CARD_FUNDING_SOURCES_TOKEN: "card-funding-sources-token",
     CUSTOMERS: "customers",
     DOCUMENTS: "documents",
+    FAILURE: "failure",
+    FEES: "fees",
     FUNDING_SOURCES: "funding-sources",
     FUNDING_SOURCES_TOKEN: "funding-sources-token",
-    MICRO_DEPOSITS: "micro-deposits"
+    MICRO_DEPOSITS: "micro-deposits",
+    TRANSFERS: "transfers"
 } as const;

@@ -1,4 +1,4 @@
-import { ClassConstructor } from "class-transformer";
+import { TargetMap } from "class-transformer";
 import { AccountsApi } from "./api/AccountsApi";
 import { BeneficialOwnersApi } from "./api/BeneficialOwnersApi";
 import { BusinessClassificationsApi } from "./api/BusinessClassificationsApi";
@@ -6,10 +6,10 @@ import { CustomersApi } from "./api/CustomersApi";
 import { DocumentsApi } from "./api/DocumentsApi";
 import { FundingSourceApi } from "./api/FundingSourceApi";
 import { RootApi } from "./api/RootApi";
+import { TransfersApi } from "./api/TransfersApi";
 import { Auth } from "./Auth";
 import getEnvironment, { Environment } from "./environment";
-import { HalResource } from "./models/HalResource";
-import { PathLike, RequestHeaders, RequestQuery, Response } from "./Token";
+import { Deserializable, PathLike, RequestHeaders, RequestQuery, Response } from "./Token";
 import { TokenManager } from "./TokenManager";
 import { RequireAtLeastOne } from "./types/RequireAtLeastOne";
 
@@ -30,7 +30,8 @@ export class Client {
         customers: new CustomersApi(this),
         documents: new DocumentsApi(this),
         fundingSources: new FundingSourceApi(this),
-        root: new RootApi(this)
+        root: new RootApi(this),
+        transfers: new TransfersApi(this)
     } as const;
 
     readonly auth: Auth;
@@ -47,13 +48,14 @@ export class Client {
         return (await this.tokenManager.getToken()).delete(path, query, headers);
     }
 
-    async deleteMapped<TResult extends HalResource>(
-        deserializeAs: ClassConstructor<TResult>,
+    async deleteMapped<ResultType>(
+        deserializeAs: Deserializable<ResultType>,
         path: PathLike,
         query?: RequestQuery,
-        headers?: RequestHeaders
-    ): Promise<Response<TResult>> {
-        return (await this.tokenManager.getToken()).delete(path, query, headers, deserializeAs);
+        headers?: RequestHeaders,
+        targetMaps?: TargetMap[]
+    ): Promise<Response<ResultType>> {
+        return (await this.tokenManager.getToken()).delete(path, query, headers, { deserializeAs, targetMaps });
     }
 
     async get(path: PathLike, query?: RequestQuery, headers?: RequestHeaders): Promise<Response> {
@@ -64,38 +66,41 @@ export class Client {
         return getEnvironment(this.options.environment);
     }
 
-    async getMapped<TResult extends HalResource>(
-        deserializeAs: ClassConstructor<TResult>,
+    async getMapped<ResultType>(
+        deserializeAs: Deserializable<ResultType>,
         path: PathLike,
         query?: RequestQuery,
-        headers?: RequestHeaders
-    ): Promise<Response<TResult>> {
-        return (await this.tokenManager.getToken()).get(path, query, headers, deserializeAs);
+        headers?: RequestHeaders,
+        targetMaps?: TargetMap[]
+    ): Promise<Response<ResultType>> {
+        return (await this.tokenManager.getToken()).get(path, query, headers, { deserializeAs, targetMaps });
     }
 
-    async post<TBody>(path: PathLike, body?: TBody, headers?: RequestHeaders): Promise<Response> {
+    async post<BodyType>(path: PathLike, body?: BodyType, headers?: RequestHeaders): Promise<Response> {
         return (await this.tokenManager.getToken()).post(path, body, headers);
     }
 
-    async postFollow<TBody>(path: PathLike, body?: TBody, headers?: RequestHeaders): Promise<Response> {
+    async postFollow<BodyType>(path: PathLike, body?: BodyType, headers?: RequestHeaders): Promise<Response> {
         return (await this.tokenManager.getToken()).postFollow(path, body, headers);
     }
 
-    async postFollowMapped<TBody, TResult extends HalResource = any>(
-        deserializeAs: ClassConstructor<TResult>,
+    async postFollowMapped<BodyType, ResultType>(
+        deserializeAs: Deserializable<ResultType>,
         path: PathLike,
-        body?: TBody,
-        headers?: RequestHeaders
-    ): Promise<Response<TResult>> {
-        return (await this.tokenManager.getToken()).postFollow(path, body, headers, deserializeAs);
+        body?: BodyType,
+        headers?: RequestHeaders,
+        targetMaps?: TargetMap[]
+    ): Promise<Response<ResultType>> {
+        return (await this.tokenManager.getToken()).postFollow(path, body, headers, { deserializeAs, targetMaps });
     }
 
-    async postMapped<TBody, TResult extends HalResource = any>(
-        deserializeAs: ClassConstructor<TResult>,
+    async postMapped<BodyType, ResultType>(
+        deserializeAs: Deserializable<ResultType>,
         path: PathLike,
-        body?: TBody,
-        headers?: RequestHeaders
-    ): Promise<Response<TResult>> {
-        return (await this.tokenManager.getToken()).post(path, body, headers, deserializeAs);
+        body?: BodyType,
+        headers?: RequestHeaders,
+        targetMaps?: TargetMap[]
+    ): Promise<Response<ResultType>> {
+        return (await this.tokenManager.getToken()).post(path, body, headers, { deserializeAs, targetMaps });
     }
 }
