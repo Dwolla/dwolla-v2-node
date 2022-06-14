@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import type { ClearingDestination, ClearingSource } from "./types";
+import { ClearingDestination, ClearingSource } from "./types";
 
 export class Clearing {
     @Expose()

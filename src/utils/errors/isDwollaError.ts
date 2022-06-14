@@ -1,5 +1,5 @@
-import { DwollaError } from "../../errors/DwollaError";
+import { DwollaError } from "../../errors";
 
-export default function (obj: unknown): obj is DwollaError {
+export default function isDwollaError(obj: unknown): obj is DwollaError {
     return obj instanceof DwollaError;
 }

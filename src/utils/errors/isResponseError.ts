@@ -1,5 +1,5 @@
-import { ResponseError } from "../../errors/ResponseError";
+import { ResponseError } from "../../errors";
 
-export default function (obj: unknown): obj is ResponseError {
+export default function isResponseError(obj: unknown): obj is ResponseError {
     return obj instanceof ResponseError;
 }

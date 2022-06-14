@@ -1,7 +1,9 @@
 import FormData from "form-data";
 import cases from "jest-in-case";
 import nock from "nock";
-import { Client, PathLike, RequestHeaders, RequestQuery, Response, ResponseError, Token, TokenState } from "../src";
+import { Client, ResponseError } from "../src";
+import { PathLike, RequestHeaders, RequestQuery, Response, Token } from "../src/Token";
+import { TokenState } from "../src/TokenManager";
 import { toFormData, userAgent } from "../src/utils";
 import { getClient } from "./utils";
 

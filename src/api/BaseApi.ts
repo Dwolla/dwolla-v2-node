@@ -2,10 +2,10 @@ import { Client } from "../Client";
 import { Environment } from "../environment";
 
 export abstract class BaseApi {
-    constructor(private client: Client) {}
+    constructor(protected client: Client) {}
 
     protected buildUrl(...parts: string[]): string {
-        const environment: Environment = this.getClient().environment;
+        const environment: Environment = this.client.environment;
 
         return parts.reduce((previousValue: string, currentValue: string) => {
             if (currentValue === environment.apiUrl || currentValue.startsWith(`${environment.apiUrl}/`)) {
@@ -16,10 +16,6 @@ export abstract class BaseApi {
                 return `${previousValue}/${this.trimSlashes(currentValue)}`;
             }
         });
-    }
-
-    protected getClient(): Client {
-        return this.client;
     }
 
     private removePrefix(search: string, str: string): string {

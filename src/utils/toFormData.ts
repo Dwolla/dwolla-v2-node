@@ -1,6 +1,6 @@
 import FormData from "form-data";
 
-export default function (obj: any): FormData {
+export default function toFormData(obj: any): FormData {
     const formData: FormData = new FormData();
 
     Object.keys(obj).forEach((key: string) => {

@@ -1,7 +1,8 @@
 import nock from "nock";
 import "reflect-metadata";
-import { Client, Token } from "../../src";
+import { Client } from "../../src";
 import { PATHS } from "../../src/constants";
+import { Token } from "../../src/Token";
 import { getApiHeaders, getClient, mockTokenRequest } from "../utils";
 
 describe("Accounts API", () => {

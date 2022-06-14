@@ -1,5 +1,5 @@
 import { Expose, Type } from "class-transformer";
-import { InternationalAddress } from "../shared/InternationalAddress";
+import { InternationalAddress } from "../shared";
 
 /**
  * Represents a Dwolla customer controller that is assigned to verified business customers (not required for sole

@@ -1,3 +1,3 @@
-export default function (obj: any): any {
+export default function rejectEmptyKeys(obj: any): any {
     return Object.fromEntries(Object.entries(obj).filter(([, v]) => v != null));
 }

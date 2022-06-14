@@ -11,8 +11,7 @@ import fetch, { Headers, Response as FetchResponse } from "node-fetch";
 import { AuthResponse } from "./Auth";
 import { Client } from "./Client";
 import { HEADERS } from "./constants";
-import { DwollaError } from "./errors/DwollaError";
-import { ResponseError } from "./errors/ResponseError";
+import { DwollaError, ResponseError } from "./errors";
 import { TokenState } from "./TokenManager";
 import { rejectEmptyKeys, userAgent } from "./utils";
 

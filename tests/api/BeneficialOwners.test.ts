@@ -3,13 +3,13 @@ import {
     BeneficialOwner,
     Client,
     Country,
-    CreateForCustomerOptions,
+    CreateBeneficialOwnerBody,
     DateOfBirth,
-    Token,
-    UpdateOptions,
+    UpdateBeneficialOwnerBody,
     USState
 } from "../../src";
 import { PATHS } from "../../src/constants";
+import { Token } from "../../src/Token";
 import { getApiHeaders, getClient, mockTokenRequest } from "../utils";
 
 describe("Beneficial Owners API", () => {
@@ -23,7 +23,7 @@ describe("Beneficial Owners API", () => {
     });
 
     test("should create beneficial owner for customer", async () => {
-        const requestBody: CreateForCustomerOptions = {
+        const requestBody: CreateBeneficialOwnerBody = {
             firstName: "Beneficial",
             lastName: "Owner",
             ssn: "123-45-6789",
@@ -171,7 +171,7 @@ describe("Beneficial Owners API", () => {
     });
 
     test("should update beneficial owner", async () => {
-        const requestBody: UpdateOptions = {
+        const requestBody: UpdateBeneficialOwnerBody = {
             firstName: "beneficial",
             lastName: "owner",
             ssn: "123-54-6789",

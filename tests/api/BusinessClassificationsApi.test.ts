@@ -1,6 +1,7 @@
 import nock from "nock";
-import { Client, Token } from "../../src";
+import { Client } from "../../src";
 import { PATHS } from "../../src/constants";
+import { Token } from "../../src/Token";
 import { getApiHeaders, getClient, mockTokenRequest } from "../utils";
 
 describe("Business Classifications API", () => {

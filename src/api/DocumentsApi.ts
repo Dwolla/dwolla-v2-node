@@ -1,7 +1,7 @@
 import FormData from "form-data";
 import { ReadStream } from "fs";
 import { PATHS } from "../constants";
-import { Document, Documents, DocumentType } from "../models/documents";
+import { Document, Documents, DocumentType } from "../models";
 import { RequestHeaders } from "../Token";
 import { BaseApi } from "./BaseApi";
 
@@ -10,7 +10,7 @@ import { BaseApi } from "./BaseApi";
  * @see {@link DocumentsApi.createForBeneficialOwner}
  * @see {@link DocumentsApi.createForCustomer}
  */
-export interface CreateOptions {
+export interface CreateDocumentBody {
     documentType: DocumentType;
     file: ReadStream;
     fileMetadata: {
@@ -35,11 +35,11 @@ export class DocumentsApi extends BaseApi {
      */
     async createForBeneficialOwner(
         beneficialOwnerId: string,
-        body: CreateOptions,
+        body: CreateDocumentBody,
         headers?: RequestHeaders
     ): Promise<Document> {
         return (
-            await this.getClient().postFollowMapped(
+            await this.client.postFollowMapped(
                 Document,
                 this.buildUrl(PATHS.BENEFICIAL_OWNERS, beneficialOwnerId, PATHS.DOCUMENTS),
                 this.getRequestBody(body),
@@ -56,9 +56,9 @@ export class DocumentsApi extends BaseApi {
      * @returns - The newly-created document assigned to the customer
      * @see {@link https://developers.dwolla.com/api-reference/documents/create-document-for-customer|Create a Document for a Customer - Dwolla Documentation}
      */
-    async createForCustomer(customerId: string, body: CreateOptions, headers?: RequestHeaders): Promise<Document> {
+    async createForCustomer(customerId: string, body: CreateDocumentBody, headers?: RequestHeaders): Promise<Document> {
         return (
-            await this.getClient().postFollowMapped(
+            await this.client.postFollowMapped(
                 Document,
                 this.buildUrl(PATHS.CUSTOMERS, customerId, PATHS.DOCUMENTS),
                 this.getRequestBody(body),
@@ -74,10 +74,10 @@ export class DocumentsApi extends BaseApi {
      * @see {@link https://developers.dwolla.com/api-reference/documents/retrieve|Retrieve a Document - Dwolla Documentation}
      */
     async get(id: string): Promise<Document> {
-        return (await this.getClient().getMapped(Document, this.buildUrl(PATHS.DOCUMENTS, id))).body;
+        return (await this.client.getMapped(Document, this.buildUrl(PATHS.DOCUMENTS, id))).body;
     }
 
-    private getRequestBody(options: CreateOptions): FormData {
+    private getRequestBody(options: CreateDocumentBody): FormData {
         const requestBody = new FormData();
         requestBody.append("documentType", options.documentType);
         requestBody.append("file", options.file, {
@@ -96,7 +96,7 @@ export class DocumentsApi extends BaseApi {
      */
     async listForBeneficialOwner(beneficialOwnerId: string): Promise<Documents> {
         return (
-            await this.getClient().getMapped(
+            await this.client.getMapped(
                 Documents,
                 this.buildUrl(PATHS.BENEFICIAL_OWNERS, beneficialOwnerId, PATHS.DOCUMENTS)
             )
@@ -110,8 +110,7 @@ export class DocumentsApi extends BaseApi {
      * @see {@link https://developers.dwolla.com/api-reference/documents/list-documents-for-customer|List Documents for a Customer - Dwolla Documentation}
      */
     async listForCustomer(customerId: string): Promise<Documents> {
-        return (
-            await this.getClient().getMapped(Documents, this.buildUrl(PATHS.CUSTOMERS, customerId, PATHS.DOCUMENTS))
-        ).body;
+        return (await this.client.getMapped(Documents, this.buildUrl(PATHS.CUSTOMERS, customerId, PATHS.DOCUMENTS)))
+            .body;
     }
 }

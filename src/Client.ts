@@ -1,17 +1,19 @@
 import { TargetMap } from "class-transformer";
-import { AccountsApi } from "./api/AccountsApi";
-import { BeneficialOwnersApi } from "./api/BeneficialOwnersApi";
-import { BusinessClassificationsApi } from "./api/BusinessClassificationsApi";
-import { CustomersApi } from "./api/CustomersApi";
-import { DocumentsApi } from "./api/DocumentsApi";
-import { FundingSourceApi } from "./api/FundingSourceApi";
-import { RootApi } from "./api/RootApi";
-import { TransfersApi } from "./api/TransfersApi";
+import {
+    AccountsApi,
+    BeneficialOwnersApi,
+    BusinessClassificationsApi,
+    CustomersApi,
+    DocumentsApi,
+    FundingSourcesApi,
+    RootApi,
+    TransfersApi
+} from "./api";
 import { Auth } from "./Auth";
 import getEnvironment, { Environment } from "./environment";
 import { Deserializable, PathLike, RequestHeaders, RequestQuery, Response } from "./Token";
 import { TokenManager } from "./TokenManager";
-import { RequireAtLeastOne } from "./types/RequireAtLeastOne";
+import { RequireAtLeastOne } from "./types";
 
 interface BaseClientOptions {
     environment?: Environment | "production" | "sandbox";
@@ -29,7 +31,7 @@ export class Client {
         businessClassifications: new BusinessClassificationsApi(this),
         customers: new CustomersApi(this),
         documents: new DocumentsApi(this),
-        fundingSources: new FundingSourceApi(this),
+        fundingSources: new FundingSourcesApi(this),
         root: new RootApi(this),
         transfers: new TransfersApi(this)
     } as const;

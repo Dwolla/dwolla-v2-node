@@ -1,5 +1,5 @@
 import { PATHS } from "../constants";
-import { Account } from "../models/accounts";
+import { Account } from "../models";
 import { BaseApi } from "./BaseApi";
 
 export class AccountsApi extends BaseApi {
@@ -10,6 +10,6 @@ export class AccountsApi extends BaseApi {
      * either by using our high-level or low-level function.
      */
     async get(id: string): Promise<Account> {
-        return (await this.getClient().getMapped(Account, this.buildUrl(PATHS.ACCOUNTS, id))).body;
+        return (await this.client.getMapped(Account, this.buildUrl(PATHS.ACCOUNTS, id))).body;
     }
 }

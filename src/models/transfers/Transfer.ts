@@ -1,10 +1,10 @@
-import { Expose } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 import { HalResource } from "../HalResource";
 import { Money } from "../shared";
 import { ACHDestination, ACHDetails, ACHSource } from "./ach";
 import { Clearing } from "./Clearing";
 import { RTPDestination, RTPDetails } from "./rtp";
-import type { TransferStatus } from "./types";
+import { TransferStatus } from "./types";
 
 export class Transfer<
     ACHSourceType extends ACHSource,
@@ -18,19 +18,21 @@ export class Transfer<
     readonly status!: TransferStatus;
 
     @Expose()
+    @Type(() => Money)
     readonly amount!: Money;
 
     @Expose()
     readonly created!: Date;
 
     @Expose()
+    @Type(() => Clearing)
     readonly clearing?: Clearing;
 
     @Expose()
-    readonly achDetails?: ACHDetails<ACHSourceType, ACHDestinationType>;
+    readonly achDetails?: ACHDetails<ACHSourceType, ACHDestinationType>; // -> The `Type()` for this is handled by `targetMaps`
 
     @Expose()
-    readonly rtpDetails?: RTPDetails<RTPDestinationType>;
+    readonly rtpDetails?: RTPDetails<RTPDestinationType>; // -> The `Type()` for this is handled by `targetMaps`
 
     @Expose()
     readonly correlationId?: string;

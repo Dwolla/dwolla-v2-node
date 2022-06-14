@@ -1,6 +1,5 @@
 import { ClassConstructor, TargetMap } from "class-transformer";
 import { PATHS } from "../constants";
-import { Money } from "../models/shared";
 import {
     ACHDestination,
     ACHDetails,
@@ -9,12 +8,13 @@ import {
     ClearingSource,
     FacilitatorFees,
     FailureReason,
+    Money,
     RTPDestination,
     RTPDetails,
     Transfer,
     Transfers,
     TransferStatus
-} from "../models/transfers";
+} from "../models";
 import { RequestHeaders } from "../Token";
 import { BaseApi } from "./BaseApi";
 
@@ -34,7 +34,7 @@ export interface InitiateTransferBody<
     processingChannel?: { destination: "real-time-payments" };
 }
 
-export interface ListForCustomerQueryParams {
+export interface ListTransfersQueryParams {
     search?: string;
     startAmount?: string;
     endAmount?: string;
@@ -90,7 +90,7 @@ export class TransfersApi extends BaseApi {
         targetMaps?: TransferTargetMaps<ACHSourceType, ACHDestinationType, RTPDestinationType>
     ): Promise<Transfer<ACHSourceType, ACHDestinationType, RTPDestinationType>> {
         return (
-            await this.getClient().postMapped(
+            await this.client.postMapped(
                 new Transfer<ACHSourceType, ACHDestinationType, RTPDestinationType>(),
                 this.buildUrl(PATHS.TRANSFERS, id),
                 { status: "cancelled" },
@@ -109,7 +109,7 @@ export class TransfersApi extends BaseApi {
         targetMaps?: TransferTargetMaps<ACHSourceType, ACHDestinationType, RTPDestinationType>
     ): Promise<Transfer<ACHSourceType, ACHDestinationType, RTPDestinationType>> {
         return (
-            await this.getClient().getMapped(
+            await this.client.getMapped(
                 new Transfer<ACHSourceType, ACHDestinationType, RTPDestinationType>(),
                 this.buildUrl(PATHS.TRANSFERS, id),
                 undefined,
@@ -120,8 +120,7 @@ export class TransfersApi extends BaseApi {
     }
 
     async getFailureReason(id: string): Promise<FailureReason> {
-        return (await this.getClient().getMapped(FailureReason, this.buildUrl(PATHS.TRANSFERS, id, PATHS.FAILURE)))
-            .body;
+        return (await this.client.getMapped(FailureReason, this.buildUrl(PATHS.TRANSFERS, id, PATHS.FAILURE))).body;
     }
 
     private getTargetMaps<
@@ -147,7 +146,7 @@ export class TransfersApi extends BaseApi {
     }
 
     async listFees(id: string): Promise<FacilitatorFees> {
-        return (await this.getClient().getMapped(FacilitatorFees, this.buildUrl(PATHS.TRANSFERS, id, PATHS.FEES))).body;
+        return (await this.client.getMapped(FacilitatorFees, this.buildUrl(PATHS.TRANSFERS, id, PATHS.FEES))).body;
     }
 
     async listForCustomer<
@@ -156,11 +155,11 @@ export class TransfersApi extends BaseApi {
         RTPDestinationType extends RTPDestination
     >(
         customerId: string,
-        query?: ListForCustomerQueryParams,
+        query?: ListTransfersQueryParams,
         targetMaps?: TransferTargetMaps<ACHSourceType, ACHDestinationType, RTPDestinationType>
     ): Promise<Transfers<ACHSourceType, ACHDestinationType, RTPDestinationType>> {
         return (
-            await this.getClient().getMapped(
+            await this.client.getMapped(
                 new Transfers<ACHSourceType, ACHDestinationType, RTPDestinationType>(),
                 this.buildUrl(PATHS.CUSTOMERS, customerId, PATHS.TRANSFERS),
                 query,
@@ -180,7 +179,7 @@ export class TransfersApi extends BaseApi {
         targetMaps?: TransferTargetMaps<ACHSourceType, ACHDestinationType, RTPDestinationType>
     ): Promise<Transfer<ACHSourceType, ACHDestinationType, RTPDestinationType>> {
         return (
-            await this.getClient().postFollowMapped(
+            await this.client.postFollowMapped(
                 new Transfer<ACHSourceType, ACHDestinationType, RTPDestinationType>(),
                 PATHS.TRANSFERS,
                 body,

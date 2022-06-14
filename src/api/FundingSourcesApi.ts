@@ -9,10 +9,10 @@ import {
     FundingSourceToken,
     MicroDeposits,
     MicroDepositsVerified,
+    Money,
     ProcessingChannel,
     UpdatedFundingSource
-} from "../models/funding-sources";
-import { Money } from "../models/shared";
+} from "../models";
 import { RequestHeaders } from "../Token";
 import { BaseApi } from "./BaseApi";
 
@@ -20,7 +20,7 @@ import { BaseApi } from "./BaseApi";
  * Request body that is sent when creating a `bank` {@link FundingSource}.
  * @see {@link FundingSourceApi.createBankForCustomer}
  */
-export interface CreateBankForCustomerBody {
+export interface CreateBankFundingSourceBody {
     _links?: {
         "on-demand-authorization": string;
     };
@@ -36,7 +36,7 @@ export interface CreateBankForCustomerBody {
  * Request body that is sent when creating a `virtual` {@link FundingSource}.
  * @see {@link FundingSourceApi.createVirtualForCustomer}
  */
-export interface CreateVirtualForCustomerBody {
+export interface CreateVirtualFundingSourceBody {
     name: string;
 }
 
@@ -44,7 +44,7 @@ export interface CreateVirtualForCustomerBody {
  * Query parameters that can be used to filter {@link FundingSources}.
  * @see {@link FundingSourceApi.listForCustomer}
  */
-export interface ListForCustomerQueryParams {
+export interface ListFundingSourcesQueryParams {
     removed?: boolean;
 }
 
@@ -52,7 +52,7 @@ export interface ListForCustomerQueryParams {
  * Request body that is sent when updating a {@link FundingSource}.
  * @see {@link FundingSourceApi.update}
  */
-export interface UpdateBody {
+export interface UpdateFundingSourceBody {
     id: string;
     name: string;
     bankAccountType?: BankAccountType;
@@ -69,7 +69,7 @@ export interface VerifyMicroDepositsBody {
     amount2: Money;
 }
 
-export class FundingSourceApi extends BaseApi {
+export class FundingSourcesApi extends BaseApi {
     /**
      * Create a `bank` {@link FundingSource} that is assigned to a {@link Customer}.
      *
@@ -83,11 +83,11 @@ export class FundingSourceApi extends BaseApi {
      */
     async createBankForCustomer(
         customerId: string,
-        body: CreateBankForCustomerBody,
+        body: CreateBankFundingSourceBody,
         headers?: RequestHeaders
     ): Promise<FundingSource> {
         return (
-            await this.getClient().postFollowMapped(
+            await this.client.postFollowMapped(
                 FundingSource,
                 this.buildUrl(PATHS.CUSTOMERS, customerId, PATHS.FUNDING_SOURCES),
                 body,
@@ -106,7 +106,7 @@ export class FundingSourceApi extends BaseApi {
      */
     async createCardTokenForCustomer(customerId: string): Promise<CardFundingSourceToken> {
         return (
-            await this.getClient().postFollowMapped(
+            await this.client.postFollowMapped(
                 CardFundingSourceToken,
                 this.buildUrl(PATHS.CUSTOMERS, customerId, PATHS.CARD_FUNDING_SOURCES_TOKEN)
             )
@@ -123,7 +123,7 @@ export class FundingSourceApi extends BaseApi {
      */
     async createTokenForCustomer(customerId: string): Promise<FundingSourceToken> {
         return (
-            await this.getClient().postFollowMapped(
+            await this.client.postFollowMapped(
                 FundingSourceToken,
                 this.buildUrl(PATHS.CUSTOMERS, customerId, PATHS.FUNDING_SOURCES_TOKEN)
             )
@@ -143,11 +143,11 @@ export class FundingSourceApi extends BaseApi {
      */
     async createVirtualForCustomer(
         customerId: string,
-        body: CreateVirtualForCustomerBody,
+        body: CreateVirtualFundingSourceBody,
         headers?: RequestHeaders
     ): Promise<FundingSource> {
         return (
-            await this.getClient().postFollowMapped(
+            await this.client.postFollowMapped(
                 FundingSource,
                 this.buildUrl(PATHS.CUSTOMERS, customerId, PATHS.FUNDING_SOURCES),
                 { bankAccountType: "checking", type: "virtual", ...body },
@@ -164,7 +164,7 @@ export class FundingSourceApi extends BaseApi {
      * @see {@link https://developers.dwolla.com/api-reference/funding-sources/retrieve#retrieve-a-funding-source|Retrieve a Funding Source - Dwolla Documentation}
      */
     async get(id: string): Promise<FundingSource> {
-        return (await this.getClient().getMapped(FundingSource, this.buildUrl(PATHS.FUNDING_SOURCES, id))).body;
+        return (await this.client.getMapped(FundingSource, this.buildUrl(PATHS.FUNDING_SOURCES, id))).body;
     }
 
     /**
@@ -176,9 +176,8 @@ export class FundingSourceApi extends BaseApi {
      * @see {@link https://developers.dwolla.com/api-reference/funding-sources/retrieve-a-van-account-and-routing-number#http-request|Retrieve a VAN Account and Routing Number - Dwolla Documentation}
      */
     async getAchRouting(id: string): Promise<ACHRouting> {
-        return (
-            await this.getClient().getMapped(ACHRouting, this.buildUrl(PATHS.FUNDING_SOURCES, id, PATHS.ACH_ROUTING))
-        ).body;
+        return (await this.client.getMapped(ACHRouting, this.buildUrl(PATHS.FUNDING_SOURCES, id, PATHS.ACH_ROUTING)))
+            .body;
     }
 
     /**
@@ -190,10 +189,7 @@ export class FundingSourceApi extends BaseApi {
      */
     async getBalance(id: string): Promise<FundingSourceBalance> {
         return (
-            await this.getClient().getMapped(
-                FundingSourceBalance,
-                this.buildUrl(PATHS.FUNDING_SOURCES, id, PATHS.BALANCE)
-            )
+            await this.client.getMapped(FundingSourceBalance, this.buildUrl(PATHS.FUNDING_SOURCES, id, PATHS.BALANCE))
         ).body;
     }
 
@@ -208,10 +204,7 @@ export class FundingSourceApi extends BaseApi {
      */
     async getMicroDeposits(id: string): Promise<MicroDeposits> {
         return (
-            await this.getClient().getMapped(
-                MicroDeposits,
-                this.buildUrl(PATHS.FUNDING_SOURCES, id, PATHS.MICRO_DEPOSITS)
-            )
+            await this.client.getMapped(MicroDeposits, this.buildUrl(PATHS.FUNDING_SOURCES, id, PATHS.MICRO_DEPOSITS))
         ).body;
     }
 
@@ -226,7 +219,7 @@ export class FundingSourceApi extends BaseApi {
      */
     async initiateMicroDeposits(id: string): Promise<MicroDeposits> {
         return (
-            await this.getClient().postFollowMapped(
+            await this.client.postFollowMapped(
                 MicroDeposits,
                 this.buildUrl(PATHS.FUNDING_SOURCES, id, PATHS.MICRO_DEPOSITS)
             )
@@ -243,9 +236,9 @@ export class FundingSourceApi extends BaseApi {
      *
      * @see {@link https://developers.dwolla.com/api-reference/funding-sources/list-funding-sources-for-a-customer#http-request|List Funding Sources for a Customer - Dwolla Documentation}
      */
-    async listForCustomer(customerId: string, query?: ListForCustomerQueryParams): Promise<FundingSources> {
+    async listForCustomer(customerId: string, query?: ListFundingSourcesQueryParams): Promise<FundingSources> {
         return (
-            await this.getClient().getMapped(
+            await this.client.getMapped(
                 FundingSources,
                 this.buildUrl(PATHS.CUSTOMERS, customerId, PATHS.FUNDING_SOURCES),
                 query
@@ -265,7 +258,7 @@ export class FundingSourceApi extends BaseApi {
      */
     async remove(id: string, headers?: RequestHeaders): Promise<FundingSource> {
         return (
-            await this.getClient().postMapped(
+            await this.client.postMapped(
                 FundingSource,
                 this.buildUrl(PATHS.FUNDING_SOURCES, id),
                 { removed: true },
@@ -285,10 +278,9 @@ export class FundingSourceApi extends BaseApi {
      *
      * @see {@link https://developers.dwolla.com/api-reference/funding-sources/update#http-request|Update a Funding Source - Dwolla Documentation}
      */
-    async update(id: string, body: UpdateBody, headers?: RequestHeaders): Promise<UpdatedFundingSource> {
-        return (
-            await this.getClient().postMapped(FundingSource, this.buildUrl(PATHS.FUNDING_SOURCES, id), body, headers)
-        ).body;
+    async update(id: string, body: UpdateFundingSourceBody, headers?: RequestHeaders): Promise<UpdatedFundingSource> {
+        return (await this.client.postMapped(FundingSource, this.buildUrl(PATHS.FUNDING_SOURCES, id), body, headers))
+            .body;
     }
 
     /**
@@ -308,7 +300,7 @@ export class FundingSourceApi extends BaseApi {
         headers?: RequestHeaders
     ): Promise<MicroDepositsVerified> {
         return (
-            await this.getClient().postFollowMapped(
+            await this.client.postFollowMapped(
                 MicroDepositsVerified,
                 this.buildUrl(PATHS.FUNDING_SOURCES, id, PATHS.MICRO_DEPOSITS),
                 body,

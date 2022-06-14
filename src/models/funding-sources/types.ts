@@ -1,4 +1,4 @@
-import { PartialNested } from "../../types/PartialNested";
+import { PartialNested } from "../../types";
 import { FundingSource } from "./FundingSource";
 
 /**

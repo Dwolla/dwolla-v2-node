@@ -1,5 +1,5 @@
-import { AuthError } from "../../errors/AuthError";
+import { AuthError } from "../../errors";
 
-export default function (obj: unknown): obj is AuthError {
+export default function isAuthError(obj: unknown): obj is AuthError {
     return obj instanceof AuthError;
 }

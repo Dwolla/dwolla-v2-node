@@ -1,6 +1,6 @@
 import { Expose, Type } from "class-transformer";
 import { HalResource } from "../HalResource";
-import { USState } from "../shared/USState";
+import { USState } from "../shared";
 import { BusinessType } from "./BusinessType";
 import { CustomerController } from "./CustomerController";
 import { CustomerStatus } from "./CustomerStatus";

@@ -1,16 +1,14 @@
 import { PATHS } from "../constants";
-import { BeneficialOwner } from "../models/beneficial-owners/BeneficialOwner";
-import { BeneficialOwners } from "../models/beneficial-owners/BeneficialOwners";
-import { Country, DateOfBirth } from "../models/shared";
+import { BeneficialOwner, BeneficialOwners, Country, DateOfBirth } from "../models";
 import { RequestHeaders } from "../Token";
-import { PartialNested } from "../types/PartialNested";
+import { PartialNested } from "../types";
 import { BaseApi } from "./BaseApi";
 
 /**
  * Request options that are sent when a beneficial owner is created.
  * @see {@link BeneficialOwnersApi.createForCustomer}
  */
-export interface CreateForCustomerOptions {
+export interface CreateBeneficialOwnerBody {
     firstName: string;
     lastName: string;
     ssn?: string;
@@ -34,7 +32,7 @@ export interface CreateForCustomerOptions {
  * Request options that are sent when a beneficial owner is updated.
  * @see {@link BeneficialOwnersApi.update}
  */
-export type UpdateOptions = PartialNested<CreateForCustomerOptions>;
+export type UpdateBeneficialOwnerBody = PartialNested<CreateBeneficialOwnerBody>;
 
 export class BeneficialOwnersApi extends BaseApi {
     /**
@@ -47,13 +45,13 @@ export class BeneficialOwnersApi extends BaseApi {
      */
     async createForCustomer(
         customerId: string,
-        body: CreateForCustomerOptions,
+        body: CreateBeneficialOwnerBody,
         headers?: RequestHeaders
     ): Promise<BeneficialOwner> {
         return (
-            await this.getClient().postFollowMapped(
+            await this.client.postFollowMapped(
                 BeneficialOwner,
-                `${PATHS.CUSTOMERS}/${customerId}/${PATHS.BENEFICIAL_OWNERS}`,
+                this.buildUrl(PATHS.CUSTOMERS, customerId, PATHS.BENEFICIAL_OWNERS),
                 body,
                 headers
             )
@@ -67,7 +65,7 @@ export class BeneficialOwnersApi extends BaseApi {
      * @see {@link https://developers.dwolla.com/api-reference/beneficial-owners/retrieve|Retrieve a Beneficial Owner - Dwolla Documentation}
      */
     async get(id: string): Promise<BeneficialOwner> {
-        return (await this.getClient().getMapped(BeneficialOwner, `${PATHS.BENEFICIAL_OWNERS}/${id}`)).body;
+        return (await this.client.getMapped(BeneficialOwner, this.buildUrl(PATHS.BENEFICIAL_OWNERS, id))).body;
     }
 
     /**
@@ -78,9 +76,9 @@ export class BeneficialOwnersApi extends BaseApi {
      */
     async listForCustomer(customerId: string): Promise<BeneficialOwners> {
         return (
-            await this.getClient().getMapped(
+            await this.client.getMapped(
                 BeneficialOwners,
-                `${PATHS.CUSTOMERS}/${customerId}/${PATHS.BENEFICIAL_OWNERS}`
+                this.buildUrl(PATHS.CUSTOMERS, customerId, PATHS.BENEFICIAL_OWNERS)
             )
         ).body;
     }
@@ -92,7 +90,7 @@ export class BeneficialOwnersApi extends BaseApi {
      * @see {@link https://developers.dwolla.com/api-reference/beneficial-owners/remove|Remove a Beneficial Owner - Dwolla Documentation}
      */
     async remove(id: string): Promise<BeneficialOwner> {
-        return (await this.getClient().deleteMapped(BeneficialOwner, `${PATHS.BENEFICIAL_OWNERS}/${id}`)).body;
+        return (await this.client.deleteMapped(BeneficialOwner, this.buildUrl(PATHS.BENEFICIAL_OWNERS, id))).body;
     }
 
     /**
@@ -103,7 +101,7 @@ export class BeneficialOwnersApi extends BaseApi {
      * @returns - The updated beneficial owner
      * @see {@link https://developers.dwolla.com/api-reference/beneficial-owners/update|Update a Beneficial Owner - Dwolla Documentation}
      */
-    async update(id: string, body: UpdateOptions): Promise<BeneficialOwner> {
-        return (await this.getClient().postMapped(BeneficialOwner, `${PATHS.BENEFICIAL_OWNERS}/${id}`, body)).body;
+    async update(id: string, body: UpdateBeneficialOwnerBody): Promise<BeneficialOwner> {
+        return (await this.client.postMapped(BeneficialOwner, this.buildUrl(PATHS.BENEFICIAL_OWNERS, id), body)).body;
     }
 }

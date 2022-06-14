@@ -1,7 +1,7 @@
 import formUrlEncoded from "form-urlencoded";
 import fetch, { Response } from "node-fetch";
 import { Client } from "./Client";
-import { AuthError } from "./errors/AuthError";
+import { AuthError } from "./errors";
 import { Token } from "./Token";
 import { userAgent } from "./utils";
 
