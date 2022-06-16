@@ -5,10 +5,12 @@ import { ACHDestination, ACHDetails, ACHSource } from "./ach";
 import { Clearing } from "./Clearing";
 import { RTPDestination, RTPDetails } from "./rtp";
 import { TransferStatus } from "./types";
+import { Metadata } from "./Metadata";
 
 export class Transfer<
     ACHSourceType extends ACHSource,
     ACHDestinationType extends ACHDestination,
+    MetadataType extends Metadata,
     RTPDestinationType extends RTPDestination
 > extends HalResource {
     @Expose()
@@ -23,6 +25,9 @@ export class Transfer<
 
     @Expose()
     readonly created!: Date;
+
+    @Expose()
+    readonly metadata?: MetadataType; // -> The `Type()` for this is handled by `targetMaps`
 
     @Expose()
     @Type(() => Clearing)

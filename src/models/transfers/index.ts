@@ -5,6 +5,7 @@ export * from "./EmbeddedTransfers";
 export * from "./FacilitatorFee";
 export * from "./FacilitatorFees";
 export * from "./FailureReason";
+export * from "./Metadata";
 export * from "./Transfer";
 export * from "./Transfers";
 export * from "./types";

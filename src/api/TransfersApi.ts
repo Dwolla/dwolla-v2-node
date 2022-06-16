@@ -8,6 +8,7 @@ import {
     ClearingSource,
     FacilitatorFees,
     FailureReason,
+    Metadata,
     Money,
     RTPDestination,
     RTPDetails,
@@ -21,11 +22,12 @@ import { BaseApi } from "./BaseApi";
 export interface InitiateTransferBody<
     ACHSourceType extends ACHSource,
     ACHDestinationType extends ACHDestination,
+    MetadataType extends Metadata,
     RTPDestinationType extends RTPDestination
 > {
     _links: { source: { href: string }; destination: { href: string } };
     amount: Required<Money>;
-    metadata?: TransferMetadata;
+    metadata?: Partial<MetadataType>;
     fees?: TransferFee;
     clearing?: TransferClearing;
     achDetails?: TransferACHDetails<ACHSourceType, ACHDestinationType>;
@@ -63,10 +65,6 @@ export interface TransferFee {
     amount: Required<Money>;
 }
 
-export interface TransferMetadata {
-    [key: string]: string;
-}
-
 export interface TransferRTPDetails<DestinationType extends RTPDestination> {
     destination?: Partial<DestinationType>;
 }
@@ -74,9 +72,11 @@ export interface TransferRTPDetails<DestinationType extends RTPDestination> {
 export type TransferTargetMaps<
     ACHSourceType extends ACHSource,
     ACHDestinationType extends ACHDestination,
+    MetadataType extends Metadata,
     RTPDestinationType extends RTPDestination
 > = {
     ach?: { source?: ClassConstructor<ACHSourceType>; destination?: ClassConstructor<ACHDestinationType> };
+    metadata?: ClassConstructor<MetadataType>;
     rtp?: { destination?: ClassConstructor<RTPDestinationType> };
 };
 
@@ -84,14 +84,15 @@ export class TransfersApi extends BaseApi {
     async cancel<
         ACHSourceType extends ACHSource,
         ACHDestinationType extends ACHDestination,
+        MetadataType extends Metadata,
         RTPDestinationType extends RTPDestination
     >(
         id: string,
-        targetMaps?: TransferTargetMaps<ACHSourceType, ACHDestinationType, RTPDestinationType>
-    ): Promise<Transfer<ACHSourceType, ACHDestinationType, RTPDestinationType>> {
+        targetMaps?: TransferTargetMaps<ACHSourceType, ACHDestinationType, MetadataType, RTPDestinationType>
+    ): Promise<Transfer<ACHSourceType, ACHDestinationType, MetadataType, RTPDestinationType>> {
         return (
             await this.client.postMapped(
-                new Transfer<ACHSourceType, ACHDestinationType, RTPDestinationType>(),
+                new Transfer<ACHSourceType, ACHDestinationType, MetadataType, RTPDestinationType>(),
                 this.buildUrl(PATHS.TRANSFERS, id),
                 { status: "cancelled" },
                 undefined,
@@ -103,14 +104,15 @@ export class TransfersApi extends BaseApi {
     async get<
         ACHSourceType extends ACHSource,
         ACHDestinationType extends ACHDestination,
+        MetadataType extends Metadata,
         RTPDestinationType extends RTPDestination
     >(
         id: string,
-        targetMaps?: TransferTargetMaps<ACHSourceType, ACHDestinationType, RTPDestinationType>
-    ): Promise<Transfer<ACHSourceType, ACHDestinationType, RTPDestinationType>> {
+        targetMaps?: TransferTargetMaps<ACHSourceType, ACHDestinationType, MetadataType, RTPDestinationType>
+    ): Promise<Transfer<ACHSourceType, ACHDestinationType, MetadataType, RTPDestinationType>> {
         return (
             await this.client.getMapped(
-                new Transfer<ACHSourceType, ACHDestinationType, RTPDestinationType>(),
+                new Transfer<ACHSourceType, ACHDestinationType, MetadataType, RTPDestinationType>(),
                 this.buildUrl(PATHS.TRANSFERS, id),
                 undefined,
                 undefined,
@@ -126,14 +128,23 @@ export class TransfersApi extends BaseApi {
     private getTargetMaps<
         ACHSourceType extends ACHSource,
         ACHDestinationType extends ACHDestination,
-        RTPDestinationType extends RTPDestination
-    >(targetMaps?: TransferTargetMaps<ACHSourceType, ACHDestinationType, RTPDestinationType>): TargetMap[] {
+        MetadataType extends Metadata,
+        RTPDestinationType extends RTPDestination = RTPDestination
+    >(
+        targetMaps?: TransferTargetMaps<ACHSourceType, ACHDestinationType, MetadataType, RTPDestinationType>
+    ): TargetMap[] {
         return [
             {
                 target: ACHDetails,
                 properties: {
                     source: targetMaps?.ach?.source ?? ACHSource,
                     destination: targetMaps?.ach?.destination ?? ACHDestination
+                }
+            },
+            {
+                target: Transfer,
+                properties: {
+                    metadata: targetMaps?.metadata ?? Metadata
                 }
             },
             {
@@ -152,15 +163,16 @@ export class TransfersApi extends BaseApi {
     async listForCustomer<
         ACHSourceType extends ACHSource,
         ACHDestinationType extends ACHDestination,
+        MetadataType extends Metadata,
         RTPDestinationType extends RTPDestination
     >(
         customerId: string,
         query?: ListTransfersQueryParams,
-        targetMaps?: TransferTargetMaps<ACHSourceType, ACHDestinationType, RTPDestinationType>
-    ): Promise<Transfers<ACHSourceType, ACHDestinationType, RTPDestinationType>> {
+        targetMaps?: TransferTargetMaps<ACHSourceType, ACHDestinationType, MetadataType, RTPDestinationType>
+    ): Promise<Transfers<ACHSourceType, ACHDestinationType, MetadataType, RTPDestinationType>> {
         return (
             await this.client.getMapped(
-                new Transfers<ACHSourceType, ACHDestinationType, RTPDestinationType>(),
+                new Transfers<ACHSourceType, ACHDestinationType, MetadataType, RTPDestinationType>(),
                 this.buildUrl(PATHS.CUSTOMERS, customerId, PATHS.TRANSFERS),
                 query,
                 undefined,
@@ -172,15 +184,16 @@ export class TransfersApi extends BaseApi {
     async initiateTransfer<
         ACHSourceType extends ACHSource,
         ACHDestinationType extends ACHDestination,
+        MetadataType extends Metadata,
         RTPDestinationType extends RTPDestination
     >(
-        body: InitiateTransferBody<ACHSourceType, ACHDestinationType, RTPDestinationType>,
+        body: InitiateTransferBody<ACHSourceType, ACHDestinationType, MetadataType, RTPDestinationType>,
         headers?: RequestHeaders,
-        targetMaps?: TransferTargetMaps<ACHSourceType, ACHDestinationType, RTPDestinationType>
-    ): Promise<Transfer<ACHSourceType, ACHDestinationType, RTPDestinationType>> {
+        targetMaps?: TransferTargetMaps<ACHSourceType, ACHDestinationType, MetadataType, RTPDestinationType>
+    ): Promise<Transfer<ACHSourceType, ACHDestinationType, MetadataType, RTPDestinationType>> {
         return (
             await this.client.postFollowMapped(
-                new Transfer<ACHSourceType, ACHDestinationType, RTPDestinationType>(),
+                new Transfer<ACHSourceType, ACHDestinationType, MetadataType, RTPDestinationType>(),
                 PATHS.TRANSFERS,
                 body,
                 headers,
