@@ -6,6 +6,7 @@ import {
     CustomersApi,
     DocumentsApi,
     FundingSourcesApi,
+    OnDemandAuthorizations,
     RootApi,
     TransfersApi
 } from "./api";
@@ -32,6 +33,7 @@ export class Client {
         customers: new CustomersApi(this),
         documents: new DocumentsApi(this),
         fundingSources: new FundingSourcesApi(this),
+        onDemandAuthorizations: new OnDemandAuthorizations(this),
         root: new RootApi(this),
         transfers: new TransfersApi(this)
     } as const;

@@ -4,6 +4,7 @@ export * from "./business-classifications";
 export * from "./customers";
 export * from "./documents";
 export * from "./funding-sources";
+export * from "./on-demand-authorizations";
 export * from "./shared";
 export * from "./transfers";
 export * from "./HalResource";

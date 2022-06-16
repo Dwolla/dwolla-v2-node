@@ -4,5 +4,6 @@ export * from "./BusinessClassificationsApi";
 export * from "./CustomersApi";
 export * from "./DocumentsApi";
 export * from "./FundingSourcesApi";
+export * from "./OnDemandAuthorizations";
 export * from "./RootApi";
 export * from "./TransfersApi";

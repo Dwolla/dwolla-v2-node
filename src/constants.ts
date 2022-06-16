@@ -16,5 +16,6 @@ export const PATHS = {
     FUNDING_SOURCES: "funding-sources",
     FUNDING_SOURCES_TOKEN: "funding-sources-token",
     MICRO_DEPOSITS: "micro-deposits",
+    ON_DEMAND_AUTHORIZATIONS: "on-demand-authorizations",
     TRANSFERS: "transfers"
 } as const;
