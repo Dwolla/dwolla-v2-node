@@ -151,6 +151,7 @@ by [clicking here](https://github.com/Dwolla/dwolla-v2-node/compare).
 ## Changelog
 
 - **4.0.0** SDK is fully rewritten in TypeScript. Support is added for ES Modules.
+- **3.4.0** Update `form-urlencoded` version to allow `{ skipIndex: true, skipBracket: true}` options to be passed in. Thanks [@MarcMouallem](https://github.com/MarcMouallem)!
 - **3.3.0** Remove lodash as a dependency and replace with `Object.assign`
 - **3.2.3** Update version and changelog
 - **3.2.2** Update unit test involving token. Thanks [@philting](https://github.com/philting)!
