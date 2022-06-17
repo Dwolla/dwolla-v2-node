@@ -20,7 +20,7 @@ export interface DeserializeOptions<ResultType> {
     targetMaps?: TargetMap[];
 }
 
-export interface Response<BodyType = any> {
+export interface Response<BodyType = unknown> {
     body: BodyType;
     headers: Headers;
     status: number;

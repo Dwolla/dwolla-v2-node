@@ -3,7 +3,7 @@
  *
  * @see {@link https://developers.dwolla.com/api-reference/documents/create-document-for-customer#acceptable-documents|Acceptable Documents - Dwolla Documentation}
  */
-export enum DocumentType {
+export const enum DocumentType {
     /**
      * ID Card
      */

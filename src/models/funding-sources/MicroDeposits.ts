@@ -1,7 +1,7 @@
+import { Expose } from "class-transformer";
 import { HalResource } from "../HalResource";
 import { MicroDepositsFailure } from "./MicroDepositsFailure";
-import { MicroDepositsStatus } from "./types";
-import { Expose } from "class-transformer";
+import { MicroDepositsStatus } from "./MicroDepositsStatus";
 
 /**
  * Represents the current state of micro deposits that were sent to a customer's {@link FundingSource}.

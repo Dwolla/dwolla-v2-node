@@ -1,7 +1,7 @@
 /**
  * Represents an enumeration of all U.S. states as well as territories.
  */
-export enum USState {
+export const enum USState {
     ALABAMA = "AL",
     ALASKA = "AK",
     AMERICA_SAMOA = "AS",

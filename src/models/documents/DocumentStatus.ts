@@ -1,7 +1,7 @@
 /**
  * Represents whether an uploaded document is pending review or has been reviewed.
  */
-export enum DocumentStatus {
+export const enum DocumentStatus {
     /**
      * Pending
      */

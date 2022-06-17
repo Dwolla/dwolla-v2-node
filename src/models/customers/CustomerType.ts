@@ -4,7 +4,7 @@
  *
  * @see {@link https://developers.dwolla.com/concepts/customer-types|Customer Types - Dwolla Documentation}
  */
-export enum CustomerType {
+export const enum CustomerType {
     BUSINESS = "business",
     BUSINESS_NO_BALANCE = "business-no-balance",
     PERSONAL = "personal",

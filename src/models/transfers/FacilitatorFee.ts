@@ -1,7 +1,7 @@
 import { Expose, Type } from "class-transformer";
 import { HalResource } from "../HalResource";
 import { Money } from "../shared";
-import { TransferStatus } from "./types";
+import { TransferStatus } from "./TransferStatus";
 
 export class FacilitatorFee extends HalResource {
     @Expose()

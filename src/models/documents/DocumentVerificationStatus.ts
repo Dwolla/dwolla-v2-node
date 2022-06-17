@@ -1,7 +1,7 @@
 /**
  * Represents the final status of an uploaded document after being reviewed by Dwolla.
  */
-export enum DocumentVerificationStatus {
+export const enum DocumentVerificationStatus {
     /**
      * Accepted
      */

@@ -3,9 +3,9 @@ import { HalResource } from "../HalResource";
 import { Money } from "../shared";
 import { ACHDestination, ACHDetails, ACHSource } from "./ach";
 import { Clearing } from "./Clearing";
-import { RTPDestination, RTPDetails } from "./rtp";
-import { TransferStatus } from "./types";
 import { Metadata } from "./Metadata";
+import { RTPDestination, RTPDetails } from "./rtp";
+import { TransferStatus } from "./TransferStatus";
 
 export class Transfer<
     ACHSourceType extends ACHSource,

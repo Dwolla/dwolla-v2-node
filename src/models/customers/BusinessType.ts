@@ -3,7 +3,7 @@
  * @see {@link CustomersApi.createVerifiedBusiness}
  * @see {@link CustomersApi.createVerifiedSoleProp}
  */
-export enum BusinessType {
+export const enum BusinessType {
     CORPORATION = "CORPORATION",
     LLC = "LLC",
     PARTNERSHIP = "PARTNERSHIP",

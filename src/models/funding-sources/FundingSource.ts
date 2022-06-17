@@ -1,8 +1,11 @@
 import { Expose, Type } from "class-transformer";
 import { HalResource } from "../HalResource";
 import { Money } from "../shared";
+import { BankAccountType } from "./BankAccountType";
 import { CardDetails } from "./CardDetails";
-import { BankAccountType, FundingSourceStatus, FundingSourceType, ProcessingChannel } from "./types";
+import { FundingSourceStatus } from "./FundingSourceStatus";
+import { FundingSourceType } from "./FundingSourceType";
+import { ProcessingChannel } from "./ProcessingChannel";
 
 /**
  * Represents a Dwolla funding source record.

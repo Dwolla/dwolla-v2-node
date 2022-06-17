@@ -1,8 +1,11 @@
-import { Expose } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 import { HalResource } from "../HalResource";
 import { USAddress } from "../shared";
-import { AccountType } from "./types";
+import { AccountType } from "./AccountType";
 
+/**
+ * Represents a Dwolla Master Account
+ */
 export class Account extends HalResource {
     /**
      * Unique account identifier assigned by Dwolla
@@ -20,6 +23,7 @@ export class Account extends HalResource {
      * Physical U.S. address assigned to the account
      */
     @Expose()
+    @Type(() => USAddress)
     readonly address?: USAddress;
 
     /**
@@ -56,5 +60,6 @@ export class Account extends HalResource {
      * Date and time that the account was created
      */
     @Expose()
+    @Type(() => Date)
     readonly created?: Date;
 }

@@ -1,7 +1,7 @@
 /**
  * Represents the status of a Dwolla customer.
  */
-export enum CustomerStatus {
+export const enum CustomerStatus {
     DEACTIVATED = "deactivated",
     DOCUMENT = "document",
     RETRY = "retry",

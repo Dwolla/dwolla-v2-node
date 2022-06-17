@@ -1,7 +1,7 @@
 /**
  * Represents the reason an uploaded document failed verification.
  */
-export enum DocumentFailureReason {
+export const enum DocumentFailureReason {
     /**
      * Business Document Not Supported
      */
