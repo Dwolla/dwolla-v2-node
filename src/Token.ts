@@ -203,10 +203,10 @@ export class Token {
     ): Promise<Response<ResultType>> {
         const rawResponse: FetchResponse = await fetch(this.getUrl(path), {
             method: "POST",
-            headers: Object.assign(
-                this.getHeaders(headers),
-                isFormData(body) ? body.getHeaders() : { "Content-Type": "application/json" }
-            ),
+            headers: {
+                ...this.getHeaders(headers),
+                ...(isFormData(body) ? body.getHeaders() : { "Content-Type": "application/json" })
+            },
             body: isFormData(body) ? body : JSON.stringify(body)
         });
 
