@@ -5,7 +5,6 @@ import {
     plainToInstance,
     TargetMap
 } from "class-transformer";
-import FormData from "form-data";
 import formUrlEncoded from "form-urlencoded";
 import fetch, { Headers, Response as FetchResponse } from "node-fetch";
 import { AuthResponse } from "./Auth";
@@ -13,7 +12,7 @@ import { Client } from "./Client";
 import { HEADERS } from "./constants";
 import { DwollaError, ResponseError } from "./errors";
 import { TokenState } from "./TokenManager";
-import { rejectEmptyKeys, userAgent } from "./utils";
+import { isFormData, rejectEmptyKeys, userAgent } from "./utils";
 
 export interface DeserializeOptions<ResultType> {
     deserializeAs?: Deserializable<ResultType>;
@@ -204,11 +203,11 @@ export class Token {
     ): Promise<Response<ResultType>> {
         const rawResponse: FetchResponse = await fetch(this.getUrl(path), {
             method: "POST",
-            headers: {
-                ...this.getHeaders(headers),
-                ...(body instanceof FormData ? body.getHeaders() : { "Content-Type": "application/json" })
-            },
-            body: body instanceof FormData ? body : JSON.stringify(body)
+            headers: Object.assign(
+                this.getHeaders(headers),
+                isFormData(body) ? body.getHeaders() : { "Content-Type": "application/json" }
+            ),
+            body: isFormData(body) ? body : JSON.stringify(body)
         });
 
         const { parsedResponse, unmappedResponse } = await this.parseResponse(rawResponse, deserializeOptions);
