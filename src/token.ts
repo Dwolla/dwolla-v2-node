@@ -1,10 +1,9 @@
 import formUrlEncoded from "form-urlencoded";
 import fetch, { Headers, Response as FetchResponse } from "node-fetch";
 import { Client } from "./client";
-import { rejectEmptyKeys, userAgent } from "./utils";
+import { isFormData, rejectEmptyKeys, userAgent } from "./utils";
 import { AuthResponse } from "./auth";
 import { TokenState } from "./token-manager";
-import isFormData from "./utils/isFormData";
 
 export interface Response {
     body: any;
