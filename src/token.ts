@@ -1,8 +1,7 @@
-import FormData from "form-data";
 import formUrlEncoded from "form-urlencoded";
 import fetch, { Headers, Response as FetchResponse } from "node-fetch";
 import { Client } from "./client";
-import { rejectEmptyKeys, userAgent } from "./utils";
+import { isFormData, rejectEmptyKeys, userAgent } from "./utils";
 import { AuthResponse } from "./auth";
 import { TokenState } from "./token-manager";
 
@@ -143,9 +142,9 @@ export class Token {
             method: "POST",
             headers: Object.assign(
                 this.#getHeaders(headers),
-                body instanceof FormData ? body.getHeaders() : { "Content-Type": "application/json" }
+                isFormData(body) ? body.getHeaders() : { "Content-Type": "application/json" }
             ),
-            body: body instanceof FormData ? body : JSON.stringify(body)
+            body: isFormData(body) ? body : JSON.stringify(body)
         });
 
         const parsedResponse: Response = await this.#parseResponse(rawResponse);
