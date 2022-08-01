@@ -38,7 +38,7 @@ const dwolla = new Client({
 
 ## Making Requests
 
-Once you've created a `Client`, you can make low-level HTTP requests. High-level abstraction is planned for this SDK but not currently ready, at the time of writing.
+Once you've created a `Client`, currently, you can make low-level HTTP requests. High-level abstraction is planned for this SDK; however, at the time of writing, it has not been completed.
 
 ### Low-level Requests
 
