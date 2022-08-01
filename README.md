@@ -1,11 +1,11 @@
 # Dwolla SDK for JavaScript
 
-This repository contains the source code for Dwolla's Node-based SDK, which allows developers to interact with Dwolla's [server-side API](https://developers.dwolla.com/api-reference) via an exposed JavaScript API with automatic OAuth token management. Any action that can be performed via an HTTP request can be made using this SDK when executed within a server-side environment.
+This repository contains the source code for Dwolla's Node-based SDK, which allows developers to interact with Dwolla's [server-side API](https://developers.dwolla.com/api-reference) via a JavaScript API with automatic OAuth token management. Any action that can be performed via an HTTP request can be made using this SDK when executed within a server-side environment.
 
 ## Getting Started
 
 ### Installation
-To begin using this SDK, you will first need to download and install it on your machine, which is currently available on [npm](https://www.npmjs.com/package/dwolla-v2).
+To begin using this SDK, you will first need to download it to your machine. We use [npm](https://www.npmjs.com/package/dwolla-v2) to distribute this package.
 
 ```shell
 # npm
