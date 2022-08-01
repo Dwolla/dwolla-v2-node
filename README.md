@@ -24,7 +24,7 @@ Before any API requests can be made, you must first determine which environment 
 * Production: https://dashboard.dwolla.com/applications
 * Sandbox: https://dashboard-sandbox.dwolla.com/applications
 
-Finally, you can create an instance of `Client` with `key` and `secret` replaced with the application key and secret, respectively, that you fetched from one of the aforementioned links.
+Finally, you can create an instance of `Client` with `key` and `secret` replaced with the application key and secret that you fetched from one of the aforementioned links, respectively.
 
 ```javascript
 const Client = require("dwolla-v2").Client;
@@ -38,7 +38,11 @@ const dwolla = new Client({
 
 ## Making Requests
 
-Once you've created a `Client`, you can make requests using the `get()`, `post()`, and `delete()` methods. These methods will return a `Promise` containing the response object.
+Once you've created a `Client`, you can make low-level HTTP requests. High-level abstraction is planned for this SDK but not currently ready, at the time of writing.
+
+### Low-level Requests
+
+To make low-level HTTP requests, you can use the `get()`, `post()`, and `delete()` methods. These methods will return a `Promise` containing the response object
 
 The following snippet defines Dwolla's response object, both with a successful and error response. Although we are using `try`/`catch`, you can also use `.then()`/`.catch()` as well.
 
@@ -56,8 +60,6 @@ try {
     // error.status     => 400
 }
 ```
-
-### Low-level Requests
 
 #### `GET`
 
