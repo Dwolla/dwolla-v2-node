@@ -59,7 +59,7 @@ Once you've created a `Client`, currently, you can make low-level HTTP requests.
 
 To make low-level HTTP requests, you can use the [`get()`](#get), [`post()`](#post), and [`delete()`](#delete) methods. These methods will return a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) containing the response object.
 
-The following snippet defines Dwolla's response object, both with a successful and errored response. Although the snippet uses `try`/`catch`, you can also use `.then()`/`.catch()` if you prefer.
+The following snippet defines Dwolla's response object, both with a successful and errored response. Although the snippet uses [`try`/`catch`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch), you can also use [`.then()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then)/[`.catch()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch) if you prefer.
 
 An errored response is returned when Dwolla's servers respond with a status code that is greater than or equal to 400, whereas a successful response is when Dwolla's servers respond with a 200-level status code.
 
