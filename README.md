@@ -57,7 +57,7 @@ Once you've created a `Client`, currently, you can make low-level HTTP requests.
 
 ### Low-Level Requests
 
-To make low-level HTTP requests, you can use the [`get()`](#get), [`post()`](#post), and [`delete()`](#delete) methods. These methods will return a `Promise` containing the response object.
+To make low-level HTTP requests, you can use the [`get()`](#get), [`post()`](#post), and [`delete()`](#delete) methods. These methods will return a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) containing the response object.
 
 The following snippet defines Dwolla's response object, both with a successful and errored response. Although the snippet uses `try`/`catch`, you can also use `.then()`/`.catch()` if you prefer.
 
