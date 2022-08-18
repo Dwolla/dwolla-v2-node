@@ -124,7 +124,9 @@ await dwolla.delete("resource");
 
 #### Setting Headers
 
-When a request is sent to Dwolla, a few headers are automatically sent (e.g., `Accept`, `Content-Type`, `User-Agent`); however, if you would like to send additional headers such as `Idempotency-Key`, this can be done by passing in a third (3rd) argument for `POST` requests.
+When a request is sent to Dwolla, a few headers are automatically sent (e.g., `Accept`, `Content-Type`, `User-Agent`); however, if you would like to send additional headers, such as `Idempotency-Key`, this can be done by passing in a third (3rd) argument for `POST` requests.
+
+To learn more about how to make your requests idempotent, check out our [developer documentation](https://developers.dwolla.com/api-reference#idempotency-key) on this topic!
 
 ```javascript
 // POST https://api.dwolla.com/customers body={ ... }  headers={ ..., Idempotency-Key=... }
