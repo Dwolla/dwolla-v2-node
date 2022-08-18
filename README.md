@@ -1,21 +1,36 @@
 # Dwolla SDK for JavaScript
 
-This repository contains the source code for Dwolla's Node-based SDK, which allows developers to interact with Dwolla's [server-side API](https://developers.dwolla.com/api-reference) via a JavaScript API with automatic OAuth token management. Any action that can be performed via an HTTP request can be made using this SDK when executed within a server-side environment.
+This repository contains the source code for Dwolla's Node-based SDK, which allows developers to interact with Dwolla's [server-side API](https://developers.dwolla.com/api-reference) via a JavaScript API, with automatic OAuth token management. Any action that can be performed via an HTTP request can be made using this SDK when executed within a server-side environment.
+
+## Table of Contents
+
+* [Getting Started](#getting-started)
+  * [Installation](#installation)
+  * [Initialization](#initialization)
+* [Making Requests](#making-requests)
+  * [Low-Level Requests](#low-level-requests)
+    * [`GET`](#get)
+    * [`POST`](#post)
+    * [`DELETE`](#delete)
+    * [Setting Headers](#setting-headers)
+* [Changelog](#changelog)
+* [Community](#community)
+* [Additional Resources](#additional-resources)
 
 ## Getting Started
 
 ### Installation
-To begin using this SDK, you will first need to download it to your machine. We use [npm](https://www.npmjs.com/package/dwolla-v2) to distribute this package.
+To begin using this SDK, you will first need to download and install it on your machine. We use [npm](https://www.npmjs.com/package/dwolla-v2) to distribute this package.
 
 ```shell
 # npm
-npm install --save dwolla-v2
+$ npm install --save dwolla-v2
 
 # yarn
-yarn add dwolla-v2
+$ yarn add dwolla-v2
 
 # pnpm
-pnpm add dwolla-v2
+$ pnpm add dwolla-v2
 ```
 
 ### Initialization
@@ -38,13 +53,13 @@ const dwolla = new Client({
 
 ## Making Requests
 
-Once you've created a `Client`, currently, you can make low-level HTTP requests. High-level abstraction is planned for this SDK; however, at the time of writing, it has not been completed.
+Once you've created a `Client`, currently, you can make low-level HTTP requests. High-level abstraction is planned for this SDK; however, at the time of writing, it has not yet been completed.
 
-### Low-level Requests
+### Low-Level Requests
 
-To make low-level HTTP requests, you can use the `get()`, `post()`, and `delete()` methods. These methods will return a `Promise` containing the response object
+To make low-level HTTP requests, you can use the `get()`, `post()`, and `delete()` methods. These methods will return a `Promise` containing the response object.
 
-The following snippet defines Dwolla's response object, both with a successful and errored response. Although the snippet uses `try`/`catch`, you can use `.then()`/`.catch()` if you prefer.
+The following snippet defines Dwolla's response object, both with a successful and errored response. Although the snippet uses `try`/`catch`, you can also use `.then()`/`.catch()` if you prefer.
 
 An errored response is returned when Dwolla's servers respond with a status code that is greater than or equal to 400, whereas a successful response is when Dwolla's servers respond with a 200-level status code.
 
@@ -76,7 +91,8 @@ console.log("Response Total: ", response.body.total);
 #### `POST`
 
 ```javascript
-// POST https://api.dwolla.com/<resource> body={ ... }
+// POST https://api.dwolla.com/customers body={ ... }
+// This request is not idempotent since `Idempotecy-Key` is not passed as a header
 const response = await dwolla.post("customers", {
     firstName: "Jane",
     lastName: "Doe",
@@ -85,7 +101,7 @@ const response = await dwolla.post("customers", {
 
 console.log("Created Resource: ", response.headers.get("Location"));
 
-// POST https://api.dwolla.com/<resource> multipart/form-data ...
+// POST https://api.dwolla.com/customers/{id}/documents multipart/form-data ...
 // Note: Requires form-data peer dependency to be downloaded and installed
 const formData = new FormData();
 formData.append("documentType", "license");
@@ -102,8 +118,24 @@ console.log("Created Resource: ", response.headers.get("Location"));
 #### `DELETE`
 
 ```javascript
-// DELETE https://api.dwolla.com/<resource>
-await dwolla.delete("<resource>");
+// DELETE https://api.dwolla.com/[resource]
+await dwolla.delete("resource");
+```
+
+#### Setting Headers
+
+When a request is sent to Dwolla, a few headers are automatically sent (e.g., `Accept`, `Content-Type`, `User-Agent`); however, if you would like to send additional headers such as `Idempotency-Key`, this can be done by passing in a third (3rd) argument for `POST` requests.
+
+```javascript
+// POST https://api.dwolla.com/customers body={ ... }  headers={ ..., Idempotency-Key=... }
+// This request is idempotent since `Idempotecy-Key` is passed as a header
+const response = await dwolla.post("customers", {
+    firstName: "Jane",
+    lastName: "Doe",
+    email: "jane.doe@example.com"
+}, {
+    "Idempotency-Key": "[RANDOMLY_GENERATED_KEY_HERE]"
+});
 ```
 
 ## Changelog
@@ -135,7 +167,7 @@ await dwolla.delete("<resource>");
 
 ## Community
 * If you have any feedback, please reach out to us on [our forums](https://discuss.dwolla.com/) or by [creating a GitHub issue](https://github.com/Dwolla/dwolla-v2-node/issues/new).
-* If you would like to contribute to this library, please read the [contributing guide](https://github.com/Dwolla/dwolla-v2-node/blob/main/CONTRIBUTING.md) to learn more about how to build and test this SDK.
+* If you would like to contribute to this library, [bug reports](https://github.com/Dwolla/dwolla-v2-node/issues) and [pull requests](https://github.com/Dwolla/dwolla-v2-node/pulls) are always appreciated!
 
 ## Additional Resources
 
@@ -146,6 +178,7 @@ To learn more about Dwolla and how to integrate our product with your applicatio
 * [SDKs and Tools](https://developers.dwolla.com/sdks-tools)
   * [Dwolla SDK for C#](https://github.com/Dwolla/dwolla-v2-csharp)
   * [Dwolla SDK for Kotlin](https://github.com/Dwolla/dwolla-v2-kotlin)
+  * [Dwolla SDK for PHP](https://github.com/Dwolla/dwolla-swagger-php)
   * [Dwolla SDK for Python](https://github.com/Dwolla/dwolla-v2-python)
   * [Dwolla SDK for Ruby](https://github.com/Dwolla/dwolla-v2-ruby)
 * [Developer Support Forum](https://discuss.dwolla.com/)
