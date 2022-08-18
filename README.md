@@ -1,6 +1,6 @@
 # Dwolla SDK for JavaScript
 
-This repository contains the source code for Dwolla's Node-based SDK, which allows developers to interact with Dwolla's [server-side API](https://developers.dwolla.com/api-reference) via a JavaScript API, with automatic OAuth token management. Any action that can be performed via an HTTP request can be made using this SDK when executed within a server-side environment.
+This repository contains the source code for Dwolla's Node-based SDK, which allows developers to interact with Dwolla's [server-side API](https://developers.dwolla.com/api-reference) via a JavaScript API, with automatic OAuth token management included. Any action that can be performed via an HTTP request can be made using this SDK when executed within a server-side environment.
 
 ## Table of Contents
 
@@ -53,11 +53,11 @@ const dwolla = new Client({
 
 ## Making Requests
 
-Once you've created a `Client`, currently, you can make low-level HTTP requests. High-level abstraction is planned for this SDK; however, at the time of writing, it has not yet been completed.
+Once you've created a `Client`, currently, you can make low-level HTTP requests. High-level abstraction is planned for this SDK; however, at the time of writing, it has not yet been fully implemented.
 
 ### Low-Level Requests
 
-To make low-level HTTP requests, you can use the `get()`, `post()`, and `delete()` methods. These methods will return a `Promise` containing the response object.
+To make low-level HTTP requests, you can use the [`get()`](#get), [`post()`](#post), and [`delete()`](#delete) methods. These methods will return a `Promise` containing the response object.
 
 The following snippet defines Dwolla's response object, both with a successful and errored response. Although the snippet uses `try`/`catch`, you can also use `.then()`/`.catch()` if you prefer.
 
