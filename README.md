@@ -1,117 +1,154 @@
-# DwollaV2 Node
+# Dwolla SDK for JavaScript
 
-Dwolla V2 Node client.
+This repository contains the source code for Dwolla's Node-based SDK, which allows developers to interact with Dwolla's [server-side API](https://developers.dwolla.com/api-reference) via a JavaScript API, with automatic OAuth token management included. Any action that can be performed via an HTTP request can be made using this SDK when executed within a server-side environment.
 
-[API Documentation](https://docsv2.dwolla.com)
+## Table of Contents
 
-## Installation
+* [Getting Started](#getting-started)
+  * [Installation](#installation)
+  * [Initialization](#initialization)
+* [Making Requests](#making-requests)
+  * [Low-Level Requests](#low-level-requests)
+    * [`GET`](#get)
+    * [`POST`](#post)
+    * [`DELETE`](#delete)
+    * [Setting Headers](#setting-headers)
+* [Changelog](#changelog)
+* [Community](#community)
+* [Additional Resources](#additional-resources)
 
-`dwolla-v2` is available on [NPM](https://www.npmjs.com/package/dwolla-v2).
+## Getting Started
 
+### Installation
+To begin using this SDK, you will first need to download and install it on your machine. We use [npm](https://www.npmjs.com/package/dwolla-v2) to distribute this package.
+
+```shell
+# npm
+$ npm install --save dwolla-v2
+
+# yarn
+$ yarn add dwolla-v2
+
+# pnpm
+$ pnpm add dwolla-v2
 ```
-npm install dwolla-v2 --save
-```
 
-## Getting started
+### Initialization
+Before any API requests can be made, you must first determine which environment you will be using, as well as fetch the application key and secret. To fetch your application key and secret, please visit one of the following links:
+
+* Production: https://dashboard.dwolla.com/applications
+* Sandbox: https://dashboard-sandbox.dwolla.com/applications
+
+Finally, you can create an instance of `Client` with `key` and `secret` replaced with the application key and secret that you fetched from one of the aforementioned links, respectively.
 
 ```javascript
-var Client = require("dwolla-v2").Client;
+const Client = require("dwolla-v2").Client;
 
-var dwolla = new Client({
-  key: process.env.DWOLLA_APP_KEY,
-  secret: process.env.DWOLLA_APP_SECRET,
-  environment: "sandbox", // defaults to 'production'
+const dwolla = new Client({ 
+    environment: "sandbox", // Defaults to "production"
+    key: process.env.DWOLLA_APP_KEY,
+    secret: process.env.DWOLLA_APP_SECRET
+})
+```
+
+## Making Requests
+
+Once you've created a `Client`, currently, you can make low-level HTTP requests. High-level abstraction is planned for this SDK; however, at the time of writing, it has not yet been fully implemented.
+
+### Low-Level Requests
+
+To make low-level HTTP requests, you can use the [`get()`](#get), [`post()`](#post), and [`delete()`](#delete) methods. These methods will return a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) containing the response object.
+
+The following snippet defines Dwolla's response object, both with a successful and errored response. Although the snippet uses [`try`/`catch`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch), you can also use [`.then()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then)/[`.catch()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch) if you prefer.
+
+An errored response is returned when Dwolla's servers respond with a status code that is greater than or equal to 400, whereas a successful response is when Dwolla's servers respond with a 200-level status code.
+
+```javascript
+try {
+    const response = await dwolla.get("customers");
+    // response.body      => Object or String depending on response type
+    // response.headers   => Headers { ... }
+    // response.status    => 200
+} catch(error) {
+    // error.body       => Object or String depending on response type
+    // error.headers    => Headers { ... }
+    // error.status     => 400
+}
+```
+
+#### `GET`
+
+```javascript
+// GET https://api.dwolla.com/customers?offset=20&limit=10
+const response = await dwolla.get("customers", {
+    offset: 20, 
+    limit: 10
 });
+
+console.log("Response Total: ", response.body.total);
 ```
 
-### Integrations Authorization
-
-Check out our [Integrations Authorization Guide](https://developers.dwolla.com/integrations/authorization).
-
-## Making requests
-
-Once you've created a `Client`, you can make requests using the `#get`, `#post`,
-and `#delete` methods. These methods return promises containing a response object
-detailed in the [Responses section](#responses).
+#### `POST`
 
 ```javascript
-// GET api.dwolla.com/customers?limit=10&offset=20
-dwolla
-  .get("customers", { limit: 10, offset: 20 })
-  .then((res) => console.log(res.body.total));
-
-// POST api.dwolla.com/resource {"foo":"bar"}
-dwolla
-  .post("customers", {
+// POST https://api.dwolla.com/customers body={ ... }
+// This request is not idempotent since `Idempotecy-Key` is not passed as a header
+const response = await dwolla.post("customers", {
     firstName: "Jane",
     lastName: "Doe",
-    email: "jane@doe.com",
-  })
-  .then((res) => console.log(res.headers.get("location")));
-
-// POST api.dwolla.com/resource multipart/form-data foo=...
-var body = new FormData();
-body.append("file", fs.createReadStream("mclovin.jpg"), {
-  filename: "mclovin.jpg",
-  contentType: "image/jpeg",
-  knownLength: fs.statSync("mclovin.jpg").size,
+    email: "jane.doe@example.com"
 });
-body.append("documentType", "license");
-dwolla.post(`${customerUrl}/documents`, body);
 
-// DELETE api.dwolla.com/resource
-dwolla.delete("resource");
+console.log("Created Resource: ", response.headers.get("Location"));
+
+// POST https://api.dwolla.com/customers/{id}/documents multipart/form-data ...
+// Note: Requires form-data peer dependency to be downloaded and installed
+const formData = new FormData();
+formData.append("documentType", "license");
+formData.append("file", ffs.createReadStream("mclovin.jpg", {
+    contentType: "image/jpeg",
+    filename: "mclovin.jpg",
+    knownLength: fs.statSync("mclovin.jpg").size
+}));
+
+const response = await dwolla.post(`${customerUrl}/documents`, formData);
+console.log("Created Resource: ", response.headers.get("Location"));
 ```
 
-#### Setting headers
-
-To set additional headers on a request you can pass an `object` as the 3rd argument.
-
-For example:
+#### `DELETE`
 
 ```javascript
-dwolla.post(
-  "customers",
-  { firstName: "John", lastName: "Doe", email: "john@doe.com" },
-  { "Idempotency-Key": "a52fcf63-0730-41c3-96e8-7147b5d1fb01" }
-);
+// DELETE https://api.dwolla.com/[resource]
+await dwolla.delete("resource");
 ```
 
-## Responses
+#### Setting Headers
+
+When a request is sent to Dwolla, a few headers are automatically sent (e.g., `Accept`, `Content-Type`, `User-Agent`); however, if you would like to send additional headers, such as `Idempotency-Key`, this can be done by passing in a third (3rd) argument for `POST` requests.
+
+To learn more about how to make your requests idempotent, check out our [developer documentation](https://developers.dwolla.com/api-reference#idempotency-key) on this topic!
 
 ```javascript
-dwolla.get("customers").then(
-  function(res) {
-    // res.status   => 200
-    // res.headers  => Headers { ... }
-    // res.body     => Object or String depending on response type
-  },
-  function(error) {
-    // when the server return a status >= 400
-    // error.status   => 400
-    // error.headers  => Headers { ... }
-    // error.body     => Object or String depending on response type
-  }
-);
+// POST https://api.dwolla.com/customers body={ ... }  headers={ ..., Idempotency-Key=... }
+// This request is idempotent since `Idempotency-Key` is passed as a header
+const response = await dwolla.post("customers", {
+    firstName: "Jane",
+    lastName: "Doe",
+    email: "jane.doe@example.com"
+}, {
+    "Idempotency-Key": "[RANDOMLY_GENERATED_KEY_HERE]"
+});
 ```
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/Dwolla/dwolla-v2-node.
-
-## License
-
-The package is available as open source under the terms of the [MIT License](https://github.com/Dwolla/dwolla-v2-node).
 
 ## Changelog
 
-- **3.4.0** Update `form-urlencoded` version to allow `{ skipIndex: true, skipBracket: true}` options to be passed in. Thanks [@MarcMouallem](https://github.com/MarcMouallem)!
-- **3.3.0** Remove lodash as a dependency and replace with `Object.assign`
+- **[3.4.0](https://github.com/Dwolla/dwolla-v2-node/releases/tag/v3.4.0)** Update `form-urlencoded` version to allow `{ skipIndex: true, skipBracket: true }` options to be passed in. Thanks, [@MarcMouallem](https://github.com/MarcMouallem)!
+- **3.3.0** Remove `lodash` as a dependency in favor of `Object.assign`
 - **3.2.3** Update version and changelog
-- **3.2.2** Update unit test involving token. Thanks [@philting](https://github.com/philting)!
+- **3.2.2** Update unit test involving token. Thanks, [@philting](https://github.com/philting)!
 - **3.2.1** Update dependencies. Remove `npm-check` package.
-- **3.2.0** Add TypeScript definition (Thanks @rhuffy!)
-- **3.1.1** Change node-fetch import style for better Webpack compatibility
+- **3.2.0** Add TypeScript definition. Thanks, [@rhuffy](https://github.com/rhuffy)!
+- **3.1.1** Change `node-fetch` import style for better Webpack compatibility
 - **3.1.0** Add integrations auth functionality
 - **3.0.2** Don't cache token errors
 - **3.0.1** Fix token leeway logic
@@ -119,13 +156,31 @@ The package is available as open source under the terms of the [MIT License](htt
 - **2.1.0** Update dependencies
 - **2.0.1** Update dependencies
 - **2.0.0** Change token URLs, update dependencies, remove Node 0.x support.
-- **1.3.3** Update lodash to avoid security vulnerability ([#25](/Dwolla/dwolla-v2-node/issues/25) - Thanks @bold-d!).
+- **1.3.3** Update lodash to avoid security vulnerability. Thanks, [@bold-d](https://github.com/bold-d)!
 - **1.3.2** Strip domain from URLs provided to `token.*` methods.
 - **1.3.1** Update sandbox URLs from uat => sandbox.
-- **1.3.0** Refer to Client id as key.
+- **1.3.0** Refer to Client ID as key.
 - **1.2.3** Use Bluebird Promise in Auth to prevent Promise undefined error.
-- **1.2.2** Upgrade `node-fetch` dependency to fix `form-data` compatibility ([#15][/dwolla/dwolla-v2-node/issues/15])
+- **1.2.2** Upgrade `node-fetch` dependency to fix `form-data` compatibility
 - **1.2.1** Add support for `verified_account` and `dwolla_landing` auth flags
-- **1.2.0** Reject promises with Errors instead of plain objects ([#8](/Dwolla/dwolla-v2-node/issues/8))
-- **1.1.2** Fix issue uploading files ([#4](/Dwolla/dwolla-v2-node/issues/4))
-- **1.1.1** Handle promises differently to allow all rejections to be handled ([#5](/Dwolla/dwolla-v2-node/issues/5))
+- **1.2.0** Reject promises with Errors instead of plain objects
+- **1.1.2** Fix issue uploading files
+- **1.1.1** Handle promises differently to allow all rejections to be handled
+
+## Community
+* If you have any feedback, please reach out to us on [our forums](https://discuss.dwolla.com/) or by [creating a GitHub issue](https://github.com/Dwolla/dwolla-v2-node/issues/new).
+* If you would like to contribute to this library, [bug reports](https://github.com/Dwolla/dwolla-v2-node/issues) and [pull requests](https://github.com/Dwolla/dwolla-v2-node/pulls) are always appreciated!
+
+## Additional Resources
+
+To learn more about Dwolla and how to integrate our product with your application, please consider visiting some of the following resources and becoming a member of our community!
+
+* [Dwolla](https://www.dwolla.com/)
+* [Dwolla Developers](https://developers.dwolla.com/)
+* [SDKs and Tools](https://developers.dwolla.com/sdks-tools)
+  * [Dwolla SDK for C#](https://github.com/Dwolla/dwolla-v2-csharp)
+  * [Dwolla SDK for Kotlin](https://github.com/Dwolla/dwolla-v2-kotlin)
+  * [Dwolla SDK for PHP](https://github.com/Dwolla/dwolla-swagger-php)
+  * [Dwolla SDK for Python](https://github.com/Dwolla/dwolla-v2-python)
+  * [Dwolla SDK for Ruby](https://github.com/Dwolla/dwolla-v2-ruby)
+* [Developer Support Forum](https://discuss.dwolla.com/)
