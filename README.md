@@ -130,7 +130,7 @@ To learn more about how to make your requests idempotent, check out our [develop
 
 ```javascript
 // POST https://api.dwolla.com/customers body={ ... }  headers={ ..., Idempotency-Key=... }
-// This request is idempotent since `Idempotecy-Key` is passed as a header
+// This request is idempotent since `Idempotency-Key` is passed as a header
 const response = await dwolla.post("customers", {
     firstName: "Jane",
     lastName: "Doe",
