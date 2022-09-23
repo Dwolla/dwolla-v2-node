@@ -44,7 +44,7 @@ Finally, you can create an instance of `Client` with `key` and `secret` replaced
 ```javascript
 const Client = require("dwolla-v2").Client;
 
-const dwolla = new Client({ 
+const dwolla = new Client({
     environment: "sandbox", // Defaults to "production"
     key: process.env.DWOLLA_APP_KEY,
     secret: process.env.DWOLLA_APP_SECRET
@@ -81,7 +81,7 @@ try {
 ```javascript
 // GET https://api.dwolla.com/customers?offset=20&limit=10
 const response = await dwolla.get("customers", {
-    offset: 20, 
+    offset: 20,
     limit: 10
 });
 
@@ -170,6 +170,11 @@ const response = await dwolla.post("customers", {
 ## Community
 * If you have any feedback, please reach out to us on [our forums](https://discuss.dwolla.com/) or by [creating a GitHub issue](https://github.com/Dwolla/dwolla-v2-node/issues/new).
 * If you would like to contribute to this library, [bug reports](https://github.com/Dwolla/dwolla-v2-node/issues) and [pull requests](https://github.com/Dwolla/dwolla-v2-node/pulls) are always appreciated!
+
+## Docker
+
+If you prefer to use Docker to run dwolla-v2-node locally, a Dockerfile is included at the root directory.
+Follow these instructions from [Docker's website](https://docs.docker.com/build/hellobuild/) to create a Docker image from the Dockerfile, and run it.
 
 ## Additional Resources
 
