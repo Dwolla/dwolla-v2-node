@@ -34,8 +34,6 @@
     "bluebird": "^3.5.1",
     "form-urlencoded": "^4.5.1",
     "invariant": "^2.2.4",
-    "is-stream": "^1.1.0",
-    "lodash.snakecase": "^4.1.1",
     "node-fetch": "^2.6.2"
   }
 }
