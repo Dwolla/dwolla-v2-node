@@ -105,11 +105,11 @@ console.log("Created Resource: ", response.headers.get("Location"));
 // Note: Requires form-data peer dependency to be downloaded and installed
 const formData = new FormData();
 formData.append("documentType", "license");
-formData.append("file", ffs.createReadStream("mclovin.jpg", {
+formData.append("file", ffs.createReadStream("mclovin.jpg"), {
     contentType: "image/jpeg",
     filename: "mclovin.jpg",
     knownLength: fs.statSync("mclovin.jpg").size
-}));
+});
 
 const response = await dwolla.post(`${customerUrl}/documents`, formData);
 console.log("Created Resource: ", response.headers.get("Location"));
