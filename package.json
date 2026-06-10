@@ -18,6 +18,10 @@
   "keywords": [
     "Dwolla"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dwolla/dwolla-v2-node"
+  },
   "author": "Stephen Ausman <stephen@dwolla.com>",
   "license": "MIT",
   "devDependencies": {
