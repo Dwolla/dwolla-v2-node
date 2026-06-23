@@ -36,6 +36,7 @@ function performOnGrantCallback(client, token) {
 function requestToken(client, params) {
   return fetch(client.tokenUrl, {
     method: "POST",
+    compress: false,
     headers: {
       "content-type": "application/x-www-form-urlencoded",
       "user-agent": require("../../src/dwolla/userAgent")

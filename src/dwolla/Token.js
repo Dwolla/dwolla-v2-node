@@ -78,6 +78,7 @@ function handleResponse(res) {
 
 Token.prototype.get = function(path, query, headers) {
   return fetch(getUrl(this, path, query), {
+    compress: false,
     headers: getHeaders(this, headers)
   }).then(handleResponse);
 };
@@ -85,6 +86,7 @@ Token.prototype.get = function(path, query, headers) {
 Token.prototype.post = function(path, body, headers) {
   return fetch(getUrl(this, path), {
     method: "POST",
+    compress: false,
     headers: assign(
       getHeaders(this, headers),
       isFormData(body)
@@ -98,6 +100,7 @@ Token.prototype.post = function(path, body, headers) {
 Token.prototype.delete = function(path, query, headers) {
   return fetch(getUrl(this, path, query), {
     method: "DELETE",
+    compress: false,
     headers: getHeaders(this, headers)
   }).then(handleResponse);
 };

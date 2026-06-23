@@ -142,6 +142,8 @@ const response = await dwolla.post("customers", {
 
 ## Changelog
 
+- **3.4.2** Disable automatic gzip handling on all `node-fetch` requests (pass `compress: false`) to avoid false-positive `ERR_STREAM_PREMATURE_CLOSE` errors on keep-alive sockets under Node.js v24.17.0+. See [nodejs/node#63989](https://github.com/nodejs/node/issues/63989).
+- **3.4.1** Switch npm publishing to OIDC trusted publishing.
 - **[3.4.0](https://github.com/Dwolla/dwolla-v2-node/releases/tag/v3.4.0)** Update `form-urlencoded` version to allow `{ skipIndex: true, skipBracket: true }` options to be passed in. Thanks, [@MarcMouallem](https://github.com/MarcMouallem)!
 - **3.3.0** Remove `lodash` as a dependency in favor of `Object.assign`
 - **3.2.3** Update version and changelog
